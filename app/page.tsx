@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Direction = "VND" | "MYR";
+type RateStatus = "loading" | "live" | "fallback" | "manual";
 
 const onlyNumber = (value: string) => value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
 const parseAmount = (value: string) => Number(value) || 0;
@@ -20,7 +21,29 @@ export default function Home() {
   const [direction, setDirection] = useState<Direction>("VND");
   const [amount, setAmount] = useState("1000000");
   const [ratePerHundred, setRatePerHundred] = useState("0.0155");
+  const [rateDate, setRateDate] = useState("14 Jul 2026");
+  const [rateStatus, setRateStatus] = useState<RateStatus>("loading");
   const [copied, setCopied] = useState(false);
+  const manualOverride = useRef(false);
+
+  async function loadLatestRate() {
+    setRateStatus("loading");
+    try {
+      const response = await fetch("/api/rate", { cache: "no-store" });
+      if (!response.ok) throw new Error("Rate unavailable");
+      const data = await response.json() as { date: string; ratePerHundred: number };
+      if (manualOverride.current) return;
+      setRatePerHundred(String(data.ratePerHundred));
+      setRateDate(new Date(`${data.date}T00:00:00`).toLocaleDateString("en-MY", {
+        day: "numeric", month: "short", year: "numeric",
+      }));
+      setRateStatus("live");
+    } catch {
+      if (!manualOverride.current) setRateStatus("fallback");
+    }
+  }
+
+  useEffect(() => { void loadLatestRate(); }, []);
 
   const rate = parseAmount(ratePerHundred) / 100;
   const sourceAmount = parseAmount(amount);
@@ -56,7 +79,7 @@ export default function Home() {
           <span className="brand-mark">D</span>
           <span><b>Duit Exchange</b><small>VND ↔ MYR</small></span>
         </a>
-        <span className="rate-pill"><i /> Indicative rate</span>
+        <span className="rate-pill"><i className={rateStatus} />{rateStatus === "live" ? "Official daily rate" : rateStatus === "loading" ? "Checking latest rate" : rateStatus === "manual" ? "Custom rate" : "Indicative fallback"}</span>
       </header>
 
       <section className="intro">
@@ -71,7 +94,7 @@ export default function Home() {
             <p className="eyebrow">Currency converter</p>
             <h2>Convert in seconds</h2>
           </div>
-          <p className="updated">Reference updated<br /><b>14 Jul 2026</b></p>
+          <p className="updated">{rateStatus === "manual" ? "Custom rate" : rateStatus === "loading" ? "Checking latest rate…" : rateStatus === "fallback" ? "Fallback rate from" : "Rate updated"}<br /><b>{rateStatus === "manual" ? "Set by you" : rateDate}</b></p>
         </div>
 
         <div className="currency-card source-card">
@@ -121,14 +144,15 @@ export default function Home() {
           <summary>Use a different rate</summary>
           <label>
             <span>MYR for every ₫100</span>
-            <div><b>RM</b><input aria-label="MYR per 100 VND" inputMode="decimal" value={ratePerHundred} onChange={(event) => setRatePerHundred(onlyNumber(event.target.value))} /></div>
+            <div><b>RM</b><input aria-label="MYR per 100 VND" inputMode="decimal" value={ratePerHundred} onChange={(event) => { manualOverride.current = true; setRateStatus("manual"); setRatePerHundred(onlyNumber(event.target.value)); }} /></div>
           </label>
+          <button className="reload-rate" type="button" onClick={() => { manualOverride.current = false; void loadLatestRate(); }}>Reload official rate</button>
         </details>
       </section>
 
       <section className="note">
         <span>Good to know</span>
-        <p>This is an indicative conversion. Banks and money changers may include their own spread or fees, so the amount you receive can differ.</p>
+        <p>The latest available 09:00 reference rate is loaded from Bank Negara Malaysia via data.gov.my. Banks and money changers may include their own spread or fees.</p>
       </section>
 
       <footer><span>Built for everyday travel and transfers.</span><span>VND / MYR</span></footer>
