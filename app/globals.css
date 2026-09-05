@@ -47,6 +47,7 @@ a { color: inherit; }
 .purpose-card p + p { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
 .purpose-card b { color: var(--ink); }
 .purpose-card a { display: inline-block; margin-top: 10px; color: var(--green); font-weight: 800; text-underline-offset: 3px; }
+.purpose-sources { display: flex; flex-wrap: wrap; gap: 0 13px; }
 @media (hover: hover) {
   .calculator-purpose:not([open]):hover > .purpose-card { position: absolute; left: 50%; display: block; transform: translateX(-50%); }
 }

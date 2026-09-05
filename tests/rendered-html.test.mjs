@@ -21,6 +21,9 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.match(html, /Estimates daily calorie needs and a starting feeding amount in g\/day/);
   assert.match(html, /AAFCO Modified Atwater formula/);
   assert.match(html, /https:\/\/www\.aafco\.org\/resources\/startups\/calorie-content\//);
+  assert.match(html, /RER \(resting energy requirement\) = 70/);
+  assert.match(html, /MER \(maintenance energy requirement\) = RER/);
+  assert.match(html, /https:\/\/www\.aaha\.org\/resources\/2021-aaha-nutrition-and-weight-management-guidelines/);
   assert.match(html, /🐕/);
   assert.match(html, /🐈/);
   assert.doesNotMatch(html, /Veterinary nutrition workflow|From body weight to a practical feeding estimate/);

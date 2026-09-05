@@ -208,8 +208,12 @@ export default function Home() {
           <summary>What is this calculator for?</summary>
           <div className="purpose-card">
             <p>Estimates daily calorie needs and a starting feeding amount in g/day for dogs and cats using manufacturer food energy or Guaranteed Analysis.</p>
+            <p><b>Patient energy method:</b> RER (resting energy requirement) = 70 × body weight (kg)<sup>0.75</sup>. MER (maintenance energy requirement) = RER × the selected life-stage or condition factor. These are starting estimates and should be adjusted according to body-weight and body-condition trends.</p>
             <p><b>Guaranteed Analysis method:</b> Food energy is estimated with the AAFCO Modified Atwater formula: ME (kcal/kg) = 10 × [(3.5 × protein) + (8.5 × fat) + (3.5 × NFE)]. NFE is calculated carbohydrate.</p>
-            <a href="https://www.aafco.org/resources/startups/calorie-content/" target="_blank" rel="noreferrer">View the AAFCO method <span aria-hidden="true">↗</span></a>
+            <div className="purpose-sources">
+              <a href="https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/weight-reduction-in-the-obese-pet/" target="_blank" rel="noreferrer">AAHA energy guidance <span aria-hidden="true">↗</span></a>
+              <a href="https://www.aafco.org/resources/startups/calorie-content/" target="_blank" rel="noreferrer">AAFCO food-energy method <span aria-hidden="true">↗</span></a>
+            </div>
           </div>
         </details>
       </section>
