@@ -30,6 +30,13 @@ const formatNumber = (value: number, digits = 0) =>
 const formatRange = (minimum: number, maximum: number, unit: string) =>
   `${formatNumber(minimum)}–${formatNumber(maximum)} ${unit}`;
 
+const isSingleValue = (minimum: number, maximum: number) => Math.abs(maximum - minimum) < 1e-9;
+const formatEstimate = (minimum: number, maximum: number, unit: string) =>
+  isSingleValue(minimum, maximum) ? `${formatNumber(minimum)} ${unit}` : formatRange(minimum, maximum, unit);
+const formatMultiplier = (value: number) => value.toLocaleString("en-MY", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const formatFactor = (minimum: number, maximum: number) =>
+  `${isSingleValue(minimum, maximum) ? formatMultiplier(minimum) : `${formatMultiplier(minimum)}–${formatMultiplier(maximum)}`} × RER`;
+
 const clinicalDisclaimerText = "Estimated feeding amount only. Individual requirements may vary with body condition, activity level, health status, environment and treatment goals. Use as a starting guide and adjust according to clinical response and body-weight trends. Veterinary supervision is recommended.";
 const feedbackEndpoint = "https://formspree.io/f/mzebvqne";
 
@@ -108,36 +115,62 @@ function StepHeader({ id, number, title, copy }: { id: string; number: string; t
   );
 }
 
-function EnergyResult({ minimum, maximum, rer, mer }: { minimum: number; maximum: number; rer: number; mer: number }) {
+function EnergyResult({
+  minimum,
+  maximum,
+  rer,
+  factorMinimum,
+  factorMaximum,
+  calculation,
+}: {
+  minimum: number;
+  maximum: number;
+  rer: number;
+  factorMinimum: number | null;
+  factorMaximum: number | null;
+  calculation: "factor" | "lactation";
+}) {
+  const hasRange = !isSingleValue(minimum, maximum);
+  const basis = calculation === "factor" && factorMinimum !== null && factorMaximum !== null
+    ? formatFactor(factorMinimum, factorMaximum)
+    : "Species-specific lactation equation";
+
   return (
     <section className="energy-result" aria-live="polite" aria-label="Estimated daily energy requirement">
       <div className="energy-primary">
-        <p>Estimated daily energy requirement</p>
-        <strong>{formatNumber(mer)} kcal/day</strong>
-        <span>MER midpoint</span>
+        <p>Estimated starting requirement</p>
+        <strong>{formatEstimate(minimum, maximum, "kcal/day")}</strong>
+        <span>{hasRange ? "Published factor range" : "Single starting estimate"}</span>
       </div>
-      <aside className="energy-range" aria-label="Estimated daily energy range">
-        <span>Estimated range</span>
-        <strong>{formatRange(minimum, maximum, "kcal/day")}</strong>
+      <aside className="energy-range" aria-label="Energy calculation basis">
+        <span>Calculation basis</span>
+        <strong>{basis}</strong>
       </aside>
       <div className="energy-meta"><span>RER {formatNumber(rer)} kcal/day</span></div>
-      <small>This range allows for individual variation around the estimated MER.</small>
+      <small>Calculated energy requirements are starting estimates. Individual requirements may vary substantially; monitor body weight and body condition score and adjust intake accordingly.</small>
+      <details className="energy-variability">
+        <summary>About biological variability</summary>
+        <p>Published guidance notes that individual maintenance energy requirements may vary by approximately ±30% in dogs and ±50% in cats. These values describe biological variability and are not intended to be displayed as routine feeding ranges.</p>
+      </details>
     </section>
   );
 }
 
 function FeedingResult({ minimum, maximum, midpoint }: { minimum: number; maximum: number; midpoint: number }) {
+  const hasRange = !isSingleValue(minimum, maximum);
   return (
-    <section className="feeding-result" aria-live="polite" aria-label="Estimated feeding amount">
+    <section className={`feeding-result${hasRange ? "" : " single-value"}`} aria-live="polite" aria-label="Estimated feeding amount">
       <div className="feeding-primary">
         <span>Estimated amount to feed</span>
         <strong>{formatNumber(midpoint)} g/day</strong>
-        <small>MER-based midpoint</small>
+        <small>{hasRange ? "MER-based midpoint" : "Single starting amount"}</small>
       </div>
-      <aside className="feeding-range" aria-label="Estimated feeding range">
-        <span>Estimated range</span>
-        <strong>{formatRange(minimum, maximum, "g/day")}</strong>
-      </aside>
+      {hasRange && (
+        <aside className="feeding-range" aria-label="Estimated feeding range">
+          <span>Estimated range</span>
+          <strong>{formatRange(minimum, maximum, "g/day")}</strong>
+        </aside>
+      )}
     </section>
   );
 }
@@ -367,7 +400,7 @@ export default function Home() {
   const [species, setSpecies] = useState<Species>("Dog");
   const [weight, setWeight] = useState("");
   const [petName, setPetName] = useState("");
-  const [condition, setCondition] = useState("Typical intact pet");
+  const [condition, setCondition] = useState("Intact adult");
   const [lactating, setLactating] = useState(false);
   const [manufacturerEnabled, setManufacturerEnabled] = useState(false);
   const [manufacturerKcalKg, setManufacturerKcalKg] = useState("");
@@ -430,11 +463,11 @@ export default function Home() {
         `Body weight: ${formatNumber(Number(weight), 2)} kg`,
         `Patient status: ${patientDescription}`,
         `RER: ${formatNumber(dailyEnergy.rer)} kcal/day`,
-        `MER midpoint: ${formatNumber(dailyEnergy.mer)} kcal/day`,
-        `Estimated energy range: ${formatRange(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}`,
+        `Estimated starting requirement: ${formatEstimate(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}`,
+        `Calculation basis: ${dailyEnergy.calculation === "factor" && dailyEnergy.factorMinimum !== null && dailyEnergy.factorMaximum !== null ? formatFactor(dailyEnergy.factorMinimum, dailyEnergy.factorMaximum) : "Species-specific lactation equation"}`,
         `Food energy: ${formatNumber(selectedFoodEnergy.kcalKg)} kcal/kg (${selectedFoodEnergy.source === "manufacturer" ? "manufacturer provided" : "estimated from Guaranteed Analysis"})`,
-        `Feeding midpoint: ${formatNumber(feedingAmount.midpoint)} g/day`,
-        `Estimated feeding range: ${formatRange(feedingAmount.minimum, feedingAmount.maximum, "g/day")}`,
+        `Estimated feeding amount: ${formatEstimate(feedingAmount.minimum, feedingAmount.maximum, "g/day")}`,
+        ...(!isSingleValue(feedingAmount.minimum, feedingAmount.maximum) ? [`Feeding midpoint: ${formatNumber(feedingAmount.midpoint)} g/day`] : []),
         "",
         clinicalDisclaimerText,
       ].join("\n")
@@ -444,7 +477,7 @@ export default function Home() {
     setSpecies("Dog");
     setWeight("");
     setPetName("");
-    setCondition("Typical intact pet");
+    setCondition("Intact adult");
     setLactating(false);
     setManufacturerEnabled(false);
     setManufacturerKcalKg("");
@@ -484,10 +517,14 @@ export default function Home() {
           <summary>What is this calculator for?</summary>
           <div className="purpose-card">
             <p>Estimates daily calorie needs and a starting feeding amount in g/day for dogs and cats using manufacturer food energy or Guaranteed Analysis.</p>
-            <p><b>Patient energy method:</b> RER (resting energy requirement) = 70 × body weight (kg)<sup>0.75</sup>. For standard patients, MER (maintenance energy requirement) = RER × the selected life-stage or condition factor. Lactating patients use the species-specific lactation equation with litter size and lactation week. These are starting estimates and should be adjusted according to body-weight and body-condition trends.</p>
+            <p><b>Patient energy method:</b> Using AAHA 2021 as the primary clinical framework, with FEDIAF 2025, Merck and WSAVA as supporting references, RER (resting energy requirement) = 70 × body weight (kg)<sup>0.75</sup>. Routine MER estimates apply the selected species and life-stage factor or published factor range directly. Lactating patients use the existing species-specific equation with litter size and lactation week.</p>
+            <p><b>Biological variability:</b> Published guidance notes that maintenance needs may vary by approximately ±30% in dogs and ±50% in cats. This variability is for monitoring and adjustment—not an extra range applied to the calculator result.</p>
             <p><b>Guaranteed Analysis method:</b> Food energy is estimated with the AAFCO Modified Atwater formula: ME (kcal/kg) = 10 × [(3.5 × protein) + (8.5 × fat) + (3.5 × NFE)]. NFE is calculated carbohydrate.</p>
-            <div className="purpose-sources">
-              <a href="https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/weight-reduction-in-the-obese-pet/" target="_blank" rel="noreferrer">AAHA energy guidance <span aria-hidden="true">↗</span></a>
+            <div className="purpose-sources" aria-label="References and methodology">
+              <a href="https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/home/" target="_blank" rel="noreferrer">AAHA 2021 Nutrition and Weight Management Guidelines <span aria-hidden="true">↗</span></a>
+              <a href="https://europeanpetfood.org/wp-content/uploads/2025/09/FEDIAF-Nutritional-Guidelines_2025-ONLINE.pdf" target="_blank" rel="noreferrer">FEDIAF Nutritional Guidelines 2025 <span aria-hidden="true">↗</span></a>
+              <a href="https://www.merckvetmanual.com/multimedia/table/daily-maintenance-energy-requirements-for-dogs-and-cats" target="_blank" rel="noreferrer">Merck Veterinary Manual — Daily Maintenance Energy Requirements <span aria-hidden="true">↗</span></a>
+              <a href="https://wsava.org/Global-Guidelines/Global-Nutrition-Guidelines/" target="_blank" rel="noreferrer">WSAVA Global Nutrition Guidelines <span aria-hidden="true">↗</span></a>
               <a href="https://www.aafco.org/resources/startups/calorie-content/" target="_blank" rel="noreferrer">AAFCO food-energy method <span aria-hidden="true">↗</span></a>
             </div>
           </div>
@@ -501,7 +538,7 @@ export default function Home() {
               <button className="reset-button" type="button" onClick={resetPatient}>Start new patient</button>
             </div>
             <div className="patient-grid">
-              <NumberField id="body-weight" label="Body weight" value={weight} onChange={setWeight} suffix="kg" min="0.01" step="0.01" error={weightError} primary />
+              <NumberField id="body-weight" label={!lactating && condition === "Weight loss" ? "Target / ideal body weight" : "Body weight"} value={weight} onChange={setWeight} suffix="kg" min="0.01" step="0.01" error={weightError} hint={!lactating && condition === "Weight loss" ? "Weight-loss estimates are calculated from target or ideal body weight." : undefined} primary />
               <SpeciesPicker value={species} onChange={changeSpecies} prefix="patient" />
               <label className="field pet-name-field" htmlFor="pet-name">
                 <span>Pet name <small>(optional)</small></span>
@@ -581,7 +618,7 @@ export default function Home() {
 
       {dailyEnergy && feedingAmount && (
         <aside className="mobile-result-bar" aria-label="Current calculation result" aria-live="polite">
-          <div><span>MER midpoint</span><strong>{formatNumber(dailyEnergy.mer)} kcal/day</strong></div>
+          <div><span>Energy</span><strong>{formatEstimate(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}</strong></div>
           <div><span>Feed midpoint</span><strong>{formatNumber(feedingAmount.midpoint)} g/day</strong></div>
         </aside>
       )}
@@ -595,11 +632,11 @@ export default function Home() {
             <div><dt>Body weight</dt><dd>{formatNumber(Number(weight), 2)} kg</dd></div>
             <div><dt>Patient status</dt><dd>{patientDescription}</dd></div>
             <div><dt>RER</dt><dd>{formatNumber(dailyEnergy.rer)} kcal/day</dd></div>
-            <div><dt>MER midpoint</dt><dd>{formatNumber(dailyEnergy.mer)} kcal/day</dd></div>
-            <div><dt>Energy range</dt><dd>{formatRange(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}</dd></div>
+            <div><dt>Starting requirement</dt><dd>{formatEstimate(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}</dd></div>
+            <div><dt>Calculation basis</dt><dd>{dailyEnergy.calculation === "factor" && dailyEnergy.factorMinimum !== null && dailyEnergy.factorMaximum !== null ? formatFactor(dailyEnergy.factorMinimum, dailyEnergy.factorMaximum) : "Species-specific lactation equation"}</dd></div>
             <div><dt>Food energy</dt><dd>{formatNumber(selectedFoodEnergy.kcalKg)} kcal/kg</dd></div>
-            <div><dt>Feeding midpoint</dt><dd>{formatNumber(feedingAmount.midpoint)} g/day</dd></div>
-            <div><dt>Feeding range</dt><dd>{formatRange(feedingAmount.minimum, feedingAmount.maximum, "g/day")}</dd></div>
+            <div><dt>Feeding amount</dt><dd>{formatEstimate(feedingAmount.minimum, feedingAmount.maximum, "g/day")}</dd></div>
+            {!isSingleValue(feedingAmount.minimum, feedingAmount.maximum) && <div><dt>Feeding midpoint</dt><dd>{formatNumber(feedingAmount.midpoint)} g/day</dd></div>}
           </dl>
           <p>{clinicalDisclaimerText}</p>
         </section>

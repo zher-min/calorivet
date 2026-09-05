@@ -22,8 +22,12 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.match(html, /AAFCO Modified Atwater formula/);
   assert.match(html, /https:\/\/www\.aafco\.org\/resources\/startups\/calorie-content\//);
   assert.match(html, /RER \(resting energy requirement\) = 70/);
-  assert.match(html, /MER \(maintenance energy requirement\) = RER/);
+  assert.match(html, /Routine MER estimates apply the selected species and life-stage factor/);
   assert.match(html, /https:\/\/www\.aaha\.org\/resources\/2021-aaha-nutrition-and-weight-management-guidelines/);
+  assert.match(html, /FEDIAF Nutritional Guidelines 2025/);
+  assert.match(html, /Merck Veterinary Manual/);
+  assert.match(html, /WSAVA Global Nutrition Guidelines/);
+  assert.match(html, /approximately ±30% in dogs and ±50% in cats/);
   assert.match(html, /🐕/);
   assert.match(html, /🐈/);
   assert.doesNotMatch(html, /Veterinary nutrition workflow|From body weight to a practical feeding estimate/);
@@ -36,6 +40,9 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.doesNotMatch(html, /tan\.zhermin@gmail\.com/i);
   assert.match(html, /Lactating patient/);
   assert.match(html, /Estimated daily energy requirement/);
+  assert.match(html, /Neutered adult/);
+  assert.match(html, /Puppy ≥4 months/);
+  assert.doesNotMatch(html, /Senior/);
   assert.match(html, /Food energy information/);
   assert.match(html, /kcal\/100 g/);
   assert.match(html, /Guaranteed Analysis available/);

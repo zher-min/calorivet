@@ -15,19 +15,59 @@ const validAnalysis = calculateGuaranteedAnalysis(completeAnalysis);
 
 test("preserves dog and cat RER/MER logic", () => {
   const dog = calculateDailyEnergy(36.6, "Dog", "Weight loss");
-  const cat = calculateDailyEnergy(4, "Cat", "Typical neutered pet");
+  const cat = calculateDailyEnergy(4, "Cat", "Neutered adult");
   assert.ok(dog && cat);
   assert.equal(Math.round(dog.rer), 1042);
   assert.equal(Math.round(dog.mer), 1042);
-  assert.equal(cat.factor, 1.2);
-  assert.equal(Math.round(cat.mer), Math.round(70 * Math.pow(4, 0.75) * 1.2));
+  assert.equal(cat.factorMinimum, 1.2);
+  assert.equal(cat.factorMaximum, 1.4);
+  assert.equal(Math.round(cat.mer), Math.round(70 * Math.pow(4, 0.75) * 1.3));
 });
 
 test("uses guideline-based growth factors", () => {
-  assert.equal(activityFactors.Dog["Growing (<4 months)"], 3);
-  assert.equal(activityFactors.Dog["Growing (>4 months)"], 2);
-  assert.equal(activityFactors.Cat["Growing (<4 months)"], 2.5);
-  assert.equal(activityFactors.Cat["Growing (>4 months)"], 2.5);
+  assert.deepEqual(activityFactors.Dog["Puppy <4 months"], { minimum: 3, maximum: 3 });
+  assert.deepEqual(activityFactors.Dog["Puppy ≥4 months"], { minimum: 2, maximum: 2 });
+  assert.deepEqual(activityFactors.Cat.Kitten, { minimum: 2.5, maximum: 2.5 });
+});
+
+test("uses the requested AAHA routine adult factors", () => {
+  assert.deepEqual(activityFactors.Dog["Neutered adult"], { minimum: 1.4, maximum: 1.6 });
+  assert.deepEqual(activityFactors.Dog["Intact adult"], { minimum: 1.6, maximum: 1.8 });
+  assert.deepEqual(activityFactors.Dog["Inactive / obesity-prone"], { minimum: 1, maximum: 1.2 });
+  assert.deepEqual(activityFactors.Dog["Weight loss"], { minimum: 1, maximum: 1 });
+  assert.deepEqual(activityFactors.Cat["Neutered adult"], { minimum: 1.2, maximum: 1.4 });
+  assert.deepEqual(activityFactors.Cat["Intact adult"], { minimum: 1.4, maximum: 1.6 });
+  assert.deepEqual(activityFactors.Cat["Inactive / obesity-prone"], { minimum: 1, maximum: 1 });
+  assert.deepEqual(activityFactors.Cat["Weight loss"], { minimum: 0.8, maximum: 0.8 });
+});
+
+test("uses AAHA adult factor ranges directly without extra uncertainty", () => {
+  const dog = calculateDailyEnergy(10, "Dog", "Neutered adult");
+  const cat = calculateDailyEnergy(4, "Cat", "Intact adult");
+  assert.ok(dog && cat);
+  assert.ok(Math.abs(dog.minimum / dog.rer - 1.4) < 1e-12);
+  assert.ok(Math.abs(dog.maximum / dog.rer - 1.6) < 1e-12);
+  assert.ok(Math.abs(cat.minimum / cat.rer - 1.4) < 1e-12);
+  assert.ok(Math.abs(cat.maximum / cat.rer - 1.6) < 1e-12);
+});
+
+test("single published factors produce a single energy value", () => {
+  for (const [species, condition, expected] of [
+    ["Dog", "Weight loss", 1],
+    ["Cat", "Inactive / obesity-prone", 1],
+    ["Cat", "Weight loss", 0.8],
+    ["Cat", "Kitten", 2.5],
+  ]) {
+    const result = calculateDailyEnergy(5, species, condition);
+    assert.ok(result);
+    assert.equal(result.minimum, result.maximum);
+    assert.ok(Math.abs(result.minimum / result.rer - expected) < 1e-12);
+  }
+});
+
+test("does not expose a generic senior factor", () => {
+  assert.equal(Object.keys(activityFactors.Dog).some((name) => /senior/i.test(name)), false);
+  assert.equal(Object.keys(activityFactors.Cat).some((name) => /senior/i.test(name)), false);
 });
 
 test("keeps lactation energy separate from the standard MER factor", () => {
@@ -37,11 +77,15 @@ test("keeps lactation energy separate from the standard MER factor", () => {
   const dogRer = 70 * Math.pow(20, 0.75);
   assert.equal(dog.mer, (145 / 70) * dogRer + 108 * 20 * 0.95);
   assert.equal(cat.mer, 100 * Math.pow(4, 0.67) + 60 * 4 * 1.2);
+  assert.equal(dog.minimum, dog.mer);
+  assert.equal(dog.maximum, dog.mer);
+  assert.equal(cat.minimum, cat.mer);
+  assert.equal(cat.maximum, cat.mer);
 });
 
 test("handles very small and large patients without NaN or Infinity", () => {
   for (const weight of [0.2, 80]) {
-    const result = calculateDailyEnergy(weight, "Dog", "Typical neutered pet");
+    const result = calculateDailyEnergy(weight, "Dog", "Neutered adult");
     assert.ok(result);
     assert.ok([result.rer, result.mer, result.minimum, result.maximum].every(Number.isFinite));
   }
@@ -127,6 +171,14 @@ test("converts the calorie range to the corresponding g/day range", () => {
   assert.equal(Math.round(result.midpoint), 136);
 });
 
+test("keeps feeding amount single when the energy estimate is single", () => {
+  const energy = calculateDailyEnergy(10, "Dog", "Weight loss");
+  const result = calculateFeedingAmount(energy, 3800);
+  assert.ok(result);
+  assert.equal(result.minimum, result.maximum);
+  assert.equal(result.midpoint, result.minimum);
+});
+
 test("changing weight or MER factor reactively changes energy and feeding", () => {
   const first = calculateDailyEnergy(10, "Dog", "Weight loss");
   const heavier = calculateDailyEnergy(20, "Dog", "Weight loss");
@@ -135,7 +187,8 @@ test("changing weight or MER factor reactively changes energy and feeding", () =
   assert.notEqual(first.mer, heavier.mer);
   assert.notEqual(first.mer, moreActive.mer);
   assert.notEqual(calculateFeedingAmount(first, 3800)?.midpoint, calculateFeedingAmount(heavier, 3800)?.midpoint);
-  assert.equal(moreActive.factor, activityFactors.Dog["Working — moderate"]);
+  assert.equal(moreActive.factorMinimum, activityFactors.Dog["Working — moderate"].minimum);
+  assert.equal(moreActive.factorMaximum, activityFactors.Dog["Working — moderate"].maximum);
 });
 
 test("invalid or removed inputs clear feeding results instead of leaving stale values", () => {

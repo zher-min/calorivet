@@ -9,32 +9,35 @@ export type GuaranteedAnalysisInput = {
   ash: string | number;
 };
 
-export const activityFactors: Record<Species, Record<string, number>> = {
+export type EnergyFactor = {
+  minimum: number;
+  maximum: number;
+};
+
+const factor = (minimum: number, maximum = minimum): EnergyFactor => ({ minimum, maximum });
+
+// Routine adult and growth starting factors from the 2021 AAHA Nutrition and
+// Weight Management Guidelines. Keeping these as explicit ranges makes it
+// possible to add alternative FEDIAF growth models later without changing the
+// downstream energy-to-food calculation.
+export const activityFactors: Record<Species, Record<string, EnergyFactor>> = {
   Dog: {
-    "Typical intact pet": 1.8,
-    "Typical neutered pet": 1.6,
-    "Obese prone": 1.4,
-    "Weight loss": 1,
-    "Weight gain (intact)": 1.8,
-    "Weight gain (neutered)": 1.6,
-    "Working — light": 2,
-    "Working — moderate": 3,
-    "Working — heavy": 6,
-    "Critical care": 1,
-    "Growing (<4 months)": 3,
-    "Growing (>4 months)": 2,
+    "Intact adult": factor(1.6, 1.8),
+    "Neutered adult": factor(1.4, 1.6),
+    "Inactive / obesity-prone": factor(1, 1.2),
+    "Weight loss": factor(1),
+    "Puppy <4 months": factor(3),
+    "Puppy ≥4 months": factor(2),
+    "Working — light": factor(1.6, 2),
+    "Working — moderate": factor(2, 5),
+    "Working — heavy": factor(5, 11),
   },
   Cat: {
-    "Typical intact pet": 1.4,
-    "Typical neutered pet": 1.2,
-    "Obese prone": 1,
-    "Weight loss": 0.8,
-    "Weight gain (intact)": 1.4,
-    "Weight gain (neutered)": 1.2,
-    "Active cat": 1.6,
-    "Critical care": 1,
-    "Growing (<4 months)": 2.5,
-    "Growing (>4 months)": 2.5,
+    "Intact adult": factor(1.4, 1.6),
+    "Neutered adult": factor(1.2, 1.4),
+    "Inactive / obesity-prone": factor(1),
+    "Weight loss": factor(0.8),
+    "Kitten": factor(2.5),
   },
 };
 
@@ -66,14 +69,32 @@ export function normalizeManufacturerEnergy(
 
 export function calculateDailyEnergy(weightInput: string | number, species: Species, condition: string) {
   const weight = parseFiniteNumber(weightInput);
-  const factor = activityFactors[species]?.[condition];
-  if (weight === null || weight <= 0 || !Number.isFinite(factor) || factor <= 0) return null;
+  const selectedFactor = activityFactors[species]?.[condition];
+  if (
+    weight === null
+    || weight <= 0
+    || !selectedFactor
+    || !Number.isFinite(selectedFactor.minimum)
+    || !Number.isFinite(selectedFactor.maximum)
+    || selectedFactor.minimum <= 0
+    || selectedFactor.maximum < selectedFactor.minimum
+  ) return null;
 
   const rer = 70 * Math.pow(weight, 0.75);
-  const mer = rer * factor;
-  if (![rer, mer].every(Number.isFinite)) return null;
+  const minimum = rer * selectedFactor.minimum;
+  const maximum = rer * selectedFactor.maximum;
+  const mer = (minimum + maximum) / 2;
+  if (![rer, minimum, maximum, mer].every(Number.isFinite)) return null;
 
-  return { rer, mer, minimum: mer * 0.5, maximum: mer * 1.5, factor };
+  return {
+    rer,
+    mer,
+    minimum,
+    maximum,
+    factorMinimum: selectedFactor.minimum,
+    factorMaximum: selectedFactor.maximum,
+    calculation: "factor" as const,
+  };
 }
 
 export function calculateGuaranteedAnalysis(input: GuaranteedAnalysisInput) {
@@ -193,5 +214,13 @@ export function calculateLactationEnergy(
     : 100 * Math.pow(weight, 0.67) + litterFactor * weight * weekFactor;
   if (![rer, mer].every(Number.isFinite)) return null;
 
-  return { rer, mer, minimum: mer * 0.5, maximum: mer * 1.5 };
+  return {
+    rer,
+    mer,
+    minimum: mer,
+    maximum: mer,
+    factorMinimum: null,
+    factorMaximum: null,
+    calculation: "lactation" as const,
+  };
 }
