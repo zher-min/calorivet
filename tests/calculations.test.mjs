@@ -21,6 +21,13 @@ test("preserves dog and cat RER/MER logic", () => {
   assert.equal(Math.round(cat.mer), Math.round(70 * Math.pow(4, 0.75) * 1.2));
 });
 
+test("uses guideline-based growth factors", () => {
+  assert.equal(activityFactors.Dog["Growing (<4 months)"], 3);
+  assert.equal(activityFactors.Dog["Growing (>4 months)"], 2);
+  assert.equal(activityFactors.Cat["Growing (<4 months)"], 2.5);
+  assert.equal(activityFactors.Cat["Growing (>4 months)"], 2.5);
+});
+
 test("handles very small and large patients without NaN or Infinity", () => {
   for (const weight of [0.2, 80]) {
     const result = calculateDailyEnergy(weight, "Dog", "Typical neutered pet");

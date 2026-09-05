@@ -20,8 +20,8 @@ export const activityFactors: Record<Species, Record<string, number>> = {
     "Working — moderate": 3,
     "Working — heavy": 6,
     "Critical care": 1,
-    "Growing (<4 months)": 2,
-    "Growing (>4 months)": 3,
+    "Growing (<4 months)": 3,
+    "Growing (>4 months)": 2,
   },
   Cat: {
     "Typical intact pet": 1.4,
@@ -32,8 +32,8 @@ export const activityFactors: Record<Species, Record<string, number>> = {
     "Weight gain (neutered)": 1.2,
     "Active cat": 1.6,
     "Critical care": 1,
-    "Growing (<4 months)": 2,
-    "Growing (>4 months)": 3,
+    "Growing (<4 months)": 2.5,
+    "Growing (>4 months)": 2.5,
   },
 };
 
