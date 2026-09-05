@@ -16,8 +16,6 @@ import {
   type Species,
 } from "./calculations";
 
-type View = "feeding" | "lactation";
-
 const emptyAnalysis: Record<keyof GuaranteedAnalysisInput, string> = {
   moisture: "",
   protein: "",
@@ -110,9 +108,16 @@ function StepHeader({ id, number, title, copy }: { id: string; number: string; t
 function EnergyResult({ minimum, maximum, rer, mer }: { minimum: number; maximum: number; rer: number; mer: number }) {
   return (
     <section className="energy-result" aria-live="polite" aria-label="Estimated daily energy requirement">
-      <p>Estimated daily energy requirement</p>
-      <strong>{formatRange(minimum, maximum, "kcal/day")}</strong>
-      <div><span>RER {formatNumber(rer)} kcal/day</span><span>MER midpoint {formatNumber(mer)} kcal/day</span></div>
+      <div className="energy-primary">
+        <p>Estimated daily energy requirement</p>
+        <strong>{formatNumber(mer)} kcal/day</strong>
+        <span>MER midpoint</span>
+      </div>
+      <aside className="energy-range" aria-label="Estimated daily energy range">
+        <span>Estimated range</span>
+        <strong>{formatRange(minimum, maximum, "kcal/day")}</strong>
+      </aside>
+      <div className="energy-meta"><span>RER {formatNumber(rer)} kcal/day</span></div>
       <small>This range allows for individual variation around the estimated MER.</small>
     </section>
   );
@@ -252,21 +257,24 @@ function FoodEnergyControls({
 }
 
 export default function Home() {
-  const [view, setView] = useState<View>("feeding");
   const [species, setSpecies] = useState<Species>("Dog");
   const [weight, setWeight] = useState("");
   const [condition, setCondition] = useState("Typical intact pet");
+  const [lactating, setLactating] = useState(false);
   const [manufacturerEnabled, setManufacturerEnabled] = useState(false);
   const [manufacturerKcalKg, setManufacturerKcalKg] = useState("");
   const [manufacturerUnit, setManufacturerUnit] = useState<ManufacturerEnergyUnit>("kcal/kg");
   const [analysisEnabled, setAnalysisEnabled] = useState(false);
   const [analysis, setAnalysis] = useState(emptyAnalysis);
-  const [lactationSpecies, setLactationSpecies] = useState<Species>("Dog");
-  const [lactationWeight, setLactationWeight] = useState("");
   const [offspring, setOffspring] = useState(5);
   const [week, setWeek] = useState(1);
 
-  const dailyEnergy = useMemo(() => calculateDailyEnergy(weight, species, condition), [condition, species, weight]);
+  const dailyEnergy = useMemo(
+    () => lactating
+      ? calculateLactationEnergy(weight, species, offspring, week)
+      : calculateDailyEnergy(weight, species, condition),
+    [condition, lactating, offspring, species, week, weight],
+  );
   const guaranteedAnalysis = useMemo(() => calculateGuaranteedAnalysis(analysis), [analysis]);
   const selectedFoodEnergy = useMemo(() => selectFoodEnergy({
     manufacturerEnabled,
@@ -276,14 +284,6 @@ export default function Home() {
     guaranteedAnalysis,
   }), [analysisEnabled, guaranteedAnalysis, manufacturerEnabled, manufacturerKcalKg, manufacturerUnit]);
   const feedingAmount = useMemo(() => calculateFeedingAmount(dailyEnergy, selectedFoodEnergy?.kcalKg ?? null), [dailyEnergy, selectedFoodEnergy]);
-  const lactationEnergy = useMemo(
-    () => calculateLactationEnergy(lactationWeight, lactationSpecies, offspring, week),
-    [lactationSpecies, lactationWeight, offspring, week],
-  );
-  const lactationFeeding = useMemo(
-    () => calculateFeedingAmount(lactationEnergy ? { ...lactationEnergy, mer: lactationEnergy.mer } : null, selectedFoodEnergy?.kcalKg ?? null),
-    [lactationEnergy, selectedFoodEnergy],
-  );
 
   const weightValue = parseFiniteNumber(weight);
   const weightError = weight !== "" && (weightValue === null || weightValue <= 0)
@@ -293,23 +293,15 @@ export default function Home() {
   const manufacturerError = manufacturerEnabled && manufacturerKcalKg !== "" && (manufacturerValue === null || manufacturerValue <= 0)
     ? "Enter a caloric density greater than 0 kcal/kg."
     : undefined;
-  const lactationWeightValue = parseFiniteNumber(lactationWeight);
-  const lactationWeightError = lactationWeight !== "" && (lactationWeightValue === null || lactationWeightValue <= 0)
-    ? "Enter a body weight greater than 0 kg."
-    : undefined;
 
   function changeSpecies(next: Species) {
     setSpecies(next);
     setCondition(Object.keys(activityFactors[next])[0]);
+    setWeek(1);
   }
 
   function changeAnalysis(field: keyof GuaranteedAnalysisInput, value: string) {
     setAnalysis((current) => ({ ...current, [field]: value }));
-  }
-
-  function changeLactationSpecies(next: Species) {
-    setLactationSpecies(next);
-    setWeek(1);
   }
 
   const foodMessage = !manufacturerEnabled && !analysisEnabled
@@ -317,9 +309,7 @@ export default function Home() {
     : selectedFoodEnergy === null
       ? "Complete a valid food-energy source to estimate the feeding amount."
       : null;
-  const displayedEnergy = view === "feeding" ? dailyEnergy : lactationEnergy;
-  const displayedFeeding = view === "feeding" ? feedingAmount : lactationFeeding;
-  const hasMobileResult = Boolean(displayedEnergy && displayedFeeding);
+  const hasMobileResult = Boolean(dailyEnergy && feedingAmount);
 
   return (
     <main className={hasMobileResult ? "has-mobile-result" : undefined}>
@@ -338,7 +328,7 @@ export default function Home() {
           <summary>What is this calculator for?</summary>
           <div className="purpose-card">
             <p>Estimates daily calorie needs and a starting feeding amount in g/day for dogs and cats using manufacturer food energy or Guaranteed Analysis.</p>
-            <p><b>Patient energy method:</b> RER (resting energy requirement) = 70 × body weight (kg)<sup>0.75</sup>. MER (maintenance energy requirement) = RER × the selected life-stage or condition factor. These are starting estimates and should be adjusted according to body-weight and body-condition trends.</p>
+            <p><b>Patient energy method:</b> RER (resting energy requirement) = 70 × body weight (kg)<sup>0.75</sup>. For standard patients, MER (maintenance energy requirement) = RER × the selected life-stage or condition factor. Lactating patients use the species-specific lactation equation with litter size and lactation week. These are starting estimates and should be adjusted according to body-weight and body-condition trends.</p>
             <p><b>Guaranteed Analysis method:</b> Food energy is estimated with the AAFCO Modified Atwater formula: ME (kcal/kg) = 10 × [(3.5 × protein) + (8.5 × fat) + (3.5 × NFE)]. NFE is calculated carbohydrate.</p>
             <div className="purpose-sources">
               <a href="https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/weight-reduction-in-the-obese-pet/" target="_blank" rel="noreferrer">AAHA energy guidance <span aria-hidden="true">↗</span></a>
@@ -348,24 +338,29 @@ export default function Home() {
         </details>
       </section>
 
-      <nav className="view-switch" aria-label="Calculator type">
-        <button type="button" className={view === "feeding" ? "active" : ""} aria-pressed={view === "feeding"} onClick={() => setView("feeding")}>Standard feeding</button>
-        <button type="button" className={view === "lactation" ? "active" : ""} aria-pressed={view === "lactation"} onClick={() => setView("lactation")}>Lactation</button>
-      </nav>
-
-      {view === "feeding" && (
-        <div className="workflow" id="calculator">
+      <div className="workflow" id="calculator">
           <section className="workflow-card patient-card" aria-labelledby="patient-heading">
-            <StepHeader id="patient-heading" number="01" title="Patient information" copy="Start with body weight, then choose the closest clinical or life-stage factor." />
+            <StepHeader id="patient-heading" number="01" title="Patient information" copy="Start with body weight and species, then choose the applicable life-stage details." />
             <div className="patient-grid">
               <NumberField id="body-weight" label="Body weight" value={weight} onChange={setWeight} suffix="kg" min="0.01" step="0.01" error={weightError} primary />
               <SpeciesPicker value={species} onChange={changeSpecies} prefix="patient" />
-              <label className="field condition-field" htmlFor="condition">
-                <span>Condition / life stage</span>
-                <select id="condition" value={condition} onChange={(event) => setCondition(event.target.value)}>
-                  {Object.keys(activityFactors[species]).map((item) => <option key={item}>{item}</option>)}
-                </select>
+              <label className="source-option lactation-option">
+                <input type="checkbox" checked={lactating} onChange={(event) => setLactating(event.target.checked)} />
+                <span><b>Lactating patient</b><small>Add litter size and lactation week to use the lactation energy calculation</small></span>
               </label>
+              {lactating ? (
+                <div className="lactation-fields">
+                  <label className="field" htmlFor="offspring"><span>Number of offspring</span><select id="offspring" value={offspring} onChange={(event) => setOffspring(Number(event.target.value))}>{offspringEnergy[species].map((_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label>
+                  <label className="field" htmlFor="lactation-week"><span>Lactation week</span><select id="lactation-week" value={week} onChange={(event) => setWeek(Number(event.target.value))}>{lactationWeekFactor[species].map((_, index) => <option key={index + 1} value={index + 1}>Week {index + 1}</option>)}</select></label>
+                </div>
+              ) : (
+                <label className="field condition-field" htmlFor="condition">
+                  <span>Condition / life stage</span>
+                  <select id="condition" value={condition} onChange={(event) => setCondition(event.target.value)}>
+                    {Object.keys(activityFactors[species]).map((item) => <option key={item}>{item}</option>)}
+                  </select>
+                </label>
+              )}
             </div>
             {dailyEnergy ? (
               <EnergyResult {...dailyEnergy} />
@@ -418,73 +413,12 @@ export default function Home() {
               </div>
             )}
           </section>
-        </div>
-      )}
+      </div>
 
-      {view === "lactation" && (
-        <div className="workflow lactation-workflow" id="calculator">
-          <section className="workflow-card" aria-labelledby="lactation-heading">
-            <StepHeader id="lactation-heading" number="01" title="Lactation patient" copy="Estimate energy needs during lactation using body weight, litter size and stage of lactation." />
-            <div className="patient-grid lactation-grid">
-              <NumberField id="lactation-weight" label="Body weight" value={lactationWeight} onChange={setLactationWeight} suffix="kg" min="0.01" step="0.01" error={lactationWeightError} primary />
-              <SpeciesPicker value={lactationSpecies} onChange={changeLactationSpecies} prefix="lactation" />
-              <label className="field" htmlFor="offspring"><span>Number of offspring</span><select id="offspring" value={offspring} onChange={(event) => setOffspring(Number(event.target.value))}>{offspringEnergy[lactationSpecies].map((_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label>
-              <label className="field" htmlFor="lactation-week"><span>Lactation week</span><select id="lactation-week" value={week} onChange={(event) => setWeek(Number(event.target.value))}>{lactationWeekFactor[lactationSpecies].map((_, index) => <option key={index + 1} value={index + 1}>Week {index + 1}</option>)}</select></label>
-            </div>
-            {lactationEnergy ? (
-              <EnergyResult {...lactationEnergy} />
-            ) : (
-              <div className="pending-result" aria-live="polite"><span>Estimated daily energy requirement</span><p>Enter a valid body weight to calculate kcal/day.</p></div>
-            )}
-          </section>
-
-          <div className="flow-arrow" aria-hidden="true">↓</div>
-
-          <section className="workflow-card" aria-labelledby="lactation-food-heading">
-            <StepHeader id="lactation-food-heading" number="02" title="Food energy information" copy="Enter the food information here without leaving the lactation calculator." />
-            <FoodEnergyControls
-              idPrefix="lactation"
-              manufacturerEnabled={manufacturerEnabled}
-              onManufacturerEnabledChange={setManufacturerEnabled}
-              manufacturerValue={manufacturerKcalKg}
-              onManufacturerValueChange={setManufacturerKcalKg}
-              manufacturerUnit={manufacturerUnit}
-              onManufacturerUnitChange={setManufacturerUnit}
-              manufacturerError={manufacturerError}
-              analysisEnabled={analysisEnabled}
-              onAnalysisEnabledChange={setAnalysisEnabled}
-              analysis={analysis}
-              onAnalysisChange={changeAnalysis}
-              onClearAnalysis={() => setAnalysis(emptyAnalysis)}
-              guaranteedAnalysis={guaranteedAnalysis}
-              selectedFoodEnergy={selectedFoodEnergy}
-              foodMessage={foodMessage}
-            />
-          </section>
-
-          <div className="flow-arrow" aria-hidden="true">↓</div>
-
-          <section className="workflow-card feeding-card" aria-labelledby="lactation-feeding-heading">
-            <StepHeader id="lactation-feeding-heading" number="03" title="Estimated feeding amount" copy="Calculated from the lactation energy requirement and selected food energy." />
-            {lactationFeeding ? (
-              <>
-                <div className="feeding-result"><span>Estimated amount to feed</span><strong>{formatRange(lactationFeeding.minimum, lactationFeeding.maximum, "g/day")}</strong><small>Midpoint: {formatNumber(lactationFeeding.midpoint)} g/day</small></div>
-                <ClinicalDisclaimer />
-              </>
-            ) : (
-              <div className="pending-result final-pending" aria-live="polite">
-                <span>Estimated amount to feed</span>
-                <p>{lactationEnergy ? (foodMessage ?? "Correct the invalid food-energy entry to continue.") : "Enter a valid body weight and food-energy information to calculate g/day."}</p>
-              </div>
-            )}
-          </section>
-        </div>
-      )}
-
-      {displayedEnergy && displayedFeeding && (
+      {dailyEnergy && feedingAmount && (
         <aside className="mobile-result-bar" aria-label="Current calculation result" aria-live="polite">
-          <div><span>Daily energy</span><strong>{formatRange(displayedEnergy.minimum, displayedEnergy.maximum, "kcal/day")}</strong></div>
-          <div><span>Feed amount</span><strong>{formatRange(displayedFeeding.minimum, displayedFeeding.maximum, "g/day")}</strong></div>
+          <div><span>MER midpoint</span><strong>{formatNumber(dailyEnergy.mer)} kcal/day</strong></div>
+          <div><span>Feed amount</span><strong>{formatRange(feedingAmount.minimum, feedingAmount.maximum, "g/day")}</strong></div>
         </aside>
       )}
 

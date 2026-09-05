@@ -29,12 +29,14 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.doesNotMatch(html, /Veterinary nutrition workflow|From body weight to a practical feeding estimate/);
   assert.doesNotMatch(html, /workbook|spreadsheet|supplied|original .* formula/i);
   assert.match(html, /Patient information/);
+  assert.match(html, /Lactating patient/);
   assert.match(html, /Estimated daily energy requirement/);
   assert.match(html, /Food energy information/);
   assert.match(html, /kcal\/100 g/);
   assert.match(html, /Guaranteed Analysis available/);
   assert.match(html, /Estimated feeding amount/);
   assert.doesNotMatch(html, /role="tablist"|tab-daily|tab-food/);
+  assert.doesNotMatch(html, />Standard feeding<|>Lactation<\/button>/);
   assert.doesNotMatch(html, /cups?\/day|cans?\/day|scoops?\/day|packets?\/day/i);
 });
 

@@ -5,6 +5,7 @@ import {
   calculateDailyEnergy,
   calculateFeedingAmount,
   calculateGuaranteedAnalysis,
+  calculateLactationEnergy,
   normalizeManufacturerEnergy,
   selectFoodEnergy,
 } from "../app/calculations.ts";
@@ -27,6 +28,15 @@ test("uses guideline-based growth factors", () => {
   assert.equal(activityFactors.Dog["Growing (>4 months)"], 2);
   assert.equal(activityFactors.Cat["Growing (<4 months)"], 2.5);
   assert.equal(activityFactors.Cat["Growing (>4 months)"], 2.5);
+});
+
+test("keeps lactation energy separate from the standard MER factor", () => {
+  const dog = calculateLactationEnergy(20, "Dog", 5, 2);
+  const cat = calculateLactationEnergy(4, "Cat", 3, 3);
+  assert.ok(dog && cat);
+  const dogRer = 70 * Math.pow(20, 0.75);
+  assert.equal(dog.mer, (145 / 70) * dogRer + 108 * 20 * 0.95);
+  assert.equal(cat.mer, 100 * Math.pow(4, 0.67) + 60 * 4 * 1.2);
 });
 
 test("handles very small and large patients without NaN or Infinity", () => {

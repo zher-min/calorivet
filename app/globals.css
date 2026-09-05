@@ -52,10 +52,6 @@ a { color: inherit; }
   .calculator-purpose:not([open]):hover > .purpose-card { position: absolute; left: 50%; display: block; transform: translateX(-50%); }
 }
 
-.view-switch { width: fit-content; margin: 0 auto 22px; padding: 4px; display: flex; gap: 4px; border: 1px solid var(--line); border-radius: 999px; background: #e8e6dd; }
-.view-switch button { padding: 9px 17px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 800; }
-.view-switch button.active { background: white; color: var(--green); box-shadow: 0 2px 8px rgba(20, 49, 41, 0.08); }
-
 .workflow { width: min(860px, calc(100% - 30px)); margin: 0 auto; padding-bottom: 48px; }
 .workflow-card { padding: clamp(24px, 4.3vw, 42px); border: 1px solid rgba(23, 35, 33, 0.1); border-radius: 20px; background: var(--paper); box-shadow: var(--shadow); }
 .step-header { display: grid; grid-template-columns: 38px 1fr; gap: 14px; align-items: start; }
@@ -66,8 +62,8 @@ a { color: inherit; }
 
 .patient-grid { margin-top: 27px; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 17px 18px; }
 .condition-field { grid-column: 1 / -1; }
-.lactation-grid { grid-template-columns: 1fr 1fr; }
-.lactation-grid .primary-field { grid-column: 1; }
+.lactation-option { grid-column: 1 / -1; }
+.lactation-fields { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 17px 18px; }
 .field { display: block; }
 .field > span, .species-picker legend { display: block; margin-bottom: 7px; color: var(--ink); font-size: 11px; font-weight: 800; }
 .input-wrap { display: flex; align-items: center; overflow: hidden; border: 1px solid #c3cdc4; border-radius: 10px; background: white; transition: border-color 0.15s, box-shadow 0.15s; }
@@ -85,12 +81,17 @@ a { color: inherit; }
 .species-emoji { display: inline-block; margin-right: 6px; font-size: 17px; line-height: 1; vertical-align: -2px; }
 .segmented button.active { background: white; color: var(--green); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07); }
 
-.energy-result { margin-top: 26px; padding: 25px; border-radius: 15px 15px 4px 15px; background: var(--green); color: white; }
-.energy-result > p { margin: 0 0 8px; color: #c8dacd; font-size: 11px; }
-.energy-result > strong { display: block; font-size: 40px; font-weight: 800; line-height: 1.05; letter-spacing: -0.045em; }
-.energy-result > div { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
-.energy-result > div span { padding: 6px 9px; border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; color: #e6efe8; font-size: 9px; }
-.energy-result > small { display: block; margin-top: 13px; color: #c8dacd; font-size: 9px; line-height: 1.45; }
+.energy-result { margin-top: 26px; padding: 25px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(175px, 0.72fr); gap: 14px 18px; align-items: stretch; border-radius: 15px 15px 4px 15px; background: var(--green); color: white; }
+.energy-primary { min-width: 0; align-self: center; }
+.energy-primary p { margin: 0 0 8px; color: #c8dacd; font-size: 11px; }
+.energy-primary > strong { display: block; font-size: 40px; font-weight: 800; line-height: 1.05; letter-spacing: -0.045em; }
+.energy-primary > span { display: block; margin-top: 5px; color: #c8dacd; font-size: 9px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.energy-range { min-width: 0; padding: 15px; display: flex; flex-direction: column; justify-content: center; border: 1px solid rgba(255,255,255,0.18); border-radius: 11px; background: rgba(255,255,255,0.07); }
+.energy-range span { color: #c8dacd; font-size: 9px; }
+.energy-range strong { display: block; margin-top: 5px; font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
+.energy-meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+.energy-meta span { padding: 6px 9px; border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; color: #e6efe8; font-size: 9px; }
+.energy-result > small { grid-column: 1 / -1; display: block; color: #c8dacd; font-size: 9px; line-height: 1.45; }
 .pending-result { margin-top: 25px; padding: 20px; border: 1px dashed #aebbb1; border-radius: 12px; background: #f4f5ef; }
 .pending-result span { color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
 .pending-result p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
@@ -144,7 +145,6 @@ summary { color: var(--green); cursor: pointer; font-size: 10px; font-weight: 80
 .clinical-disclaimer p { margin: 1px 0 0; font-size: 10px; line-height: 1.55; }
 .final-pending { margin-top: 25px; }
 
-.lactation-workflow { width: min(860px, calc(100% - 30px)); }
 .mobile-result-bar { display: none; }
 
 footer { max-width: 860px; margin: 0 auto; padding: 0 22px 42px; color: var(--muted); font-size: 9px; text-align: center; letter-spacing: 0.09em; text-transform: uppercase; }
@@ -160,18 +160,21 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .intro { padding-top: 25px; text-align: left; }
   .intro h1 { font-size: 35px; }
   .calculator-purpose { margin-left: 0; }
-  .view-switch { margin-left: 15px; }
   .workflow { width: calc(100% - 24px); }
   .workflow-card { padding: 24px 18px; border-radius: 16px; }
   .step-header { grid-template-columns: 32px 1fr; gap: 11px; }
   .step-header > span { width: 32px; height: 32px; }
   .step-header h2 { font-size: 28px; }
-  .patient-grid, .lactation-grid { grid-template-columns: 1fr; }
-  .condition-field, .lactation-grid .primary-field { grid-column: auto; }
+  .patient-grid { grid-template-columns: 1fr; }
+  .condition-field { grid-column: auto; }
   .primary-field { order: -2; }
   .species-picker { order: -1; }
-  .energy-result { padding: 22px 18px; }
-  .energy-result > strong { font-size: 35px; }
+  .lactation-option { grid-column: auto; }
+  .lactation-fields { grid-column: auto; grid-template-columns: 1fr; }
+  .energy-result { grid-template-columns: minmax(0, 1fr) minmax(108px, 0.72fr); gap: 12px 10px; padding: 20px 16px; }
+  .energy-primary > strong { font-size: 30px; }
+  .energy-range { padding: 12px 10px; }
+  .energy-range strong { font-size: 11px; }
   .conditional-panel { margin-left: 13px; padding: 16px; }
   .manufacturer-panel { grid-template-columns: 1fr; }
   .analysis-panel { padding: 17px 14px; }
@@ -192,7 +195,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 
 @media (max-width: 390px) {
   .intro h1 { font-size: 31px; }
-  .view-switch button { padding-inline: 13px; }
   .distribution { grid-template-columns: 1fr; }
-  .energy-result > strong, .feeding-result > strong { overflow-wrap: anywhere; }
+  .energy-primary > strong, .feeding-result > strong { overflow-wrap: anywhere; }
 }
