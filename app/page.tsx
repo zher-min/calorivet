@@ -30,6 +30,8 @@ const formatNumber = (value: number, digits = 0) =>
 const formatRange = (minimum: number, maximum: number, unit: string) =>
   `${formatNumber(minimum)}–${formatNumber(maximum)} ${unit}`;
 
+const clinicalDisclaimerText = "Estimated feeding amount only. Individual requirements may vary with body condition, activity level, health status, environment and treatment goals. Use as a starting guide and adjust according to clinical response and body-weight trends. Veterinary supervision is recommended.";
+
 function NumberField({
   id,
   label,
@@ -123,11 +125,27 @@ function EnergyResult({ minimum, maximum, rer, mer }: { minimum: number; maximum
   );
 }
 
+function FeedingResult({ minimum, maximum, midpoint }: { minimum: number; maximum: number; midpoint: number }) {
+  return (
+    <section className="feeding-result" aria-live="polite" aria-label="Estimated feeding amount">
+      <div className="feeding-primary">
+        <span>Estimated amount to feed</span>
+        <strong>{formatNumber(midpoint)} g/day</strong>
+        <small>MER-based midpoint</small>
+      </div>
+      <aside className="feeding-range" aria-label="Estimated feeding range">
+        <span>Estimated range</span>
+        <strong>{formatRange(minimum, maximum, "g/day")}</strong>
+      </aside>
+    </section>
+  );
+}
+
 function ClinicalDisclaimer() {
   return (
     <div className="clinical-disclaimer" role="note">
       <span aria-hidden="true">i</span>
-      <p>Estimated feeding amount only. Individual requirements may vary with body condition, activity level, health status, environment and treatment goals. Use as a starting guide and adjust according to clinical response and body-weight trends. Veterinary supervision is recommended.</p>
+      <p>{clinicalDisclaimerText}</p>
     </div>
   );
 }
@@ -259,6 +277,7 @@ function FoodEnergyControls({
 export default function Home() {
   const [species, setSpecies] = useState<Species>("Dog");
   const [weight, setWeight] = useState("");
+  const [petName, setPetName] = useState("");
   const [condition, setCondition] = useState("Typical intact pet");
   const [lactating, setLactating] = useState(false);
   const [manufacturerEnabled, setManufacturerEnabled] = useState(false);
@@ -268,6 +287,7 @@ export default function Home() {
   const [analysis, setAnalysis] = useState(emptyAnalysis);
   const [offspring, setOffspring] = useState(5);
   const [week, setWeek] = useState(1);
+  const [copyStatus, setCopyStatus] = useState("Copy summary");
 
   const dailyEnergy = useMemo(
     () => lactating
@@ -310,6 +330,53 @@ export default function Home() {
       ? "Complete a valid food-energy source to estimate the feeding amount."
       : null;
   const hasMobileResult = Boolean(dailyEnergy && feedingAmount);
+  const patientDescription = lactating
+    ? `Lactating · ${offspring} offspring · week ${week}`
+    : condition;
+  const consultationSummary = dailyEnergy && feedingAmount && selectedFoodEnergy
+    ? [
+        "CaloriVet consultation summary",
+        `Patient: ${petName.trim() || "Not provided"}`,
+        `Species: ${species}`,
+        `Body weight: ${formatNumber(Number(weight), 2)} kg`,
+        `Patient status: ${patientDescription}`,
+        `RER: ${formatNumber(dailyEnergy.rer)} kcal/day`,
+        `MER midpoint: ${formatNumber(dailyEnergy.mer)} kcal/day`,
+        `Estimated energy range: ${formatRange(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}`,
+        `Food energy: ${formatNumber(selectedFoodEnergy.kcalKg)} kcal/kg (${selectedFoodEnergy.source === "manufacturer" ? "manufacturer provided" : "estimated from Guaranteed Analysis"})`,
+        `Feeding midpoint: ${formatNumber(feedingAmount.midpoint)} g/day`,
+        `Estimated feeding range: ${formatRange(feedingAmount.minimum, feedingAmount.maximum, "g/day")}`,
+        "",
+        clinicalDisclaimerText,
+      ].join("\n")
+    : "";
+
+  function resetPatient() {
+    setSpecies("Dog");
+    setWeight("");
+    setPetName("");
+    setCondition("Typical intact pet");
+    setLactating(false);
+    setManufacturerEnabled(false);
+    setManufacturerKcalKg("");
+    setManufacturerUnit("kcal/kg");
+    setAnalysisEnabled(false);
+    setAnalysis(emptyAnalysis);
+    setOffspring(5);
+    setWeek(1);
+    setCopyStatus("Copy summary");
+  }
+
+  async function copyConsultationSummary() {
+    if (!consultationSummary) return;
+    try {
+      await navigator.clipboard.writeText(consultationSummary);
+      setCopyStatus("Copied");
+      window.setTimeout(() => setCopyStatus("Copy summary"), 1800);
+    } catch {
+      setCopyStatus("Copy failed");
+    }
+  }
 
   return (
     <main className={hasMobileResult ? "has-mobile-result" : undefined}>
@@ -340,10 +407,17 @@ export default function Home() {
 
       <div className="workflow" id="calculator">
           <section className="workflow-card patient-card" aria-labelledby="patient-heading">
-            <StepHeader id="patient-heading" number="01" title="Patient information" copy="Start with body weight and species, then choose the applicable life-stage details." />
+            <div className="patient-heading-row">
+              <StepHeader id="patient-heading" number="01" title="Patient information" copy="Start with body weight and species, then choose the applicable life-stage details." />
+              <button className="reset-button" type="button" onClick={resetPatient}>Start new patient</button>
+            </div>
             <div className="patient-grid">
               <NumberField id="body-weight" label="Body weight" value={weight} onChange={setWeight} suffix="kg" min="0.01" step="0.01" error={weightError} primary />
               <SpeciesPicker value={species} onChange={changeSpecies} prefix="patient" />
+              <label className="field pet-name-field" htmlFor="pet-name">
+                <span>Pet name <small>(optional)</small></span>
+                <input id="pet-name" className="text-input" type="text" value={petName} maxLength={60} autoComplete="off" placeholder="e.g. Milo" onChange={(event) => setPetName(event.target.value)} />
+              </label>
               <label className="source-option lactation-option">
                 <input type="checkbox" checked={lactating} onChange={(event) => setLactating(event.target.checked)} />
                 <span><b>Lactating patient</b><small>Add litter size and lactation week to use the lactation energy calculation</small></span>
@@ -399,12 +473,13 @@ export default function Home() {
             <StepHeader id="feeding-heading" number="03" title="Estimated feeding amount" copy="Calculated only when valid patient and food-energy information are available." />
             {feedingAmount ? (
               <>
-                <div className="feeding-result" aria-live="polite">
-                  <span>Estimated amount to feed</span>
-                  <strong>{formatRange(feedingAmount.minimum, feedingAmount.maximum, "g/day")}</strong>
-                  <small>Midpoint: {formatNumber(feedingAmount.midpoint)} g/day · starting guide only</small>
-                </div>
+                <FeedingResult {...feedingAmount} />
                 <ClinicalDisclaimer />
+                <div className="consultation-actions">
+                  <div><b>Consultation summary</b><small>Includes patient details, energy, food density and feeding estimate.</small></div>
+                  <button type="button" onClick={copyConsultationSummary}>{copyStatus}</button>
+                  <button type="button" onClick={() => window.print()}>Print</button>
+                </div>
               </>
             ) : (
               <div className="pending-result final-pending" aria-live="polite">
@@ -418,8 +493,27 @@ export default function Home() {
       {dailyEnergy && feedingAmount && (
         <aside className="mobile-result-bar" aria-label="Current calculation result" aria-live="polite">
           <div><span>MER midpoint</span><strong>{formatNumber(dailyEnergy.mer)} kcal/day</strong></div>
-          <div><span>Feed amount</span><strong>{formatRange(feedingAmount.minimum, feedingAmount.maximum, "g/day")}</strong></div>
+          <div><span>Feed midpoint</span><strong>{formatNumber(feedingAmount.midpoint)} g/day</strong></div>
         </aside>
+      )}
+
+      {dailyEnergy && feedingAmount && selectedFoodEnergy && (
+        <section className="print-summary">
+          <h1>CaloriVet consultation summary</h1>
+          <dl>
+            <div><dt>Patient</dt><dd>{petName.trim() || "Not provided"}</dd></div>
+            <div><dt>Species</dt><dd>{species}</dd></div>
+            <div><dt>Body weight</dt><dd>{formatNumber(Number(weight), 2)} kg</dd></div>
+            <div><dt>Patient status</dt><dd>{patientDescription}</dd></div>
+            <div><dt>RER</dt><dd>{formatNumber(dailyEnergy.rer)} kcal/day</dd></div>
+            <div><dt>MER midpoint</dt><dd>{formatNumber(dailyEnergy.mer)} kcal/day</dd></div>
+            <div><dt>Energy range</dt><dd>{formatRange(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}</dd></div>
+            <div><dt>Food energy</dt><dd>{formatNumber(selectedFoodEnergy.kcalKg)} kcal/kg</dd></div>
+            <div><dt>Feeding midpoint</dt><dd>{formatNumber(feedingAmount.midpoint)} g/day</dd></div>
+            <div><dt>Feeding range</dt><dd>{formatRange(feedingAmount.minimum, feedingAmount.maximum, "g/day")}</dd></div>
+          </dl>
+          <p>{clinicalDisclaimerText}</p>
+        </section>
       )}
 
       <footer><p>CaloriVet · Veterinary nutrition estimates for dogs and cats</p></footer>
