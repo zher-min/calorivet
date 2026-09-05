@@ -43,6 +43,7 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.match(html, /Neutered adult/);
   assert.match(html, /Puppy ≥4 months/);
   assert.doesNotMatch(html, /Senior/);
+  assert.doesNotMatch(html, /Estimate target weight from BCS/);
   assert.match(html, /Food energy information/);
   assert.match(html, /kcal\/100 g/);
   assert.match(html, /Guaranteed Analysis available/);

@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   activityFactors,
   calculateDailyEnergy,
   calculateFeedingAmount,
   calculateGuaranteedAnalysis,
   calculateLactationEnergy,
+  estimateTargetWeightFromBcs,
   lactationWeekFactor,
   offspringEnergy,
   parseFiniteNumber,
@@ -87,6 +88,133 @@ function NumberField({
       {hint && <small className="field-hint" id={`${id}-hint`}>{hint}</small>}
       {error && <small className="field-error" id={`${id}-error`}>{error}</small>}
     </label>
+  );
+}
+
+function TargetWeightField({
+  currentWeight,
+  value,
+  onChange,
+  error,
+}: {
+  currentWeight: string;
+  value: string;
+  onChange: (value: string) => void;
+  error?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [selectedBcs, setSelectedBcs] = useState<number | null>(null);
+  const helperRef = useRef<HTMLDivElement>(null);
+  const currentWeightValue = parseFiniteNumber(currentWeight);
+  const validCurrentWeight = currentWeightValue !== null && currentWeightValue > 0;
+  const estimatedTargetWeight = selectedBcs === null
+    ? null
+    : estimateTargetWeightFromBcs(currentWeight, selectedBcs);
+  const roundedTargetWeight = estimatedTargetWeight === null
+    ? null
+    : Math.round(estimatedTargetWeight * 10) / 10;
+
+  useEffect(() => {
+    if (!open) return;
+
+    function closeOnOutsidePress(event: PointerEvent) {
+      if (!helperRef.current?.contains(event.target as Node)) setOpen(false);
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("pointerdown", closeOnOutsidePress);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePress);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+
+  function openEstimator() {
+    setSelectedBcs(null);
+    setOpen(true);
+  }
+
+  function useEstimate() {
+    if (roundedTargetWeight === null) return;
+    onChange(roundedTargetWeight.toFixed(1));
+    setOpen(false);
+  }
+
+  const describedBy = ["target-weight-hint", error ? "target-weight-error" : ""].filter(Boolean).join(" ");
+
+  return (
+    <div className="field target-weight-field" ref={helperRef}>
+      <div className="target-weight-label-row">
+        <label htmlFor="target-weight">Target / ideal body weight</label>
+        <button type="button" className="bcs-trigger" aria-expanded={open} aria-controls="bcs-target-popover" onClick={openEstimator}>Estimate from BCS</button>
+      </div>
+      <span className={`input-wrap${error ? " invalid" : ""}`}>
+        <input
+          id="target-weight"
+          type="number"
+          inputMode="decimal"
+          min="0.01"
+          step="0.1"
+          value={value}
+          aria-invalid={Boolean(error)}
+          aria-describedby={describedBy}
+          onChange={(event) => onChange(event.target.value)}
+        />
+        <b aria-hidden="true">kg</b>
+      </span>
+      <small className="field-hint" id="target-weight-hint">Used for the weight-loss energy calculation.</small>
+      {error && <small className="field-error" id="target-weight-error">{error}</small>}
+
+      {open && (
+        <section className="bcs-popover" id="bcs-target-popover" role="dialog" aria-modal="false" aria-labelledby="bcs-popover-title">
+          <div className="bcs-popover-heading">
+            <h3 id="bcs-popover-title">Estimate target weight from BCS</h3>
+            <button type="button" onClick={() => setOpen(false)} aria-label="Close BCS estimator">×</button>
+          </div>
+
+          <div className="bcs-current-weight">
+            <span>Current BW</span>
+            <strong>{validCurrentWeight ? `${formatNumber(currentWeightValue, 2)} kg` : "Enter current BW first"}</strong>
+          </div>
+
+          <fieldset className="bcs-options" disabled={!validCurrentWeight}>
+            <legend>BCS</legend>
+            <div>
+              {[6, 7, 8, 9].map((score) => (
+                <button
+                  key={score}
+                  type="button"
+                  className={selectedBcs === score ? "selected" : ""}
+                  aria-pressed={selectedBcs === score}
+                  aria-label={`BCS ${score} of 9, approximately ${(score - 5) * 10}% overweight`}
+                  onClick={() => setSelectedBcs(score)}
+                >
+                  {score}<small>/9</small>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="bcs-estimate" aria-live="polite">
+            <span>Estimated target BW</span>
+            <strong>{roundedTargetWeight === null ? "—" : `${roundedTargetWeight.toFixed(1)} kg`}</strong>
+          </div>
+
+          <button type="button" className="bcs-use-button" disabled={roundedTargetWeight === null} onClick={useEstimate}>
+            {roundedTargetWeight === null ? "Select BCS" : `Use ${roundedTargetWeight.toFixed(1)} kg`}
+          </button>
+
+          <div className="bcs-reference-note">
+            <p>AAHA 2021: each BCS point &gt;5/9 corresponds to approximately 10% excess body weight. <a href="https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/screening-evaluation/" target="_blank" rel="noreferrer">Reference <span aria-hidden="true">↗</span></a></p>
+            <span className="bcs-info" tabIndex={0} role="img" aria-label="BCS-derived target weight is an estimate. Reassess target weight and caloric intake according to clinical response. Interpret BCS alongside muscle condition where clinically relevant." data-tooltip="BCS-derived target weight is an estimate. Reassess target weight and caloric intake according to clinical response. Interpret BCS alongside muscle condition where clinically relevant.">i</span>
+          </div>
+        </section>
+      )}
+    </div>
   );
 }
 
@@ -399,6 +527,7 @@ function FoodEnergyControls({
 export default function Home() {
   const [species, setSpecies] = useState<Species>("Dog");
   const [weight, setWeight] = useState("");
+  const [targetWeight, setTargetWeight] = useState("");
   const [petName, setPetName] = useState("");
   const [condition, setCondition] = useState("Intact adult");
   const [lactating, setLactating] = useState(false);
@@ -411,12 +540,13 @@ export default function Home() {
   const [week, setWeek] = useState(1);
   const [copyStatus, setCopyStatus] = useState("Copy summary");
 
-  const dailyEnergy = useMemo(
-    () => lactating
-      ? calculateLactationEnergy(weight, species, offspring, week)
-      : calculateDailyEnergy(weight, species, condition),
-    [condition, lactating, offspring, species, week, weight],
-  );
+  const weightLossSelected = !lactating && condition === "Weight loss";
+  const dailyEnergy = useMemo(() => {
+    const currentWeight = parseFiniteNumber(weight);
+    if (currentWeight === null || currentWeight <= 0) return null;
+    if (lactating) return calculateLactationEnergy(weight, species, offspring, week);
+    return calculateDailyEnergy(weightLossSelected ? targetWeight : weight, species, condition);
+  }, [condition, lactating, offspring, species, targetWeight, week, weight, weightLossSelected]);
   const guaranteedAnalysis = useMemo(() => calculateGuaranteedAnalysis(analysis), [analysis]);
   const selectedFoodEnergy = useMemo(() => selectFoodEnergy({
     manufacturerEnabled,
@@ -430,6 +560,10 @@ export default function Home() {
   const weightValue = parseFiniteNumber(weight);
   const weightError = weight !== "" && (weightValue === null || weightValue <= 0)
     ? "Enter a body weight greater than 0 kg."
+    : undefined;
+  const targetWeightValue = parseFiniteNumber(targetWeight);
+  const targetWeightError = weightLossSelected && targetWeight !== "" && (targetWeightValue === null || targetWeightValue <= 0)
+    ? "Enter a target weight greater than 0 kg."
     : undefined;
   const manufacturerValue = parseFiniteNumber(manufacturerKcalKg);
   const manufacturerError = manufacturerEnabled && manufacturerKcalKg !== "" && (manufacturerValue === null || manufacturerValue <= 0)
@@ -460,7 +594,8 @@ export default function Home() {
         "CaloriVet consultation summary",
         `Patient: ${petName.trim() || "Not provided"}`,
         `Species: ${species}`,
-        `Body weight: ${formatNumber(Number(weight), 2)} kg`,
+        `Current body weight: ${formatNumber(Number(weight), 2)} kg`,
+        ...(weightLossSelected ? [`Target / ideal body weight: ${formatNumber(Number(targetWeight), 2)} kg`] : []),
         `Patient status: ${patientDescription}`,
         `RER: ${formatNumber(dailyEnergy.rer)} kcal/day`,
         `Estimated starting requirement: ${formatEstimate(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}`,
@@ -476,6 +611,7 @@ export default function Home() {
   function resetPatient() {
     setSpecies("Dog");
     setWeight("");
+    setTargetWeight("");
     setPetName("");
     setCondition("Intact adult");
     setLactating(false);
@@ -538,7 +674,7 @@ export default function Home() {
               <button className="reset-button" type="button" onClick={resetPatient}>Start new patient</button>
             </div>
             <div className="patient-grid">
-              <NumberField id="body-weight" label={!lactating && condition === "Weight loss" ? "Target / ideal body weight" : "Body weight"} value={weight} onChange={setWeight} suffix="kg" min="0.01" step="0.01" error={weightError} hint={!lactating && condition === "Weight loss" ? "Weight-loss estimates are calculated from target or ideal body weight." : undefined} primary />
+              <NumberField id="body-weight" label="Current body weight" value={weight} onChange={setWeight} suffix="kg" min="0.01" step="0.01" error={weightError} primary />
               <SpeciesPicker value={species} onChange={changeSpecies} prefix="patient" />
               <label className="field pet-name-field" htmlFor="pet-name">
                 <span>Pet name <small>(optional)</small></span>
@@ -554,18 +690,21 @@ export default function Home() {
                   <label className="field" htmlFor="lactation-week"><span>Lactation week</span><select id="lactation-week" value={week} onChange={(event) => setWeek(Number(event.target.value))}>{lactationWeekFactor[species].map((_, index) => <option key={index + 1} value={index + 1}>Week {index + 1}</option>)}</select></label>
                 </div>
               ) : (
-                <label className="field condition-field" htmlFor="condition">
-                  <span>Condition / life stage</span>
-                  <select id="condition" value={condition} onChange={(event) => setCondition(event.target.value)}>
-                    {Object.keys(activityFactors[species]).map((item) => <option key={item}>{item}</option>)}
-                  </select>
-                </label>
+                <>
+                  <label className="field condition-field" htmlFor="condition">
+                    <span>Condition / life stage</span>
+                    <select id="condition" value={condition} onChange={(event) => setCondition(event.target.value)}>
+                      {Object.keys(activityFactors[species]).map((item) => <option key={item}>{item}</option>)}
+                    </select>
+                  </label>
+                  {weightLossSelected && <TargetWeightField currentWeight={weight} value={targetWeight} onChange={setTargetWeight} error={targetWeightError} />}
+                </>
               )}
             </div>
             {dailyEnergy ? (
               <EnergyResult {...dailyEnergy} />
             ) : (
-              <div className="pending-result" aria-live="polite"><span>Estimated daily energy requirement</span><p>Enter a valid body weight to calculate kcal/day.</p></div>
+              <div className="pending-result" aria-live="polite"><span>Estimated daily energy requirement</span><p>{weightLossSelected && weightValue !== null && weightValue > 0 ? "Enter a valid target / ideal body weight to calculate kcal/day." : "Enter a valid current body weight to calculate kcal/day."}</p></div>
             )}
           </section>
 
@@ -629,7 +768,8 @@ export default function Home() {
           <dl>
             <div><dt>Patient</dt><dd>{petName.trim() || "Not provided"}</dd></div>
             <div><dt>Species</dt><dd>{species}</dd></div>
-            <div><dt>Body weight</dt><dd>{formatNumber(Number(weight), 2)} kg</dd></div>
+            <div><dt>Current body weight</dt><dd>{formatNumber(Number(weight), 2)} kg</dd></div>
+            {weightLossSelected && <div><dt>Target / ideal body weight</dt><dd>{formatNumber(Number(targetWeight), 2)} kg</dd></div>}
             <div><dt>Patient status</dt><dd>{patientDescription}</dd></div>
             <div><dt>RER</dt><dd>{formatNumber(dailyEnergy.rer)} kcal/day</dd></div>
             <div><dt>Starting requirement</dt><dd>{formatEstimate(dailyEnergy.minimum, dailyEnergy.maximum, "kcal/day")}</dd></div>

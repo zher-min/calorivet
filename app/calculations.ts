@@ -67,6 +67,27 @@ export function normalizeManufacturerEnergy(
   return Number.isFinite(kcalKg) && kcalKg > 0 ? kcalKg : null;
 }
 
+export function estimateTargetWeightFromBcs(
+  currentWeightInput: string | number,
+  bcsInput: string | number,
+): number | null {
+  const currentWeight = parseFiniteNumber(currentWeightInput);
+  const bcs = parseFiniteNumber(bcsInput);
+  if (
+    currentWeight === null
+    || currentWeight <= 0
+    || bcs === null
+    || !Number.isInteger(bcs)
+    || bcs < 6
+    || bcs > 9
+  ) return null;
+
+  const estimatedTargetWeight = currentWeight / (1 + 0.1 * (bcs - 5));
+  return Number.isFinite(estimatedTargetWeight) && estimatedTargetWeight > 0
+    ? estimatedTargetWeight
+    : null;
+}
+
 export function calculateDailyEnergy(weightInput: string | number, species: Species, condition: string) {
   const weight = parseFiniteNumber(weightInput);
   const selectedFactor = activityFactors[species]?.[condition];

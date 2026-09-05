@@ -6,6 +6,7 @@ import {
   calculateFeedingAmount,
   calculateGuaranteedAnalysis,
   calculateLactationEnergy,
+  estimateTargetWeightFromBcs,
   normalizeManufacturerEnergy,
   selectFoodEnergy,
 } from "../app/calculations.ts";
@@ -68,6 +69,23 @@ test("single published factors produce a single energy value", () => {
 test("does not expose a generic senior factor", () => {
   assert.equal(Object.keys(activityFactors.Dog).some((name) => /senior/i.test(name)), false);
   assert.equal(Object.keys(activityFactors.Cat).some((name) => /senior/i.test(name)), false);
+});
+
+test("estimates target weight only from overweight BCS values", () => {
+  assert.ok(Math.abs(estimateTargetWeightFromBcs(30, 8) - (30 / 1.3)) < 1e-12);
+  assert.ok(Math.abs(estimateTargetWeightFromBcs(12, 6) - (12 / 1.1)) < 1e-12);
+  for (const [weight, bcs] of [[0, 8], [-1, 8], [30, 5], [30, 10], [30, 7.5], ["", 8]]) {
+    assert.equal(estimateTargetWeightFromBcs(weight, bcs), null);
+  }
+});
+
+test("feeds a BCS-derived target weight into the existing weight-loss calculation", () => {
+  const targetWeight = estimateTargetWeightFromBcs(30, 8);
+  assert.ok(targetWeight);
+  const energy = calculateDailyEnergy(targetWeight, "Dog", "Weight loss");
+  assert.ok(energy);
+  assert.ok(Math.abs(energy.rer - (70 * Math.pow(30 / 1.3, 0.75))) < 1e-12);
+  assert.equal(energy.minimum, energy.maximum);
 });
 
 test("keeps lactation energy separate from the standard MER factor", () => {
