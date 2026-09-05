@@ -31,6 +31,9 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.match(html, /Patient information/);
   assert.match(html, /Pet name/);
   assert.match(html, /Start new patient/);
+  assert.match(html, /Send feedback/);
+  assert.match(html, /Help improve the calculator/);
+  assert.doesNotMatch(html, /tan\.zhermin@gmail\.com/i);
   assert.match(html, /Lactating patient/);
   assert.match(html, /Estimated daily energy requirement/);
   assert.match(html, /Food energy information/);
