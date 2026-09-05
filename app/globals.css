@@ -42,9 +42,13 @@ a { color: inherit; }
 .calculator-purpose summary::-webkit-details-marker { display: none; }
 .calculator-purpose summary::after { content: " +"; }
 .calculator-purpose[open] summary::after { content: " −"; }
-.calculator-purpose p { z-index: 5; width: min(330px, calc(100vw - 36px)); margin: 9px 0 0; padding: 13px 15px; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); box-shadow: 0 12px 30px rgba(31, 54, 47, 0.12); color: var(--muted); font-size: 11px; line-height: 1.5; text-align: left; }
+.purpose-card { z-index: 5; width: min(390px, calc(100vw - 36px)); margin: 9px 0 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); box-shadow: 0 12px 30px rgba(31, 54, 47, 0.12); color: var(--muted); font-size: 11px; line-height: 1.5; text-align: left; }
+.purpose-card p { margin: 0; }
+.purpose-card p + p { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.purpose-card b { color: var(--ink); }
+.purpose-card a { display: inline-block; margin-top: 10px; color: var(--green); font-weight: 800; text-underline-offset: 3px; }
 @media (hover: hover) {
-  .calculator-purpose:not([open]):hover > p { position: absolute; left: 50%; display: block; transform: translateX(-50%); }
+  .calculator-purpose:not([open]):hover > .purpose-card { position: absolute; left: 50%; display: block; transform: translateX(-50%); }
 }
 
 .view-switch { width: fit-content; margin: 0 auto 22px; padding: 4px; display: flex; gap: 4px; border: 1px solid var(--line); border-radius: 999px; background: #e8e6dd; }

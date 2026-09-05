@@ -19,6 +19,8 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.match(html, /CaloriVet Feeding Calculator/);
   assert.match(html, /What is this calculator for\?/);
   assert.match(html, /Estimates daily calorie needs and a starting feeding amount in g\/day/);
+  assert.match(html, /AAFCO Modified Atwater formula/);
+  assert.match(html, /https:\/\/www\.aafco\.org\/resources\/startups\/calorie-content\//);
   assert.match(html, /🐕/);
   assert.match(html, /🐈/);
   assert.doesNotMatch(html, /Veterinary nutrition workflow|From body weight to a practical feeding estimate/);

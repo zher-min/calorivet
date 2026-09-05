@@ -206,7 +206,11 @@ export default function Home() {
         <h1 id="page-title">CaloriVet Feeding Calculator</h1>
         <details className="calculator-purpose">
           <summary>What is this calculator for?</summary>
-          <p>Estimates daily calorie needs and a starting feeding amount in g/day for dogs and cats using manufacturer food energy or Guaranteed Analysis.</p>
+          <div className="purpose-card">
+            <p>Estimates daily calorie needs and a starting feeding amount in g/day for dogs and cats using manufacturer food energy or Guaranteed Analysis.</p>
+            <p><b>Guaranteed Analysis method:</b> Food energy is estimated with the AAFCO Modified Atwater formula: ME (kcal/kg) = 10 × [(3.5 × protein) + (8.5 × fat) + (3.5 × NFE)]. NFE is calculated carbohydrate.</p>
+            <a href="https://www.aafco.org/resources/startups/calorie-content/" target="_blank" rel="noreferrer">View the AAFCO method <span aria-hidden="true">↗</span></a>
+          </div>
         </details>
       </section>
 
