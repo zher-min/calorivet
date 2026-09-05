@@ -16,6 +16,12 @@ test("renders one continuous standard feeding workflow", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
+  assert.match(html, /CaloriVet Feeding Calculator/);
+  assert.match(html, /What is this calculator for\?/);
+  assert.match(html, /Estimates daily calorie needs and a starting feeding amount in g\/day/);
+  assert.match(html, /🐕/);
+  assert.match(html, /🐈/);
+  assert.doesNotMatch(html, /Veterinary nutrition workflow|From body weight to a practical feeding estimate/);
   assert.match(html, /Patient information/);
   assert.match(html, /Estimated daily energy requirement/);
   assert.match(html, /Food energy information/);

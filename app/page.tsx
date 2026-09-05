@@ -88,6 +88,7 @@ function SpeciesPicker({ value, onChange, prefix }: { value: Species; onChange: 
       <div className="segmented" id={`${prefix}-species`}>
         {(["Dog", "Cat"] as Species[]).map((item) => (
           <button key={item} type="button" aria-pressed={value === item} className={value === item ? "active" : ""} onClick={() => onChange(item)}>
+            <span className="species-emoji" aria-hidden="true">{item === "Dog" ? "🐕" : "🐈"}</span>
             {item}
           </button>
         ))}
@@ -202,9 +203,11 @@ export default function Home() {
       </header>
 
       <section className="intro" id="top" aria-labelledby="page-title">
-        <p className="eyebrow">Veterinary nutrition workflow</p>
-        <h1 id="page-title">From body weight to a <em>practical feeding estimate.</em></h1>
-        <p>Patient energy, food energy and grams per day in one continuous clinical workflow.</p>
+        <h1 id="page-title">CaloriVet Feeding Calculator</h1>
+        <details className="calculator-purpose">
+          <summary>What is this calculator for?</summary>
+          <p>Estimates daily calorie needs and a starting feeding amount in g/day for dogs and cats using manufacturer food energy or Guaranteed Analysis.</p>
+        </details>
       </section>
 
       <nav className="view-switch" aria-label="Calculator type">
