@@ -22,6 +22,7 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.match(html, /🐕/);
   assert.match(html, /🐈/);
   assert.doesNotMatch(html, /Veterinary nutrition workflow|From body weight to a practical feeding estimate/);
+  assert.doesNotMatch(html, /workbook|spreadsheet|supplied|original .* formula/i);
   assert.match(html, /Patient information/);
   assert.match(html, /Estimated daily energy requirement/);
   assert.match(html, /Food energy information/);

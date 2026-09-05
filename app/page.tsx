@@ -112,7 +112,7 @@ function EnergyResult({ minimum, maximum, rer, mer }: { minimum: number; maximum
       <p>Estimated daily energy requirement</p>
       <strong>{formatRange(minimum, maximum, "kcal/day")}</strong>
       <div><span>RER {formatNumber(rer)} kcal/day</span><span>MER midpoint {formatNumber(mer)} kcal/day</span></div>
-      <small>The range reflects the workbook’s ±50% clinical variation around MER.</small>
+      <small>This range allows for individual variation around the estimated MER.</small>
     </section>
   );
 }
@@ -335,7 +335,7 @@ export default function Home() {
       {view === "lactation" && (
         <div className="workflow lactation-workflow" id="calculator">
           <section className="workflow-card" aria-labelledby="lactation-heading">
-            <StepHeader id="lactation-heading" number="L" title="Lactation calculator" copy="The original mother-and-litter energy formula is preserved in this separate workflow." />
+            <StepHeader id="lactation-heading" number="L" title="Lactation calculator" copy="Estimate energy needs during lactation using body weight, litter size and stage of lactation." />
             <div className="patient-grid lactation-grid">
               <NumberField id="lactation-weight" label="Body weight" value={lactationWeight} onChange={setLactationWeight} suffix="kg" min="0.01" step="0.01" error={lactationWeightError} primary />
               <SpeciesPicker value={lactationSpecies} onChange={changeLactationSpecies} prefix="lactation" />
@@ -358,7 +358,7 @@ export default function Home() {
         </div>
       )}
 
-      <footer><p>Based on the supplied Caloric Distribution Calculator workbook.</p></footer>
+      <footer><p>CaloriVet · Veterinary nutrition estimates for dogs and cats</p></footer>
     </main>
   );
 }
