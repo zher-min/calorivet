@@ -1,4 +1,5 @@
 export type Species = "Dog" | "Cat";
+export type ManufacturerEnergyUnit = "kcal/kg" | "kcal/100g";
 
 export type GuaranteedAnalysisInput = {
   moisture: string | number;
@@ -51,6 +52,16 @@ export function parseFiniteNumber(value: string | number): number | null {
   if (typeof value === "string" && value.trim() === "") return null;
   const parsed = typeof value === "number" ? value : Number(value);
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+export function normalizeManufacturerEnergy(
+  value: string | number,
+  unit: ManufacturerEnergyUnit = "kcal/kg",
+): number | null {
+  const parsed = parseFiniteNumber(value);
+  if (parsed === null || parsed <= 0) return null;
+  const kcalKg = unit === "kcal/100g" ? parsed * 10 : parsed;
+  return Number.isFinite(kcalKg) && kcalKg > 0 ? kcalKg : null;
 }
 
 export function calculateDailyEnergy(weightInput: string | number, species: Species, condition: string) {
@@ -133,16 +144,18 @@ export function calculateGuaranteedAnalysis(input: GuaranteedAnalysisInput) {
 export function selectFoodEnergy({
   manufacturerEnabled,
   manufacturerKcalKg,
+  manufacturerUnit = "kcal/kg",
   guaranteedAnalysisEnabled,
   guaranteedAnalysis,
 }: {
   manufacturerEnabled: boolean;
   manufacturerKcalKg: string | number;
+  manufacturerUnit?: ManufacturerEnergyUnit;
   guaranteedAnalysisEnabled: boolean;
   guaranteedAnalysis: ReturnType<typeof calculateGuaranteedAnalysis>;
 }) {
-  const manufacturer = parseFiniteNumber(manufacturerKcalKg);
-  if (manufacturerEnabled && manufacturer !== null && manufacturer > 0) {
+  const manufacturer = normalizeManufacturerEnergy(manufacturerKcalKg, manufacturerUnit);
+  if (manufacturerEnabled && manufacturer !== null) {
     return { source: "manufacturer" as const, kcalKg: manufacturer };
   }
   if (guaranteedAnalysisEnabled && guaranteedAnalysis.valid) {

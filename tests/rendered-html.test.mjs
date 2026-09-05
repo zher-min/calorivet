@@ -31,6 +31,7 @@ test("renders one continuous standard feeding workflow", async () => {
   assert.match(html, /Patient information/);
   assert.match(html, /Estimated daily energy requirement/);
   assert.match(html, /Food energy information/);
+  assert.match(html, /kcal\/100 g/);
   assert.match(html, /Guaranteed Analysis available/);
   assert.match(html, /Estimated feeding amount/);
   assert.doesNotMatch(html, /role="tablist"|tab-daily|tab-food/);

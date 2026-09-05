@@ -12,6 +12,7 @@ import {
   parseFiniteNumber,
   selectFoodEnergy,
   type GuaranteedAnalysisInput,
+  type ManufacturerEnergyUnit,
   type Species,
 } from "./calculations";
 
@@ -126,6 +127,130 @@ function ClinicalDisclaimer() {
   );
 }
 
+function FoodEnergyControls({
+  idPrefix,
+  manufacturerEnabled,
+  onManufacturerEnabledChange,
+  manufacturerValue,
+  onManufacturerValueChange,
+  manufacturerUnit,
+  onManufacturerUnitChange,
+  manufacturerError,
+  analysisEnabled,
+  onAnalysisEnabledChange,
+  analysis,
+  onAnalysisChange,
+  onClearAnalysis,
+  guaranteedAnalysis,
+  selectedFoodEnergy,
+  foodMessage,
+}: {
+  idPrefix: string;
+  manufacturerEnabled: boolean;
+  onManufacturerEnabledChange: (value: boolean) => void;
+  manufacturerValue: string;
+  onManufacturerValueChange: (value: string) => void;
+  manufacturerUnit: ManufacturerEnergyUnit;
+  onManufacturerUnitChange: (value: ManufacturerEnergyUnit) => void;
+  manufacturerError?: string;
+  analysisEnabled: boolean;
+  onAnalysisEnabledChange: (value: boolean) => void;
+  analysis: Record<keyof GuaranteedAnalysisInput, string>;
+  onAnalysisChange: (field: keyof GuaranteedAnalysisInput, value: string) => void;
+  onClearAnalysis: () => void;
+  guaranteedAnalysis: ReturnType<typeof calculateGuaranteedAnalysis>;
+  selectedFoodEnergy: ReturnType<typeof selectFoodEnergy>;
+  foodMessage: string | null;
+}) {
+  return (
+    <>
+      <div className="source-options">
+        <label className="source-option">
+          <input type="checkbox" checked={manufacturerEnabled} onChange={(event) => onManufacturerEnabledChange(event.target.checked)} />
+          <span><b>Caloric value provided by manufacturer</b><small>Accepts kcal/kg or kcal/100 g · preferred source</small></span>
+        </label>
+        {manufacturerEnabled && (
+          <div className="conditional-panel manufacturer-panel">
+            <NumberField
+              id={`${idPrefix}-manufacturer-kcal`}
+              label="Manufacturer caloric density"
+              value={manufacturerValue}
+              onChange={onManufacturerValueChange}
+              suffix={manufacturerUnit}
+              min="0.01"
+              step="0.1"
+              error={manufacturerError}
+              hint={`Enter ${manufacturerUnit} from the product label or manufacturer.`}
+            />
+            <label className="field" htmlFor={`${idPrefix}-manufacturer-unit`}>
+              <span>Energy unit</span>
+              <select id={`${idPrefix}-manufacturer-unit`} value={manufacturerUnit} onChange={(event) => onManufacturerUnitChange(event.target.value as ManufacturerEnergyUnit)}>
+                <option value="kcal/kg">kcal/kg</option>
+                <option value="kcal/100g">kcal/100 g</option>
+              </select>
+            </label>
+          </div>
+        )}
+
+        <label className="source-option">
+          <input type="checkbox" checked={analysisEnabled} onChange={(event) => onAnalysisEnabledChange(event.target.checked)} />
+          <span><b>Guaranteed Analysis available</b><small>Estimate energy from nutrients listed on the label</small></span>
+        </label>
+        {analysisEnabled && (
+          <div className="conditional-panel analysis-panel">
+            <div className="analysis-heading"><div><h3>Guaranteed Analysis</h3><p>All five values are required. No nutrient value is assumed.</p></div><button type="button" onClick={onClearAnalysis}>Clear</button></div>
+            <div className="analysis-grid">
+              <NumberField id={`${idPrefix}-ga-protein`} label="Crude protein" value={analysis.protein} onChange={(value) => onAnalysisChange("protein", value)} suffix="%" min="0" max="100" />
+              <NumberField id={`${idPrefix}-ga-fat`} label="Crude fat" value={analysis.fat} onChange={(value) => onAnalysisChange("fat", value)} suffix="%" min="0" max="100" />
+              <NumberField id={`${idPrefix}-ga-fibre`} label="Crude fibre" value={analysis.fibre} onChange={(value) => onAnalysisChange("fibre", value)} suffix="%" min="0" max="100" />
+              <NumberField id={`${idPrefix}-ga-moisture`} label="Moisture" value={analysis.moisture} onChange={(value) => onAnalysisChange("moisture", value)} suffix="%" min="0" max="100" />
+              <NumberField id={`${idPrefix}-ga-ash`} label="Ash" value={analysis.ash} onChange={(value) => onAnalysisChange("ash", value)} suffix="%" min="0" max="100" hint="If ash is not listed, obtain or enter a clinically justified estimate." />
+            </div>
+
+            {!guaranteedAnalysis.valid && (
+              <div className="analysis-status" role="status">
+                {guaranteedAnalysis.missing.length > 0 && <p><b>Required:</b> {guaranteedAnalysis.missing.join(", ")}</p>}
+                {guaranteedAnalysis.errors.map((error) => <p key={error}>{error}</p>)}
+              </div>
+            )}
+
+            {guaranteedAnalysis.valid && (
+              <div className="analysis-results" aria-live="polite">
+                <div className="analysis-energy"><span>Estimated food energy</span><strong>{formatNumber(guaranteedAnalysis.kcalKg)} kcal/kg</strong>{selectedFoodEnergy?.source === "manufacturer" && <small>Calculated for nutrition reference; manufacturer value remains active.</small>}</div>
+                <div className="distribution" aria-label="Caloric distribution">
+                  <div><span>Protein energy</span><b>{formatNumber(guaranteedAnalysis.proteinEnergy, 1)}%</b></div>
+                  <div><span>Fat energy</span><b>{formatNumber(guaranteedAnalysis.fatEnergy, 1)}%</b></div>
+                  <div><span>Carbohydrate energy</span><b>{formatNumber(guaranteedAnalysis.carbohydrateEnergy, 1)}%</b></div>
+                  <div><span>Calculated carbohydrate</span><b>{formatNumber(guaranteedAnalysis.carbohydrate, 1)}%</b></div>
+                </div>
+                <details>
+                  <summary>View dry-matter composition</summary>
+                  <div className="dry-matter-list">
+                    <span>Protein <b>{formatNumber(guaranteedAnalysis.dryMatter.protein, 1)}%</b></span>
+                    <span>Fat <b>{formatNumber(guaranteedAnalysis.dryMatter.fat, 1)}%</b></span>
+                    <span>Fibre <b>{formatNumber(guaranteedAnalysis.dryMatter.fibre, 1)}%</b></span>
+                    <span>Ash <b>{formatNumber(guaranteedAnalysis.dryMatter.ash, 1)}%</b></span>
+                    <span>Carbohydrate <b>{formatNumber(guaranteedAnalysis.dryMatter.carbohydrate, 1)}%</b></span>
+                  </div>
+                </details>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {selectedFoodEnergy && (
+        <div className="active-energy" aria-live="polite">
+          <span>Food energy used for feeding estimate</span>
+          <strong>{formatNumber(selectedFoodEnergy.kcalKg)} kcal/kg</strong>
+          <small>{selectedFoodEnergy.source === "manufacturer" ? "Manufacturer-provided value" : "Estimated from Guaranteed Analysis"}</small>
+        </div>
+      )}
+      {foodMessage && <div className="info-message" role="status">{foodMessage}</div>}
+    </>
+  );
+}
+
 export default function Home() {
   const [view, setView] = useState<View>("feeding");
   const [species, setSpecies] = useState<Species>("Dog");
@@ -133,6 +258,7 @@ export default function Home() {
   const [condition, setCondition] = useState("Typical intact pet");
   const [manufacturerEnabled, setManufacturerEnabled] = useState(false);
   const [manufacturerKcalKg, setManufacturerKcalKg] = useState("");
+  const [manufacturerUnit, setManufacturerUnit] = useState<ManufacturerEnergyUnit>("kcal/kg");
   const [analysisEnabled, setAnalysisEnabled] = useState(false);
   const [analysis, setAnalysis] = useState(emptyAnalysis);
   const [lactationSpecies, setLactationSpecies] = useState<Species>("Dog");
@@ -145,9 +271,10 @@ export default function Home() {
   const selectedFoodEnergy = useMemo(() => selectFoodEnergy({
     manufacturerEnabled,
     manufacturerKcalKg,
+    manufacturerUnit,
     guaranteedAnalysisEnabled: analysisEnabled,
     guaranteedAnalysis,
-  }), [analysisEnabled, guaranteedAnalysis, manufacturerEnabled, manufacturerKcalKg]);
+  }), [analysisEnabled, guaranteedAnalysis, manufacturerEnabled, manufacturerKcalKg, manufacturerUnit]);
   const feedingAmount = useMemo(() => calculateFeedingAmount(dailyEnergy, selectedFoodEnergy?.kcalKg ?? null), [dailyEnergy, selectedFoodEnergy]);
   const lactationEnergy = useMemo(
     () => calculateLactationEnergy(lactationWeight, lactationSpecies, offspring, week),
@@ -190,9 +317,12 @@ export default function Home() {
     : selectedFoodEnergy === null
       ? "Complete a valid food-energy source to estimate the feeding amount."
       : null;
+  const displayedEnergy = view === "feeding" ? dailyEnergy : lactationEnergy;
+  const displayedFeeding = view === "feeding" ? feedingAmount : lactationFeeding;
+  const hasMobileResult = Boolean(displayedEnergy && displayedFeeding);
 
   return (
-    <main>
+    <main className={hasMobileResult ? "has-mobile-result" : undefined}>
       <a className="skip-link" href="#calculator">Skip to calculator</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="CaloriVet home">
@@ -248,73 +378,24 @@ export default function Home() {
 
           <section className="workflow-card" aria-labelledby="food-heading">
             <StepHeader id="food-heading" number="02" title="Food energy information" copy="Use a manufacturer value when available, or estimate energy from Guaranteed Analysis." />
-
-            <div className="source-options">
-              <label className="source-option">
-                <input type="checkbox" checked={manufacturerEnabled} onChange={(event) => setManufacturerEnabled(event.target.checked)} />
-                <span><b>Caloric value provided by manufacturer</b><small>Preferred source for the feeding calculation</small></span>
-              </label>
-              {manufacturerEnabled && (
-                <div className="conditional-panel">
-                  <NumberField id="manufacturer-kcal" label="Manufacturer caloric density" value={manufacturerKcalKg} onChange={setManufacturerKcalKg} suffix="kcal/kg" min="0.01" step="1" error={manufacturerError} hint="Enter kcal/kg from the product label or manufacturer." />
-                </div>
-              )}
-
-              <label className="source-option">
-                <input type="checkbox" checked={analysisEnabled} onChange={(event) => setAnalysisEnabled(event.target.checked)} />
-                <span><b>Guaranteed Analysis available</b><small>Estimate energy from nutrients listed on the label</small></span>
-              </label>
-              {analysisEnabled && (
-                <div className="conditional-panel analysis-panel">
-                  <div className="analysis-heading"><div><h3>Guaranteed Analysis</h3><p>All five values are required. No nutrient value is assumed.</p></div><button type="button" onClick={() => setAnalysis(emptyAnalysis)}>Clear</button></div>
-                  <div className="analysis-grid">
-                    <NumberField id="ga-protein" label="Crude protein" value={analysis.protein as string} onChange={(value) => changeAnalysis("protein", value)} suffix="%" min="0" max="100" />
-                    <NumberField id="ga-fat" label="Crude fat" value={analysis.fat as string} onChange={(value) => changeAnalysis("fat", value)} suffix="%" min="0" max="100" />
-                    <NumberField id="ga-fibre" label="Crude fibre" value={analysis.fibre as string} onChange={(value) => changeAnalysis("fibre", value)} suffix="%" min="0" max="100" />
-                    <NumberField id="ga-moisture" label="Moisture" value={analysis.moisture as string} onChange={(value) => changeAnalysis("moisture", value)} suffix="%" min="0" max="100" />
-                    <NumberField id="ga-ash" label="Ash" value={analysis.ash as string} onChange={(value) => changeAnalysis("ash", value)} suffix="%" min="0" max="100" hint="If ash is not listed, obtain or enter a clinically justified estimate." />
-                  </div>
-
-                  {!guaranteedAnalysis.valid && (
-                    <div className="analysis-status" role="status">
-                      {guaranteedAnalysis.missing.length > 0 && <p><b>Required:</b> {guaranteedAnalysis.missing.join(", ")}</p>}
-                      {guaranteedAnalysis.errors.map((error) => <p key={error}>{error}</p>)}
-                    </div>
-                  )}
-
-                  {guaranteedAnalysis.valid && (
-                    <div className="analysis-results" aria-live="polite">
-                      <div className="analysis-energy"><span>Estimated food energy</span><strong>{formatNumber(guaranteedAnalysis.kcalKg)} kcal/kg</strong>{selectedFoodEnergy?.source === "manufacturer" && <small>Calculated for nutrition reference; manufacturer value remains active.</small>}</div>
-                      <div className="distribution" aria-label="Caloric distribution">
-                        <div><span>Protein energy</span><b>{formatNumber(guaranteedAnalysis.proteinEnergy, 1)}%</b></div>
-                        <div><span>Fat energy</span><b>{formatNumber(guaranteedAnalysis.fatEnergy, 1)}%</b></div>
-                        <div><span>Carbohydrate energy</span><b>{formatNumber(guaranteedAnalysis.carbohydrateEnergy, 1)}%</b></div>
-                        <div><span>Calculated carbohydrate</span><b>{formatNumber(guaranteedAnalysis.carbohydrate, 1)}%</b></div>
-                      </div>
-                      <details>
-                        <summary>View dry-matter composition</summary>
-                        <div className="dry-matter-list">
-                          <span>Protein <b>{formatNumber(guaranteedAnalysis.dryMatter.protein, 1)}%</b></span>
-                          <span>Fat <b>{formatNumber(guaranteedAnalysis.dryMatter.fat, 1)}%</b></span>
-                          <span>Fibre <b>{formatNumber(guaranteedAnalysis.dryMatter.fibre, 1)}%</b></span>
-                          <span>Ash <b>{formatNumber(guaranteedAnalysis.dryMatter.ash, 1)}%</b></span>
-                          <span>Carbohydrate <b>{formatNumber(guaranteedAnalysis.dryMatter.carbohydrate, 1)}%</b></span>
-                        </div>
-                      </details>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {selectedFoodEnergy && (
-              <div className="active-energy" aria-live="polite">
-                <span>Food energy used for feeding estimate</span>
-                <strong>{formatNumber(selectedFoodEnergy.kcalKg)} kcal/kg</strong>
-                <small>{selectedFoodEnergy.source === "manufacturer" ? "Manufacturer-provided value" : "Estimated from Guaranteed Analysis"}</small>
-              </div>
-            )}
-            {foodMessage && <div className="info-message" role="status">{foodMessage}</div>}
+            <FoodEnergyControls
+              idPrefix="standard"
+              manufacturerEnabled={manufacturerEnabled}
+              onManufacturerEnabledChange={setManufacturerEnabled}
+              manufacturerValue={manufacturerKcalKg}
+              onManufacturerValueChange={setManufacturerKcalKg}
+              manufacturerUnit={manufacturerUnit}
+              onManufacturerUnitChange={setManufacturerUnit}
+              manufacturerError={manufacturerError}
+              analysisEnabled={analysisEnabled}
+              onAnalysisEnabledChange={setAnalysisEnabled}
+              analysis={analysis}
+              onAnalysisChange={changeAnalysis}
+              onClearAnalysis={() => setAnalysis(emptyAnalysis)}
+              guaranteedAnalysis={guaranteedAnalysis}
+              selectedFoodEnergy={selectedFoodEnergy}
+              foodMessage={foodMessage}
+            />
           </section>
 
           <div className="flow-arrow" aria-hidden="true">↓</div>
@@ -343,27 +424,68 @@ export default function Home() {
       {view === "lactation" && (
         <div className="workflow lactation-workflow" id="calculator">
           <section className="workflow-card" aria-labelledby="lactation-heading">
-            <StepHeader id="lactation-heading" number="L" title="Lactation calculator" copy="Estimate energy needs during lactation using body weight, litter size and stage of lactation." />
+            <StepHeader id="lactation-heading" number="01" title="Lactation patient" copy="Estimate energy needs during lactation using body weight, litter size and stage of lactation." />
             <div className="patient-grid lactation-grid">
               <NumberField id="lactation-weight" label="Body weight" value={lactationWeight} onChange={setLactationWeight} suffix="kg" min="0.01" step="0.01" error={lactationWeightError} primary />
               <SpeciesPicker value={lactationSpecies} onChange={changeLactationSpecies} prefix="lactation" />
               <label className="field" htmlFor="offspring"><span>Number of offspring</span><select id="offspring" value={offspring} onChange={(event) => setOffspring(Number(event.target.value))}>{offspringEnergy[lactationSpecies].map((_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label>
               <label className="field" htmlFor="lactation-week"><span>Lactation week</span><select id="lactation-week" value={week} onChange={(event) => setWeek(Number(event.target.value))}>{lactationWeekFactor[lactationSpecies].map((_, index) => <option key={index + 1} value={index + 1}>Week {index + 1}</option>)}</select></label>
             </div>
-            {lactationEnergy && <EnergyResult {...lactationEnergy} />}
-            <div className="lactation-food-link">
-              <span>Food energy source</span>
-              <b>{selectedFoodEnergy ? `${formatNumber(selectedFoodEnergy.kcalKg)} kcal/kg` : "Not entered"}</b>
-              <button type="button" onClick={() => setView("feeding")}>Edit in standard feeding workflow</button>
-            </div>
-            {lactationFeeding && (
+            {lactationEnergy ? (
+              <EnergyResult {...lactationEnergy} />
+            ) : (
+              <div className="pending-result" aria-live="polite"><span>Estimated daily energy requirement</span><p>Enter a valid body weight to calculate kcal/day.</p></div>
+            )}
+          </section>
+
+          <div className="flow-arrow" aria-hidden="true">↓</div>
+
+          <section className="workflow-card" aria-labelledby="lactation-food-heading">
+            <StepHeader id="lactation-food-heading" number="02" title="Food energy information" copy="Enter the food information here without leaving the lactation calculator." />
+            <FoodEnergyControls
+              idPrefix="lactation"
+              manufacturerEnabled={manufacturerEnabled}
+              onManufacturerEnabledChange={setManufacturerEnabled}
+              manufacturerValue={manufacturerKcalKg}
+              onManufacturerValueChange={setManufacturerKcalKg}
+              manufacturerUnit={manufacturerUnit}
+              onManufacturerUnitChange={setManufacturerUnit}
+              manufacturerError={manufacturerError}
+              analysisEnabled={analysisEnabled}
+              onAnalysisEnabledChange={setAnalysisEnabled}
+              analysis={analysis}
+              onAnalysisChange={changeAnalysis}
+              onClearAnalysis={() => setAnalysis(emptyAnalysis)}
+              guaranteedAnalysis={guaranteedAnalysis}
+              selectedFoodEnergy={selectedFoodEnergy}
+              foodMessage={foodMessage}
+            />
+          </section>
+
+          <div className="flow-arrow" aria-hidden="true">↓</div>
+
+          <section className="workflow-card feeding-card" aria-labelledby="lactation-feeding-heading">
+            <StepHeader id="lactation-feeding-heading" number="03" title="Estimated feeding amount" copy="Calculated from the lactation energy requirement and selected food energy." />
+            {lactationFeeding ? (
               <>
                 <div className="feeding-result"><span>Estimated amount to feed</span><strong>{formatRange(lactationFeeding.minimum, lactationFeeding.maximum, "g/day")}</strong><small>Midpoint: {formatNumber(lactationFeeding.midpoint)} g/day</small></div>
                 <ClinicalDisclaimer />
               </>
+            ) : (
+              <div className="pending-result final-pending" aria-live="polite">
+                <span>Estimated amount to feed</span>
+                <p>{lactationEnergy ? (foodMessage ?? "Correct the invalid food-energy entry to continue.") : "Enter a valid body weight and food-energy information to calculate g/day."}</p>
+              </div>
             )}
           </section>
         </div>
+      )}
+
+      {displayedEnergy && displayedFeeding && (
+        <aside className="mobile-result-bar" aria-label="Current calculation result" aria-live="polite">
+          <div><span>Daily energy</span><strong>{formatRange(displayedEnergy.minimum, displayedEnergy.maximum, "kcal/day")}</strong></div>
+          <div><span>Feed amount</span><strong>{formatRange(displayedFeeding.minimum, displayedFeeding.maximum, "g/day")}</strong></div>
+        </aside>
       )}
 
       <footer><p>CaloriVet · Veterinary nutrition estimates for dogs and cats</p></footer>

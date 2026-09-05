@@ -5,6 +5,7 @@ import {
   calculateDailyEnergy,
   calculateFeedingAmount,
   calculateGuaranteedAnalysis,
+  normalizeManufacturerEnergy,
   selectFoodEnergy,
 } from "../app/calculations.ts";
 
@@ -66,6 +67,20 @@ test("rejects invalid percentages and impossible totals", () => {
 
 test("uses manufacturer kcal/kg when it is the only source", () => {
   const source = selectFoodEnergy({ manufacturerEnabled: true, manufacturerKcalKg: 3800, guaranteedAnalysisEnabled: false, guaranteedAnalysis: validAnalysis });
+  assert.deepEqual(source, { source: "manufacturer", kcalKg: 3800 });
+});
+
+test("normalizes manufacturer kcal per 100 g to kcal/kg", () => {
+  assert.equal(normalizeManufacturerEnergy(380, "kcal/100g"), 3800);
+  assert.equal(normalizeManufacturerEnergy(3800, "kcal/kg"), 3800);
+  assert.equal(normalizeManufacturerEnergy(0, "kcal/100g"), null);
+  const source = selectFoodEnergy({
+    manufacturerEnabled: true,
+    manufacturerKcalKg: 380,
+    manufacturerUnit: "kcal/100g",
+    guaranteedAnalysisEnabled: false,
+    guaranteedAnalysis: validAnalysis,
+  });
   assert.deepEqual(source, { source: "manufacturer", kcalKg: 3800 });
 });
 
