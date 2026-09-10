@@ -1,5 +1,38 @@
 @import "tailwindcss";
 
+.tx-calculator { font-size: 16px; line-height: 1.5; }
+.tx-calculator .clinical-section > h2 { margin-bottom: 20px; }
+.tx-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.tx-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.tx-field > span { font-size: 14px; font-weight: 700; }
+.tx-field small, .tx-calculator small { font-size: 13px; color: #52625c; }
+.tx-field input, .tx-field select { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; background: white; border: 1px solid #aebeb5; border-radius: 7px; font-size: 16px; color: #172321; }
+.tx-check { display: flex; align-items: center; gap: 10px; min-height: 44px; margin: 9px 0; font-size: 14px; }
+.tx-check input { flex-shrink: 0; width: 20px; height: 20px; }
+.tx-result { padding: 20px; margin: 18px 0; border: 1px solid #b7c9bf; border-radius: 9px; background: #f0f5f2; overflow-wrap: anywhere; }
+.tx-result > span, .tx-result > strong, .tx-result > b { display: block; }
+.tx-result > strong { font-size: clamp(28px, 5vw, 40px); line-height: 1.3; font-variant-numeric: tabular-nums; }
+.tx-result p, .tx-assumptions { font-size: 14px; }
+.tx-notice { padding: 13px 16px; margin: 16px 0; border: 1px solid; border-left-width: 4px; border-radius: 5px; font-size: 14px; }
+.tx-error { background: #fff1f0; color: #832b24; border-color: #c05a50; }
+.tx-caution { background: #fff8e6; color: #69470d; border-color: #bb8b2d; }
+.tx-info { background: #f1f5f6; color: #304b54; border-color: #7896a0; }
+.tx-notice ul { margin: 8px 0 0; padding-left: 20px; }
+.tx-secondary { margin: 16px 0; padding: 15px; border: 1px dashed #8faaa0; border-radius: 6px; font-size: 14px; }
+.tx-calculator details { margin-top: 16px; padding: 12px 14px; border: 1px solid #d4dcd3; border-radius: 7px; }
+.tx-calculator summary { cursor: pointer; min-height: 44px; align-content: center; font-size: 14px; font-weight: 700; }
+.tx-calculator ul { padding-left: 22px; }
+.tx-calculator li { margin-bottom: 9px; }
+.tx-references { padding-left: 20px; font-size: 14px; overflow-wrap: anywhere; }
+.tx-references li { padding: 10px 0; }
+.tx-references p { margin: 5px 0; }
+.tx-evidence { font-size: 13px; overflow-wrap: anywhere; }
+.tx-evidence > div { border-top: 1px solid #d4dcd3; padding: 12px 0; }
+.tx-evidence dt { font-weight: 700; }.tx-evidence dd { margin: 4px 0; }
+.tx-disclaimer { margin-top: 22px; padding: 18px; border: 1px solid #b9c8c0; background: #edf2ef; border-radius: 7px; font-size: 14px; }
+.tx-calculator a { text-underline-offset: 3px; }
+@media (max-width: 600px) { .tx-grid { grid-template-columns: 1fr; } .tx-calculator .clinical-section { padding: 18px; } }
+
 .vetcalc-header { position: sticky; top: 0; z-index: 40; min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px max(20px, calc((100vw - 1080px) / 2)); background: #fff; border-bottom: 1px solid #d4dcd3; }
 .vetcalc-brand { font-size: 23px; font-weight: 800; text-decoration: none; line-height: 1.2; }
 .vetcalc-brand span { display: block; margin-top: 3px; font-size: 12px; font-weight: 500; color: #5d6d68; }

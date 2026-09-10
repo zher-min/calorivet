@@ -14,7 +14,7 @@ export const calculatorCategories = [
       shortName: "Dogs & Cats", route: "/calculators/transfusion",
       description: "Recipient requirements, donor collection and transfusion planning",
       homeDescription: "Estimate recipient transfusion requirements, assess donor collection limits and support transfusion planning.",
-      species: ["dog", "cat"], status: "in-development",
+      species: ["dog", "cat"], status: "active",
     }],
   },
 ] as const;

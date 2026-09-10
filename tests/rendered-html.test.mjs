@@ -12,8 +12,10 @@ test("dashboard and transfusion direct routes render inside VetCalc", async () =
   const transfusion = await render("/calculators/transfusion");
   assert.equal(transfusion.status, 200);
   const page = await transfusion.text();
-  for (const title of ["Blood Transfusion Calculator", "Blood Product", "Compatibility", "Donor Collection", "Administration &amp; Monitoring", "References"]) assert.ok(page.includes(title), title);
-  assert.match(page, /not yet available/);
+  for (const title of ["Blood Transfusion Calculator", "Blood product", "Compatibility", "Donor collection", "Administration &amp; monitoring", "References"]) assert.ok(page.includes(title), title);
+  assert.doesNotMatch(page, /not yet available/);
+  assert.match(page, /Required before calculation/);
+  assert.doesNotMatch(page, /safe donor/i);
   assert.doesNotMatch(page, /kcal\/day/);
 });
 
