@@ -1,5 +1,47 @@
 @import "tailwindcss";
 
+.vetcalc-header { position: sticky; top: 0; z-index: 40; min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px max(20px, calc((100vw - 1080px) / 2)); background: #fff; border-bottom: 1px solid #d4dcd3; }
+.vetcalc-brand { font-size: 23px; font-weight: 800; text-decoration: none; line-height: 1.2; }
+.vetcalc-brand span { display: block; margin-top: 3px; font-size: 12px; font-weight: 500; color: #5d6d68; }
+.toolkit-button { min-height: 44px; min-width: 44px; padding: 9px 13px; border: 1px solid #c5cec9; border-radius: 7px; background: white; color: #172321; font-size: 14px; font-weight: 600; }
+.toolkit-button span { margin-right: 6px; font-size: 19px; }
+:where(a, button, input, select, summary):focus-visible { outline: 3px solid #1677a3; outline-offset: 3px; }
+.calculator-drawer { position: fixed; inset: 0 0 0 auto; margin: 0; padding: 0; border: 0; width: min(360px, 94vw); max-width: none; height: 100dvh; max-height: none; background: #fff; color: #172321; }
+.calculator-drawer::backdrop { background: rgb(15 28 25 / 35%); }
+.drawer-content { min-height: 100%; padding: 22px; }
+.drawer-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.drawer-heading h2 { margin: 0; font-size: 22px; }
+.nav-category { margin-top: 30px; }
+.nav-category h3, .toolkit-category { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #5d6d68; }
+.calculator-nav-item { display: block; margin-top: 10px; padding: 14px; border: 1px solid transparent; border-radius: 7px; text-decoration: none; }
+.calculator-nav-item strong, .calculator-nav-item span, .calculator-nav-item small { display: block; }
+.calculator-nav-item strong { font-size: 17px; }
+.calculator-nav-item span { margin-top: 3px; font-size: 14px; }
+.calculator-nav-item small { margin-top: 7px; font-size: 13px; line-height: 1.5; color: #5d6d68; }
+.calculator-nav-item:hover, .calculator-nav-item[aria-current=page] { background: #f0f4f2; border-color: #d4dcd3; }
+.calculator-nav-item .active-label { font-weight: 700; color: #174d42; }
+.toolkit-workspace { width: min(100% - 40px, 1000px); margin: 0 auto; padding: 36px 0 60px; }
+.toolkit-intro { margin-bottom: 28px; }
+.toolkit-intro h1 { margin: 0; font-size: clamp(28px, 4vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
+.toolkit-intro p { margin: 8px 0 0; color: #5d6d68; line-height: 1.5; }
+.toolkit-subtitle { font-size: 18px; font-weight: 600; }
+.toolkit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.toolkit-card { display: flex; flex-direction: column; padding: 25px; border: 1px solid #d4dcd3; border-radius: 10px; background: #fff; }
+.toolkit-card h2 { margin: 12px 0 0; font-size: 26px; }
+.toolkit-card p { margin: 8px 0; line-height: 1.55; }
+.toolkit-card small { font-size: 13px; color: #5d6d68; margin: 4px 0 16px; }
+.toolkit-open { display: flex; justify-content: space-between; align-items: center; min-height: 44px; margin-top: auto; padding-top: 20px; color: #174d42; font-weight: 700; text-underline-offset: 4px; }
+.transfusion-workspace { max-width: 860px; }
+.clinical-status { border-left: 3px solid #687d75; padding: 14px 18px; background: #fff; line-height: 1.5; }
+.clinical-section { padding: 22px; margin-top: 18px; border: 1px solid #d4dcd3; border-radius: 10px; background: #fff; }
+.clinical-section h2 { margin: 0; font-size: 20px; }
+.clinical-section h2 span { margin-right: 12px; font-size: 14px; color: #5d6d68; }
+.section-pending { margin-bottom: 0; color: #5d6d68; font-size: 14px; line-height: 1.5; }
+.calculator-species { color: #5d6d68; font-size: 14px; }
+@media (max-width: 600px) { .toolkit-grid { grid-template-columns: 1fr; } .vetcalc-brand span { display: none; } .toolkit-workspace { width: calc(100% - 28px); padding-top: 26px; } .toolkit-card { padding: 20px; } }
+@media (prefers-reduced-motion: no-preference) { .calculator-drawer[open] { animation: drawer-enter .16s ease-out; } @keyframes drawer-enter { from { transform: translateX(100%); } to { transform: translateX(0); } } }
+@media print { .vetcalc-header, .calculator-drawer { display: none !important; } }
+
 :root {
   --ink: #172321;
   --muted: #5d6d68;

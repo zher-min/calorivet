@@ -1,7 +1,23 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-async function render(path = "/") {
+test("dashboard and transfusion direct routes render inside VetCalc", async () => {
+  const home = await render("/");
+  assert.equal(home.status, 200);
+  const html = await home.text();
+  assert.match(html, /Veterinary Clinical Calculators/);
+  assert.match(html, /href="\/calculators\/calorie"/);
+  assert.match(html, /href="\/calculators\/transfusion"/);
+  assert.doesNotMatch(html, /Patient information/);
+  const transfusion = await render("/calculators/transfusion");
+  assert.equal(transfusion.status, 200);
+  const page = await transfusion.text();
+  for (const title of ["Blood Transfusion Calculator", "Blood Product", "Compatibility", "Donor Collection", "Administration &amp; Monitoring", "References"]) assert.ok(page.includes(title), title);
+  assert.match(page, /not yet available/);
+  assert.doesNotMatch(page, /kcal\/day/);
+});
+
+async function render(path = "/calculators/calorie") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
@@ -16,7 +32,8 @@ test("renders one continuous standard feeding workflow", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /CaloriVet Feeding Calculator/);
+  assert.match(html, /CaloriVet/);
+  assert.match(html, /Calorie &amp; Feeding Calculator/);
   assert.match(html, /What is this calculator for\?/);
   assert.match(html, /Estimates daily calorie needs and a starting feeding amount in g\/day/);
   assert.match(html, /AAFCO Modified Atwater formula/);

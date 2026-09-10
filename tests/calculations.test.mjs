@@ -9,7 +9,7 @@ import {
   estimateTargetWeightFromBcs,
   normalizeManufacturerEnergy,
   selectFoodEnergy,
-} from "../app/calculations.ts";
+} from "../calculators/calorie/calculations.ts";
 
 const completeAnalysis = { moisture: 8.5, protein: 34, fat: 16, fibre: 2.8, ash: 8 };
 const validAnalysis = calculateGuaranteedAnalysis(completeAnalysis);

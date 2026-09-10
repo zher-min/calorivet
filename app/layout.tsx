@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AppShell from "../components/layout/AppShell";
 
 export const metadata: Metadata = {
-  title: "CaloriVet — Body-Weight Calorie Calculator",
-  description: "Estimate daily calories, feeding amounts, caloric distribution, and lactation needs for dogs and cats.",
+  title: "VetCalc — Veterinary Clinical Calculators",
+  description: "Fast, practical calculators for veterinary clinical practice.",
   openGraph: {
-    title: "CaloriVet — Body-Weight Calorie Calculator",
-    description: "A clear veterinary nutrition calculator for food energy, daily feeding, and lactation needs.",
+    title: "VetCalc — Veterinary Clinical Calculators",
+    description: "Fast, practical calculators for veterinary clinical practice.",
     images: [{ url: "/og.png", width: 1536, height: 1024, alt: "CaloriVet veterinary nutrition calculator" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CaloriVet — Body-Weight Calorie Calculator",
-    description: "Food energy, daily feeding, and lactation needs in one clear calculator.",
+    title: "VetCalc — Veterinary Clinical Calculators",
+    description: "Fast, practical calculators for veterinary clinical practice.",
     images: ["/og.png"],
   },
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body><AppShell>{children}</AppShell></body></html>;
 }
