@@ -1,5 +1,59 @@
 @import "tailwindcss";
 
+.cri-page { width: min(100% - 32px, 760px); font-family: var(--sans); }
+.cri-page .toolkit-intro { margin-bottom: 20px; }
+.cri-calculator { display: grid; gap: 18px; }
+.cri-card, .cri-drug-card { display: grid; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+.cri-card h2, .cri-drug-card h3 { margin: 0; font-size: 19px; }
+.cri-drug-card header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cri-setup-card { gap: 22px; }
+.cri-choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.cri-segmented { margin: 0; padding: 0; border: 0; }
+.cri-segmented legend, .cri-field > span:first-child { display: block; margin-bottom: 7px; color: var(--ink); font-size: 14px; font-weight: 700; }
+.cri-segmented > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 10px; background: #e7ebe4; }
+.cri-segmented button { min-height: 48px; padding: 9px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.cri-segmented button.active { background: white; color: var(--green); box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+.cri-field { display: block; min-width: 0; }
+.cri-field small { display: block; margin-top: 6px; color: #a23b30; font-size: 13px; }
+.cri-number-unit, .cri-dose-input, .cri-stock-input { display: grid; align-items: stretch; min-width: 0; border: 1px solid #c3cdc4; border-radius: 10px; background: white; overflow: hidden; }
+.cri-number-unit { grid-template-columns: minmax(0, 1fr) 74px; }
+.cri-dose-input { grid-template-columns: minmax(70px, 1fr) 76px auto 76px; }
+.cri-stock-input { grid-template-columns: minmax(70px, 1fr) 76px 58px; }
+.cri-number-unit:focus-within, .cri-dose-input:focus-within, .cri-stock-input:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+.cri-field input, .cri-field select { min-width: 0; min-height: 50px; padding: 11px 12px; border: 0; outline: 0; background: white; color: var(--ink); font: inherit; font-size: 16px; font-weight: 700; }
+.cri-field input[aria-invalid=true] { box-shadow: inset 0 0 0 2px #a23b30; }
+.cri-field select { border-left: 1px solid var(--line); cursor: pointer; }
+.cri-number-unit > span, .cri-dose-input > span, .cri-stock-input > span { display: grid; place-items: center; padding: 0 9px; border-left: 1px solid var(--line); color: var(--muted); font-size: 14px; font-weight: 700; white-space: nowrap; }
+.cri-drugs { display: grid; gap: 12px; }
+.cri-remove { min-height: 44px; padding: 7px 4px; border: 0; background: transparent; color: #8a332b; font: inherit; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.cri-add-drug { justify-self: start; }
+.cri-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: -8px; }
+.cri-presets button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.cri-presets button[aria-pressed=true] { border-color: var(--green); background: var(--sage); color: var(--green-dark); }
+.cri-inline-error { margin: 0; padding: 12px 14px; border-left: 3px solid #a23b30; border-radius: 6px; background: #fff1f0; color: #832b24; font-size: 14px; }
+.cri-result { padding: 24px; border: 1px solid var(--sage-strong); border-radius: 14px; background: var(--sage); }
+.cri-result-label { display: block; margin-bottom: 13px; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.cri-drug-results { display: grid; gap: 10px; }
+.cri-drug-results > div { padding: 15px; border-radius: 10px; background: white; }
+.cri-drug-results span, .cri-drug-results strong, .cri-drug-results small { display: block; }
+.cri-drug-results span { color: var(--muted); font-size: 14px; font-weight: 700; }
+.cri-drug-results strong { margin-top: 4px; color: var(--green-dark); font-size: clamp(28px, 7vw, 40px); line-height: 1.1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.cri-drug-results small { margin-top: 7px; color: var(--muted); font-size: 13px; }
+.cri-result-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0 0; }
+.cri-result-grid > div { padding-top: 12px; border-top: 1px solid var(--sage-strong); }
+.cri-result-grid dt { color: var(--muted); font-size: 13px; }
+.cri-result-grid dd { margin: 4px 0 0; font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.cri-micro-warning { margin: 16px 0 0; padding: 12px 14px; border-left: 3px solid #bb8b2d; border-radius: 6px; background: #fff8e6; color: #69470d; font-size: 14px; line-height: 1.5; }
+@media (max-width: 600px) {
+  .cri-page { padding-top: 26px; }
+  .cri-choice-grid { grid-template-columns: 1fr; }
+  .cri-card, .cri-drug-card, .cri-result { padding: 18px; }
+  .cri-dose-input { grid-template-columns: minmax(54px, 1fr) 70px auto 68px; }
+  .cri-stock-input { grid-template-columns: minmax(54px, 1fr) 70px 52px; }
+  .cri-field input, .cri-field select { padding: 10px 8px; }
+  .cri-result-grid { grid-template-columns: 1fr; }
+}
+
 .bsa-page { width: min(100% - 32px, 620px); font-family: var(--sans); }
 .bsa-page > h1 { margin: 0 0 24px; font-size: clamp(28px, 5vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
 .bsa-calculator { display: grid; gap: 22px; padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: white; }

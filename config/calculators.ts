@@ -44,6 +44,15 @@ export const calculatorCategories = [
       },
     ],
   },
+  {
+    id: "pharmacology", name: "Pharmacology", calculators: [{
+      id: "cri", brand: "Constant Rate Infusion", name: "Constant Rate Infusion (CRI)",
+      shortName: "CRI preparation", route: "/calculators/cri",
+      description: "Calculate stock-drug volumes for fluid bags and syringe pumps",
+      homeDescription: "Calculate how much stock drug to add for a prescribed constant rate infusion.",
+      species: [], status: "active",
+    }],
+  },
 ] as const;
 
 export const calculators = calculatorCategories.flatMap(category => category.calculators.map(calculator => ({ ...calculator, category: category.name })));
