@@ -9,6 +9,9 @@ test("dashboard and transfusion direct routes render inside VetCalc", async () =
   assert.match(html, /href="\/calculators\/calorie"/);
   assert.match(html, /href="\/calculators\/transfusion"/);
   assert.doesNotMatch(html, /Patient information/);
+  assert.match(html, /<a[^>]*class="toolkit-card"[^>]*aria-label="Open CaloriVet calculator"/);
+  assert.match(html, /<a[^>]*class="toolkit-card"[^>]*aria-label="Open Blood Transfusion calculator"/);
+  assert.doesNotMatch(html, /<a[^>]*class="toolkit-open"/);
   const transfusion = await render("/calculators/transfusion");
   assert.equal(transfusion.status, 200);
   const page = await transfusion.text();

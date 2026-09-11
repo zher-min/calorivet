@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { calculatorCategories } from "../../config/calculators";
+import InstallApp from "./AppInstall";
 
 export function CalculatorNavigation({ onSelect }: { onSelect: () => void }) {
   const pathname = usePathname();
@@ -37,6 +38,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="drawer-content">
         <div className="drawer-heading"><h2 id="drawer-title">Calculators</h2><button className="toolkit-button" aria-label="Close calculators" onClick={close}>×</button></div>
         <CalculatorNavigation onSelect={close} />
+        <InstallApp />
       </div>
     </dialog>
     {children}
