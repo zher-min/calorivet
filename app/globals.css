@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+.tap-rate-page { width: min(100% - 32px, 560px); min-height: calc(100dvh - 68px); padding-top: 30px; font-family: var(--sans); }
+.tap-rate-page > h1 { width: min(100%, 480px); margin: 0 auto 4px; font-size: clamp(28px, 5vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
+.tap-rate { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: 20px; }
+.tap-rate__display { display: grid; place-content: center; min-height: 174px; padding: 20px 0 8px; text-align: center; }
+.tap-rate__value { min-width: 4ch; font-size: clamp(4rem, 18vw, 6rem); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.04em; color: var(--green-dark); }
+.tap-rate__unit { min-height: 24px; margin-top: 6px; font-size: 1rem; color: var(--muted); }
+.tap-rate__tap { width: 100%; min-height: clamp(220px, 42dvh, 340px); border: 1px solid var(--green); border-radius: 18px; background: var(--green); color: white; font: inherit; font-size: 1.5rem; font-weight: 800; letter-spacing: .04em; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: manipulation; transition: transform 80ms ease, background-color 80ms ease, opacity 80ms ease; }
+.tap-rate__tap:hover { background: var(--green-dark); }
+.tap-rate__tap--pressed { transform: scale(.985); opacity: .86; }
+.tap-rate__reset { align-self: center; min-width: 88px; min-height: 44px; padding: 8px 14px; border: 0; background: transparent; color: var(--green); font: inherit; font-size: .95rem; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.tap-rate__reset:disabled { color: var(--muted); opacity: .35; cursor: default; }
+@media (max-width: 600px) {
+  .tap-rate-page { padding-top: 22px; }
+  .tap-rate-page > h1 { font-size: 28px; }
+  .tap-rate__display { min-height: 150px; padding-top: 14px; }
+  .tap-rate__tap { min-height: clamp(240px, 45dvh, 380px); border-radius: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .tap-rate__tap { transition: none; } }
+
 .ps-workspace { font-family: var(--sans); font-size: 16px; line-height: 1.5; }
 .ps-workspace h2, .ps-workspace h3 { font-weight: 700; }
 .ps-workspace h3 { font-size: 17px; margin: 16px 0 10px; }

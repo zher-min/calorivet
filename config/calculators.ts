@@ -26,6 +26,15 @@ export const calculatorCategories = [
       species: ["dog", "cat"], status: "prototype", kind: "tool",
     }],
   },
+  {
+    id: "clinical-utilities", name: "Clinical Utilities", calculators: [{
+      id: "tap-rate", brand: "Tap Rate", name: "Tap Rate",
+      shortName: "Rate per minute", route: "/calculators/tap-rate",
+      description: "Tap repeatedly to measure events per minute",
+      homeDescription: "Measure a repeated event rate per minute with a simple tap interface.",
+      species: [], status: "active", kind: "tool",
+    }],
+  },
 ] as const;
 
 export const calculators = calculatorCategories.flatMap(category => category.calculators.map(calculator => ({ ...calculator, category: category.name })));
