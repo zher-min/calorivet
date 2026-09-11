@@ -27,13 +27,22 @@ export const calculatorCategories = [
     }],
   },
   {
-    id: "clinical-utilities", name: "Clinical Utilities", calculators: [{
-      id: "tap-rate", brand: "Tap Rate", name: "Tap Rate",
-      shortName: "Rate per minute", route: "/calculators/tap-rate",
-      description: "Tap repeatedly to measure events per minute",
-      homeDescription: "Measure a repeated event rate per minute with a simple tap interface.",
-      species: [], status: "active", kind: "tool",
-    }],
+    id: "clinical-utilities", name: "Clinical Utilities", calculators: [
+      {
+        id: "tap-rate", brand: "Tap Rate", name: "Tap Rate",
+        shortName: "Rate per minute", route: "/calculators/tap-rate",
+        description: "Tap repeatedly to measure events per minute",
+        homeDescription: "Measure a repeated event rate per minute with a simple tap interface.",
+        species: [], status: "active", kind: "tool",
+      },
+      {
+        id: "bsa", brand: "Body Surface Area", name: "Body Surface Area Calculator",
+        shortName: "Dogs & Cats", route: "/calculators/bsa",
+        description: "Calculate body surface area from body weight",
+        homeDescription: "Calculate veterinary body surface area for dogs and cats from body weight.",
+        species: ["dog", "cat"], status: "active",
+      },
+    ],
   },
 ] as const;
 
