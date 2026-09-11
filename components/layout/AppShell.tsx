@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { calculatorCategories } from "../../config/calculators";
 import InstallApp from "./AppInstall";
+import FeedbackDialog from "./FeedbackDialog";
 
 export function CalculatorNavigation({ onSelect }: { onSelect: () => void }) {
   const pathname = usePathname();
@@ -42,5 +43,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </div>
     </dialog>
     {children}
+    <footer className="site-feedback-footer"><FeedbackDialog /></footer>
   </>;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getCalculator } from "../../config/calculators";
 import ReferenceList from "../../components/calculators/ReferenceList";
 import { calorieReferences } from "./references";
@@ -43,7 +43,7 @@ const formatFactor = (minimum: number, maximum: number) =>
   `${isSingleValue(minimum, maximum) ? formatMultiplier(minimum) : `${formatMultiplier(minimum)}–${formatMultiplier(maximum)}`} × RER`;
 
 const clinicalDisclaimerText = "Estimated feeding amount only. Individual requirements may vary with body condition, activity level, health status, environment and treatment goals. Use as a starting guide and adjust according to clinical response and body-weight trends. Veterinary supervision is recommended.";
-const feedbackEndpoint = "https://formspree.io/f/mzebvqne";
+
 
 function NumberField({
   id,
@@ -313,94 +313,6 @@ function ClinicalDisclaimer() {
       <span aria-hidden="true">i</span>
       <p>{clinicalDisclaimerText}</p>
     </div>
-  );
-}
-
-function FeedbackDialog() {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-
-  function openFeedback() {
-    setStatus("idle");
-    dialogRef.current?.showModal();
-  }
-
-  function closeFeedback() {
-    dialogRef.current?.close();
-  }
-
-  async function submitFeedback(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    setStatus("sending");
-
-    try {
-      const response = await fetch(feedbackEndpoint, {
-        method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
-      });
-      if (!response.ok) throw new Error("Feedback could not be sent");
-      form.reset();
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    }
-  }
-
-  return (
-    <>
-      <button className="feedback-link" type="button" onClick={openFeedback}>Send feedback</button>
-      <dialog className="feedback-dialog" ref={dialogRef} onClose={() => setStatus("idle")} onClick={(event) => {
-        if (event.target === event.currentTarget) closeFeedback();
-      }}>
-        <div className="feedback-dialog-card">
-          <div className="feedback-dialog-heading">
-            <div>
-              <span>CaloriVet feedback</span>
-              <h2>Help improve the calculator</h2>
-            </div>
-            <button type="button" onClick={closeFeedback} aria-label="Close feedback form">×</button>
-          </div>
-
-          {status === "sent" ? (
-            <div className="feedback-success" role="status">
-              <strong>Thank you—your feedback was sent.</strong>
-              <p>It will help guide the next CaloriVet update.</p>
-              <button type="button" onClick={closeFeedback}>Done</button>
-            </div>
-          ) : (
-            <form action={feedbackEndpoint} method="POST" onSubmit={submitFeedback}>
-              <input type="hidden" name="subject" value="New CaloriVet website feedback" />
-              <label className="feedback-honeypot" aria-hidden="true">
-                Leave this field empty
-                <input name="_gotcha" tabIndex={-1} autoComplete="off" />
-              </label>
-              <label>
-                <span>Your feedback</span>
-                <textarea name="message" rows={5} maxLength={2000} required placeholder="What worked well, or what could be clearer?" />
-              </label>
-              <div className="feedback-contact-grid">
-                <label>
-                  <span>Name <small>(optional)</small></span>
-                  <input name="name" type="text" maxLength={80} autoComplete="name" />
-                </label>
-                <label>
-                  <span>Email for reply <small>(optional)</small></span>
-                  <input name="email" type="email" maxLength={160} autoComplete="email" />
-                </label>
-              </div>
-              <p className="feedback-privacy">Contact details are optional and used only if a reply is needed.</p>
-              {status === "error" && <p className="feedback-error" role="alert">The feedback could not be sent. Please try again.</p>}
-              <div className="feedback-actions">
-                <button type="button" onClick={closeFeedback}>Cancel</button>
-                <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send feedback"}</button>
-              </div>
-            </form>
-          )}
-        </div>
-      </dialog>
-    </>
   );
 }
 
@@ -777,7 +689,7 @@ export default function Home() {
 
       <footer>
         <p>CaloriVet · Veterinary nutrition estimates for dogs and cats</p>
-        <FeedbackDialog />
+
       </footer>
     </main>
   );

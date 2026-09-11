@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+.site-feedback-footer { text-align: center; padding: 12px 20px 160px; font-family: var(--sans); }
+.site-feedback-footer .feedback-link { min-height: 44px; font-size: 14px; text-transform: none; letter-spacing: normal; }
+.site-feedback-footer .feedback-dialog { margin: auto; }
+.site-feedback-footer .feedback-dialog input, .site-feedback-footer .feedback-dialog textarea { font-size: 16px; }
+.site-feedback-footer .feedback-dialog label > span { font-size: 14px; }
+.site-feedback-footer .feedback-dialog button { min-height: 44px; }
+@media print { .site-feedback-footer { display: none; } }
+
 .install-app { margin-top: 24px; }
 .install-button { display: inline-flex; align-items: center; gap: 5px; color: var(--green); }
 .install-help { margin-top: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); font-size: 14px; line-height: 1.55; }
