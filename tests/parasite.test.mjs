@@ -86,6 +86,8 @@ test('parasite direct route, dashboard navigation and prototype warning render',
       assert.match(html, /Find Protection/); assert.match(html, /Compare Products/); assert.match(html, /Identify Parasite/);
       assert.match(html, /Client View/); assert.match(html, /Vet View/);
       assert.match(html, /Malaysian product-label information has not yet been verified/);
+      assert.match(html, /Work in progress/);
+      assert.match(html, /Do not use it to make treatment or dispensing decisions/);
       assert.match(html, /🐕/); assert.match(html, /🐈/);
       assert.match(html, /Send feedback/);
     }

@@ -107,7 +107,10 @@ export default function ParasiteSelector() {
       </div></fieldset>
       <div className="ps-switch" role="group" aria-label={copy.view}>{[false, true].map(value => <button key={String(value)} type="button" aria-pressed={vet === value} onClick={() => setVet(value)}>{value ? copy.vet : copy.client}</button>)}</div>
     </div>
-    <p className="ps-notice">{copy.prototype}</p>
+    <div className="ps-wip-warning" role="note" aria-label={copy.wip}>
+      <strong><span aria-hidden="true">⚠</span> {copy.wip}</strong>
+      <p>{copy.prototype}</p>
+    </div>
     {!mode ? <div className="ps-modes">{copy.modes.map(item => <button type="button" className="toolkit-card" key={item.id} onClick={() => setMode(item.id)}><strong>{item.title}</strong><span>{item.description}</span><span aria-hidden="true">→</span></button>)}</div> : <>
       <button className="toolkit-button ps-back" type="button" onClick={() => setMode(null)}>{copy.back}</button>
       <h2 className="ps-mode-heading">{copy.modes.find(item => item.id === mode)?.title}</h2>

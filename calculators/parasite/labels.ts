@@ -2,7 +2,8 @@
 export const copy = {
   title: 'Parasite Selector',
   subtitle: 'Compare parasite coverage and help select appropriate preventative products.',
-  prototype: 'Prototype — Malaysian product-label information has not yet been verified. “?” means unknown, not no coverage.',
+  wip: 'Work in progress',
+  prototype: 'This prototype is under development. Malaysian product-label information has not yet been verified. Do not use it to make treatment or dispensing decisions. “?” means unknown, not no coverage.',
   species: 'Species', dog: 'Dog', cat: 'Cat', client: 'Client View', vet: 'Vet View',
   view: 'Information view', back: '← All modes',
   modes: [

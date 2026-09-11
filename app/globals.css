@@ -11,6 +11,9 @@
 .ps-switch button[aria-pressed=true], .ps-chips button[aria-pressed=true] { background: var(--green); color: white; border-color: var(--green); }
 .ps-switch button:focus-visible { outline-offset: -4px; }
 .ps-notice { background: var(--sage); border-left: 3px solid var(--green); padding: 12px 16px; margin: 22px 0; font-size: 14px; }
+.ps-wip-warning { margin: 22px 0; padding: 14px 16px; border: 1px solid #c79a3b; border-left: 4px solid #a36b12; border-radius: 8px; background: #fff7e3; color: #5d3c09; }
+.ps-wip-warning strong { display: block; font-size: 15px; }
+.ps-wip-warning p { margin: 5px 0 0; font-size: 14px; line-height: 1.5; }
 .ps-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .ps-modes button { text-align: left; font: inherit; }
 .ps-modes strong { font-size: 20px; }
