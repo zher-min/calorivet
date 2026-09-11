@@ -17,6 +17,15 @@ export const calculatorCategories = [
       species: ["dog", "cat"], status: "active",
     }],
   },
+  {
+    id: "parasite", name: "Parasite Prevention", calculators: [{
+      id: "parasite", brand: "Parasite Selector", name: "Parasite Selector",
+      shortName: "Dogs & Cats", route: "/calculators/parasite",
+      description: "Find protection and compare clinic products",
+      homeDescription: "Compare parasite coverage and help select appropriate preventative products. Prototype with unverified product-label data.",
+      species: ["dog", "cat"], status: "prototype", kind: "tool",
+    }],
+  },
 ] as const;
 
 export const calculators = calculatorCategories.flatMap(category => category.calculators.map(calculator => ({ ...calculator, category: category.name })));
