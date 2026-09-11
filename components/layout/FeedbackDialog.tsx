@@ -44,7 +44,7 @@ export default function FeedbackDialog() {
         <div className="feedback-dialog-card">
           <div className="feedback-dialog-heading">
             <div>
-              <span>VetCalc feedback</span>
+              <span>VetTools feedback</span>
               <h2 id="site-feedback-title">Help improve the calculator</h2>
             </div>
             <button type="button" onClick={closeFeedback} aria-label="Close feedback form">×</button>
@@ -53,12 +53,12 @@ export default function FeedbackDialog() {
           {status === "sent" ? (
             <div className="feedback-success" role="status">
               <strong>Thank you—your feedback was sent.</strong>
-              <p>It will help guide the next VetCalc update.</p>
+              <p>It will help guide the next VetTools update.</p>
               <button type="button" onClick={closeFeedback}>Done</button>
             </div>
           ) : (
             <form action={feedbackEndpoint} method="POST" onSubmit={submitFeedback}>
-              <input type="hidden" name="subject" value={`VetCalc feedback — ${pathname}`} />
+              <input type="hidden" name="subject" value={`VetTools feedback — ${pathname}`} />
               <input type="hidden" name="page" value={pathname} />
               <label className="feedback-honeypot" aria-hidden="true">
                 Leave this field empty

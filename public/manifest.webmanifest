@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "VetCalc — Veterinary Clinical Calculators",
-  "short_name": "VetCalc",
+  "name": "VetTools — Veterinary Clinical Calculators",
+  "short_name": "VetTools",
   "description": "Veterinary clinical calculators for dogs and cats.",
   "lang": "en",
   "start_url": "/",
@@ -10,8 +10,8 @@
   "background_color": "#f4f0e7",
   "theme_color": "#174d42",
   "icons": [
-    { "src": "/icons/vetcalc-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/vetcalc-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/vetcalc-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/icons/vettools-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/vettools-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/vettools-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

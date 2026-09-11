@@ -54,11 +54,11 @@ export default function InstallApp() {
       else setHelp(value => !value);
     }}><span aria-hidden="true">＋</span>{busy ? "Opening install…" : "Add to Home Screen"}</button>
     {help && <div id={id} className="install-help">
-      <p><strong>iPhone / iPad:</strong> Open VetCalc in Safari, tap Share → Add to Home Screen → Add. Keep “Open as Web App” enabled if shown.</p>
+      <p><strong>iPhone / iPad:</strong> Open VetTools in Safari, tap Share → Add to Home Screen → Add. Keep “Open as Web App” enabled if shown.</p>
       <p><strong>Android:</strong> In Chrome, open the ⋮ menu → Add to Home screen or Install app.</p>
       <p><strong>Computer:</strong> Use the install icon or “Install this site as an app” in Chrome or Edge’s menu, if available.</p>
-      <p>Using an in-app browser? Open <a href="https://vetcalc.zhermin96.chatgpt.site/" target="_blank" rel="noreferrer">VetCalc</a> in your phone’s browser first. Installation options depend on your browser.</p>
-      <p className="install-note">Internet is required to open VetCalc. Adding it does not save patient inputs or enable offline access.</p>
+      <p>Using an in-app browser? Open <a href="https://vettools.zhermin96.chatgpt.site/" target="_blank" rel="noreferrer">VetTools</a> in your phone’s browser first. Installation options depend on your browser.</p>
+      <p className="install-note">Internet is required to open VetTools. Adding it does not save patient inputs or enable offline access.</p>
       <button type="button" className="install-dismiss" onClick={() => setHelp(false)}>Hide instructions</button>
     </div>}
   </div>;

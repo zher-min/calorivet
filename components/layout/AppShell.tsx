@@ -28,7 +28,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => () => { document.body.style.overflow = ""; }, []);
   return <>
     <header className="vetcalc-header">
-      <Link className="vetcalc-brand" href="/">VetCalc<span>Veterinary Clinical Calculators</span></Link>
+      <Link className="vetcalc-brand" href="/">VetTools<span>Veterinary Clinical Calculators</span></Link>
       <button ref={trigger} className="toolkit-button" aria-haspopup="dialog" aria-controls="calculator-drawer" onClick={() => {
         dialog.current?.showModal(); document.body.style.overflow = "hidden";
       }}><span aria-hidden="true">☷</span> Calculators</button>
