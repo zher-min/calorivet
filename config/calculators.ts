@@ -12,8 +12,8 @@ export const calculatorCategories = [
     id: "transfusion", name: "Transfusion Medicine", calculators: [{
       id: "transfusion", brand: "Blood Transfusion", name: "Blood Transfusion Calculator",
       shortName: "Dogs & Cats", route: "/calculators/transfusion",
-      description: "Recipient requirements, donor collection and transfusion planning",
-      homeDescription: "Estimate recipient transfusion requirements, assess donor collection limits and support transfusion planning.",
+      description: "Transfusion volume and whole-blood donor requirements",
+      homeDescription: "Estimate transfusion volume, minimum whole-blood donor weight and donor collection capacity for dogs and cats.",
       species: ["dog", "cat"], status: "active",
     }],
   },

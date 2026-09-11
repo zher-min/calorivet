@@ -19,3 +19,18 @@ export const EVIDENCE = {
 // Technical review/validation bounds, not recommended clinical values.
 export const TECHNICAL = { ebvMin: 20, ebvMax: 150, pcvMax: 100, weightReviewKg: 150 } as const;
 export const productNames = { wholeBlood: "Whole blood", pRbc: "pRBC", plasma: "Plasma" } as const;
+
+// Presets are editable workflow defaults, not universal clinical endpoints.
+export const BEDSIDE = {
+  poundsPerKg: 2.20462,
+  defaultTargetPcv: 20,
+  targetQuickOptions: [20, 25],
+  targetContext: { dog: "Initial target preset: 20%; individualize to clinical status.", cat: "Initial target preset: 20%; individualize to clinical status." },
+  targetNote: "The 20% default and 20/25% shortcuts are workflow choices, not universal guideline targets. Merck supports individualized endpoints without PCV normalization.",
+  donor: {
+    dog: { ceiling: EVIDENCE.donor.dog.ceiling, displayIncrementKg: 1 },
+    cat: { ceiling: EVIDENCE.donor.cat.ceiling, displayIncrementKg: 0.1 },
+  },
+  donorNote: "Volume-only whole-blood estimate using the selected ceiling, excluding anticoagulant. Screening floors apply separately. Whole-blood yield cannot be equated to packed-cell yield. No separate recommended rate is assumed.",
+  warningThresholds: EVIDENCE.commonDose,
+} as const;
