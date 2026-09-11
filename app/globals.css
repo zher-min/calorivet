@@ -1,5 +1,102 @@
 @import "tailwindcss";
 
+.em-page { width: min(100% - 32px, 1040px); font-family: var(--sans); color: var(--ink); }
+.em-page .toolkit-intro { margin-bottom: 18px; }
+.em-patient { position: sticky; top: 76px; z-index: 20; display: grid; grid-template-columns: minmax(180px, 1fr) minmax(220px, 1fr); align-items: end; gap: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.97); box-shadow: 0 8px 24px rgba(16,40,35,.08); backdrop-filter: blur(8px); }
+.em-patient > label > span:first-child, .em-patient legend { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
+.em-patient small { display: block; margin-top: 5px; color: #a23b30; font-size: 13px; }
+.em-weight-input { display: grid; grid-template-columns: minmax(0, 1fr) 52px; align-items: stretch; overflow: hidden; border: 1px solid #c3cdc4; border-radius: 9px; background: white; }
+.em-weight-input:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+.em-weight-input input { min-width: 0; min-height: 48px; padding: 10px 12px; border: 0; outline: 0; color: var(--ink); font: inherit; font-size: 17px; font-weight: 700; }
+.em-weight-input input[aria-invalid=true] { box-shadow: inset 0 0 0 2px #a23b30; }
+.em-weight-input > span { display: grid; place-items: center; border-left: 1px solid var(--line); color: var(--muted); font-size: 14px; font-weight: 700; }
+.em-patient .segmented button { min-height: 48px; font-size: 15px; cursor: pointer; }
+.em-recover, .em-other { margin-top: 24px; }
+.em-section-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 0 2px; }
+.em-section-heading > span { color: var(--muted); font-size: 13px; font-weight: 800; }
+.em-section-heading h2 { margin: 0; font-size: 24px; line-height: 1.2; }
+.em-section-heading p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.em-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.em-card-grid > .em-drug-card:only-child { grid-column: 1 / -1; max-width: 650px; }
+.em-subsection-title { margin: 24px 0 10px; font-size: 16px; }
+.em-drug-card { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+.em-drug-card-dominant { border-color: var(--green); box-shadow: inset 4px 0 0 var(--green); }
+.em-drug-header > div > span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+.em-drug-header h3 { display: flex; align-items: center; gap: 7px; margin: 4px 0 0; font-size: 20px; line-height: 1.2; }
+.em-info { position: relative; display: inline-block; font-size: 14px; }
+.em-info summary { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: var(--green); cursor: pointer; list-style: none; }
+.em-info summary::-webkit-details-marker { display: none; }
+.em-info[open] > div { position: absolute; top: 35px; right: -8px; z-index: 15; width: min(330px, calc(100vw - 48px)); padding: 13px 14px; border-radius: 9px; background: var(--green-dark); color: white; box-shadow: 0 12px 28px rgba(0,0,0,.24); font-size: 13px; font-weight: 400; line-height: 1.45; }
+.em-info p { margin: 0 0 8px; }.em-info p:last-child { margin-bottom: 0; }
+.em-info .em-reference { padding-top: 8px; border-top: 1px solid rgba(255,255,255,.2); color: #c8dacd; }
+.em-concentration { margin: 14px 0; }
+.em-concentration > label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; }
+.em-concentration > div { display: grid; grid-template-columns: minmax(0,1fr) 76px; align-items: stretch; overflow: hidden; border: 1px solid #c3cdc4; border-radius: 8px; }
+.em-concentration input { min-width: 0; min-height: 46px; padding: 9px 11px; border: 0; outline: 0; color: var(--ink); font: inherit; font-size: 16px; font-weight: 700; }
+.em-concentration input[aria-invalid=true] { box-shadow: inset 0 0 0 2px #a23b30; }
+.em-concentration > div > span { display: grid; place-items: center; padding: 0 7px; border-left: 1px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.em-concentration > small { display: block; margin-top: 5px; color: #a23b30; font-size: 12px; }
+.em-concentration > button { min-height: 38px; padding: 6px 0; border: 0; background: transparent; color: var(--green); font: inherit; font-size: 12px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.em-fixed-formulation { margin: 13px 0; color: var(--muted); font-size: 13px; }
+.em-route-selector { margin: 14px 0; padding: 0; border: 0; }
+.em-route-selector legend { margin-bottom: 6px; font-size: 13px; font-weight: 700; }
+.em-route-selector > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.em-route-selector button, .em-category-buttons button, .em-toxin-selector button, .em-dilution button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.em-route-selector button[aria-pressed=true], .em-category-buttons button[aria-pressed=true], .em-toxin-selector button[aria-pressed=true], .em-dilution button[aria-pressed=true] { border-color: var(--green); background: var(--green); color: white; }
+.em-dose-list { display: grid; gap: 12px; }
+.em-dose-block { padding-top: 12px; border-top: 1px solid var(--line); }
+.em-dose-heading { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
+.em-dose-heading > span { color: var(--muted); }
+.em-locked-dose { margin: 6px 0 10px; color: var(--muted); font-size: 13px; font-weight: 700; }
+.em-calculation-lines { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; margin: 0; }
+.em-calculation-lines > div { padding: 8px 10px; border-radius: 7px; background: #f4f7f4; }
+.em-calculation-lines dt { color: var(--muted); font-size: 11px; }
+.em-calculation-lines dd { margin: 3px 0 0; font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.em-give { margin-top: 10px; padding: 13px 14px; border-radius: 9px; background: var(--green); color: white; }
+.em-give span, .em-give strong { display: block; }
+.em-give span { color: #c8dacd; font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+.em-give strong { margin-top: 3px; font-size: clamp(25px, 5vw, 34px); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.em-lipid-total { display: flex; justify-content: space-between; gap: 12px; margin-top: 9px; padding: 10px; background: var(--sage); border-radius: 7px; font-size: 13px; }
+.em-admin-note, .em-note { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.em-volume-warning, .em-warning { margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid #bb8b2d; border-radius: 5px; background: #fff8e6; color: #69470d; font-size: 13px; line-height: 1.45; }
+.em-volume-warning-strong, .em-warning-warning { border-color: #a23b30; background: #fff1f0; color: #832b24; }
+.em-warning-info { border-color: #7896a0; background: #f1f5f6; color: #304b54; }
+.em-warning strong { display: block; margin-bottom: 3px; font-size: 10px; letter-spacing: .06em; }
+.em-category-buttons { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+.em-category-buttons button { min-height: 52px; text-align: left; font-size: 14px; }
+.em-selected-category { margin-top: 18px; }.em-selected-category > h3 { margin: 0 0 12px; font-size: 19px; }
+.em-toxin-selector { margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: white; }
+.em-toxin-selector > span { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
+.em-toxin-selector > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.em-cumulative { display: grid; gap: 8px; margin-top: 14px; padding: 12px; border-radius: 8px; background: var(--paper); font-size: 13px; }
+.em-cumulative label { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 700; }
+.em-cumulative label span { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.em-cumulative input { width: 90px; min-height: 42px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; font: inherit; font-size: 16px; }
+.em-cumulative > div { display: flex; justify-content: space-between; gap: 10px; }
+.em-dilution { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.em-dilution > span { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 700; }
+.em-dilution > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.em-dilution dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-bottom: 0; }
+.em-dilution dl > div { padding: 8px; background: var(--sage); border-radius: 7px; }.em-dilution dt { font-size: 11px; color: var(--muted); }.em-dilution dd { margin: 3px 0 0; font-weight: 800; }
+.em-settings { margin-top: 24px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: white; }
+.em-settings summary { min-height: 44px; align-content: center; cursor: pointer; font-size: 14px; font-weight: 700; }
+.em-settings p { color: var(--muted); font-size: 13px; }
+.em-disclaimer { margin-top: 22px; padding: 17px 18px; border: 1px solid #b9c8c0; border-left: 4px solid var(--green); border-radius: 8px; background: #edf2ef; font-size: 13px; line-height: 1.5; }
+.em-disclaimer > strong { font-size: 14px; }.em-disclaimer p { margin: 7px 0 0; }
+@media (max-width: 720px) {
+  .em-page { padding-top: 24px; }
+  .em-patient { top: 68px; grid-template-columns: 1fr 1fr; padding: 10px; }
+  .em-patient > label > span:first-child, .em-patient legend { font-size: 12px; }
+  .em-card-grid, .em-category-buttons { grid-template-columns: 1fr; }
+  .em-card-grid > .em-drug-card:only-child { max-width: none; }
+}
+@media (max-width: 480px) {
+  .em-patient { grid-template-columns: 1fr; position: relative; top: auto; }
+  .em-drug-card { padding: 16px; }
+  .em-calculation-lines, .em-dilution dl { grid-template-columns: 1fr; }
+  .em-info[open] > div { right: -32px; }
+}
+
 .cri-page { width: min(100% - 32px, 760px); font-family: var(--sans); }
 .cri-page .toolkit-intro { margin-bottom: 20px; }
 .cri-calculator { display: grid; gap: 18px; }

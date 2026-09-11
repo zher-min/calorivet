@@ -53,6 +53,15 @@ export const calculatorCategories = [
       species: [], status: "active",
     }],
   },
+  {
+    id: "emergency", name: "Emergency & Critical Care", calculators: [{
+      id: "emergency", brand: "Emergency Drug Calculator", name: "Emergency Drug Calculator",
+      shortName: "RECOVER CPR & emergency treatments", route: "/calculators/emergency",
+      description: "Weight-based crash-sheet drug and treatment calculations",
+      homeDescription: "Calculate RECOVER CPR drugs and common emergency treatment doses from one patient weight.",
+      species: ["dog", "cat"], status: "active",
+    }],
+  },
 ] as const;
 
 export const calculators = calculatorCategories.flatMap(category => category.calculators.map(calculator => ({ ...calculator, category: category.name })));
