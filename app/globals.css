@@ -707,6 +707,35 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .text-input:focus { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(22, 119, 163, 0.13); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
+/* Urine output */
+.uo-page { width: min(100% - 32px, 620px); padding-top: 30px; padding-bottom: calc(210px + env(safe-area-inset-bottom)); font-family: var(--sans); }
+.uo-page > h1 { margin: 0 0 24px; font-size: clamp(28px, 5vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
+.uo-calculator { display: grid; gap: 18px; }
+.uo-input-card { display: grid; gap: 18px; padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+.uo-field { display: block; }
+.uo-field > span:first-child { display: block; margin-bottom: 7px; color: var(--ink); font-size: 14px; font-weight: 700; }
+.uo-input-shell { display: grid; grid-template-columns: minmax(0, 1fr) 60px; align-items: center; overflow: hidden; border: 1px solid #c3cdc4; border-radius: 10px; background: white; }
+.uo-input-shell:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+.uo-input-shell input { width: 100%; min-width: 0; min-height: 52px; padding: 12px 14px; border: 0; outline: 0; background: transparent; color: var(--ink); font-family: var(--sans); font-size: 18px; font-weight: 700; }
+.uo-input-shell input[aria-invalid=true] { box-shadow: inset 0 0 0 2px #a23b30; }
+.uo-input-shell > span { display: grid; align-self: stretch; place-items: center; border-left: 1px solid var(--line); color: var(--muted); font-size: 14px; font-weight: 700; }
+.uo-field-error { display: block; margin-top: 6px; color: #982f27; font-size: 13px; line-height: 1.35; }
+.uo-reset { justify-self: start; min-height: 44px; padding: 8px 4px; border: 0; background: transparent; color: var(--green); font: inherit; font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.uo-reset:disabled { color: var(--muted); opacity: .4; cursor: default; }
+.uo-disclaimer { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.uo-result { position: fixed; right: 12px; bottom: max(10px, env(safe-area-inset-bottom)); left: 50%; z-index: 35; width: min(592px, calc(100% - 24px)); min-height: 160px; transform: translateX(-50%); display: grid; place-content: center; justify-items: center; padding: 16px 20px; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 14px 36px rgba(16,40,35,.2); text-align: center; backdrop-filter: blur(12px); }
+.uo-result--neutral { background: rgba(255,255,255,.97); }
+.uo-result--green { border-color: #5a9f78; background: rgba(231,245,236,.97); }
+.uo-result--amber { border-color: #bb8b2d; background: rgba(255,248,230,.97); }
+.uo-result--red { border-color: #bb554b; background: rgba(255,238,235,.97); }
+.uo-result-value { min-width: 5ch; color: var(--green-dark); font-size: clamp(42px, 11vw, 64px); font-weight: 850; line-height: .95; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.uo-result-unit { margin-top: 5px; color: var(--muted); font-size: 15px; font-weight: 700; }
+.uo-status { display: flex; align-items: center; gap: 7px; margin-top: 10px; color: var(--ink); font-size: 14px; font-weight: 850; letter-spacing: .04em; }
+.uo-status span { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.uo-result--green .uo-status { color: #17633f; }.uo-result--amber .uo-status { color: #79500e; }.uo-result--red .uo-status { color: #982f27; }
+.uo-reference, .uo-neutral-message { margin-top: 5px; color: var(--muted); font-size: 13px; font-weight: 600; }
+@media print { .uo-result { position: static; width: 100%; transform: none; box-shadow: none; } }
+
 @media (max-width: 650px) {
   .privacy { display: none; }
   .intro { padding-top: 25px; text-align: left; }
@@ -755,6 +784,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .mobile-result-bar span, .mobile-result-bar strong { display: block; }
   .mobile-result-bar span { color: #bcd2c6; font-size: 8px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
   .mobile-result-bar strong { margin-top: 3px; font-size: 11px; line-height: 1.25; overflow-wrap: anywhere; }
+  .uo-page { width: calc(100% - 24px); padding-top: 22px; padding-bottom: calc(205px + env(safe-area-inset-bottom)); }
+  .uo-page > h1 { font-size: 28px; }
+  .uo-input-card { padding: 20px 18px; }
+  .uo-result { min-height: 154px; }
 }
 
 @media (max-width: 390px) {

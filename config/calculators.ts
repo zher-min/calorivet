@@ -43,6 +43,13 @@ export const calculatorCategories = [
         species: ["dog", "cat"], status: "active",
       },
       {
+        id: "urine-output", brand: "Urine Output", name: "Urine Output Calculator",
+        shortName: "mL/kg/hr", route: "/calculators/urine-output",
+        description: "Calculate urine output from volume, weight and collection time",
+        homeDescription: "Calculate urine output in mL/kg/hr for hospitalized patient monitoring.",
+        species: [], status: "active",
+      },
+      {
         id: "pill-counter", brand: "Pill Counter", name: "Pill Counter",
         shortName: "Tablet counting", route: "/calculators/pill-counter",
         description: "Count tablets and capsules from a photo with editable markers",
