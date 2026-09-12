@@ -42,6 +42,13 @@ export const calculatorCategories = [
         homeDescription: "Calculate veterinary body surface area for dogs and cats from body weight.",
         species: ["dog", "cat"], status: "active",
       },
+      {
+        id: "pill-counter", brand: "Pill Counter", name: "Pill Counter",
+        shortName: "Tablet counting", route: "/calculators/pill-counter",
+        description: "Count tablets and capsules from a photo with editable markers",
+        homeDescription: "Detect and verify individual tablets or capsules locally in your browser.",
+        species: [], status: "prototype", kind: "tool",
+      },
     ],
   },
   {
