@@ -65,6 +65,12 @@ export const calculatorCategories = [
       description: "Calculate stock-drug volumes for fluid bags and syringe pumps",
       homeDescription: "Calculate how much stock drug to add for a prescribed constant rate infusion.",
       species: [], status: "active",
+    }, {
+      id: "drug-dilution", brand: "Drug Dilution", name: "Drug Dilution Calculator",
+      shortName: "Dilution & concentration", route: "/calculators/drug-dilution",
+      description: "Calculate and verify drug dilutions across common concentration units",
+      homeDescription: "Prepare and verify drug dilutions, specific doses and percentage concentrations.",
+      species: [], status: "active",
     }],
   },
   {
