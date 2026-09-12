@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import EmergencyDrugCard from "./EmergencyDrugCard";
 import { calculateEmergencyDose, formatRange } from "./calculations";
 import { concentrationDefinitions, defibrillationTreatments, emergencyCategories, recoverTreatments } from "./data";
@@ -48,6 +48,7 @@ export default function EmergencyCalculator() {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [toxin, setToxin] = useState<string | null>(null);
   const [quickDosesOpen, setQuickDosesOpen] = useState(false);
+  const quickJumpRef = useRef<HTMLDetailsElement>(null);
   const concentrations = useEmergencyConcentrations();
   const parsedWeight = Number(weight);
   const weightKg = weight.trim() !== "" && Number.isFinite(parsedWeight) && parsedWeight > 0 ? parsedWeight : null;
@@ -74,6 +75,15 @@ export default function EmergencyCalculator() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [quickDosesOpen]);
+  useEffect(() => {
+    const closeQuickJump = (event: PointerEvent | KeyboardEvent) => {
+      if (event instanceof KeyboardEvent && event.key === "Escape") quickJumpRef.current?.removeAttribute("open");
+      if (event instanceof PointerEvent && quickJumpRef.current && !quickJumpRef.current.contains(event.target as Node)) quickJumpRef.current.removeAttribute("open");
+    };
+    document.addEventListener("pointerdown", closeQuickJump);
+    document.addEventListener("keydown", closeQuickJump);
+    return () => { document.removeEventListener("pointerdown", closeQuickJump); document.removeEventListener("keydown", closeQuickJump); };
+  }, []);
 
   const quickRows = recoverForSpecies.map(treatment => {
     const option = treatment.doseOptions.find(item => !item.species || item.species.includes(species));
@@ -96,7 +106,7 @@ export default function EmergencyCalculator() {
 
     <nav className="em-floating-actions" aria-label="Emergency calculator shortcuts">
       <button type="button" onClick={() => setQuickDosesOpen(true)}>Quick doses</button>
-      <details className="em-quick-nav"><summary>Quick jump</summary><div><a href="#recover-title">RECOVER CPR</a><a href="#other-title">Other treatments</a><a href="#em-settings">Concentrations</a></div></details>
+      <details ref={quickJumpRef} className="em-quick-nav"><summary>Quick jump</summary><div><a href="#recover-title" onClick={() => quickJumpRef.current?.removeAttribute("open")}>RECOVER CPR</a><a href="#other-title" onClick={() => quickJumpRef.current?.removeAttribute("open")}>Other treatments</a><a href="#em-settings" onClick={() => quickJumpRef.current?.removeAttribute("open")}>Concentrations</a></div></details>
     </nav>
 
     {quickDosesOpen && <div className="em-quick-overlay" role="dialog" aria-modal="true" aria-labelledby="quick-doses-title" onMouseDown={event => { if (event.target === event.currentTarget) setQuickDosesOpen(false); }}>

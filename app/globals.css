@@ -13,7 +13,7 @@
 .pill-empty { margin-top: 18px; padding: 28px; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); text-align: center; }.pill-disclaimer { margin-top: 18px; padding: 14px 16px; border-left: 4px solid var(--green); border-radius: 8px; background: #edf2ef; color: var(--muted); font-size: 13px; line-height: 1.5; }.pill-disclaimer strong { color: var(--ink); }.pill-disclaimer p { margin: 5px 0 0; }.pill-debug { margin-top: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); font-size: 12px; }.pill-debug img { display: block; max-width: 100%; margin-top: 8px; border-radius: 5px; }
 @media (max-width: 600px) { .pill-page { width: min(100% - 24px, 820px); }.pill-controls { grid-template-columns: 1fr; }.pill-actions { display: grid; grid-template-columns: 1fr 1fr; }.pill-actions .toolkit-button { width: 100%; }.pill-toolbar .toolkit-button { flex: 1 1 auto; }.pill-result strong { font-size: 22px; } }
 
-.em-page { width: min(100% - 32px, 1040px); font-family: var(--sans); color: var(--ink); }
+.em-page { width: min(100% - 32px, 1040px); padding-bottom: 32px; font-family: var(--sans); color: var(--ink); }
 .em-page .toolkit-intro { margin-bottom: 18px; }
 .em-patient { position: sticky; top: 76px; z-index: 20; display: grid; grid-template-columns: minmax(180px, 1fr) minmax(220px, 1fr); align-items: end; gap: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.97); box-shadow: 0 8px 24px rgba(16,40,35,.08); backdrop-filter: blur(8px); }
 .em-patient > label > span:first-child, .em-patient legend { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
@@ -93,8 +93,8 @@
 .em-quick-nav { position: relative; }
 .em-quick-nav summary { align-content: center; background: var(--green-dark); color: white; box-shadow: 0 8px 24px rgba(0,0,0,.2); list-style: none; }
 .em-quick-nav summary::-webkit-details-marker { display: none; }
-.em-quick-nav details > div { position: absolute; right: 0; bottom: 52px; display: grid; width: 190px; overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: white; box-shadow: 0 12px 30px rgba(0,0,0,.2); }
-.em-quick-nav a { padding: 11px 13px; border-bottom: 1px solid var(--line); color: var(--ink); font-size: 13px; font-weight: 700; text-decoration: none; }.em-quick-nav a:last-child { border-bottom: 0; }
+.em-quick-nav > div { position: absolute; right: 0; bottom: calc(100% + 8px); z-index: 1; display: grid; width: min(210px, calc(100vw - 24px)); max-height: min(60vh, 360px); overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--line); border-radius: 9px; background: white; box-shadow: 0 12px 30px rgba(0,0,0,.2); }
+.em-quick-nav a { display: flex; min-height: 44px; align-items: center; padding: 11px 13px; border-bottom: 1px solid var(--line); color: var(--ink); font-size: 13px; font-weight: 700; text-decoration: none; }.em-quick-nav a:last-child { border-bottom: 0; }.em-quick-nav a:hover, .em-quick-nav a:focus-visible { background: var(--sage); }
 .em-quick-overlay { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(10,27,23,.58); backdrop-filter: blur(3px); }
 .em-quick-sheet { width: min(760px, 100%); max-height: calc(100vh - 32px); overflow: hidden; border-radius: 12px; background: white; box-shadow: 0 24px 70px rgba(0,0,0,.35); }
 .em-quick-sheet > header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border-bottom: 1px solid var(--line); background: var(--green-dark); color: white; }
@@ -138,7 +138,8 @@
   .em-drug-card { padding: 16px; }
   .em-calculation-lines, .em-dilution dl { grid-template-columns: 1fr; }
   .em-info[open] > div { top: auto; bottom: 16px; max-height: calc(100vh - 32px); transform: translateX(-50%); }
-  .em-floating-actions { right: 12px; bottom: 12px; }
+  .em-floating-actions { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); }
+  .em-page { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
   .em-concentration-directory { grid-template-columns: 1fr; }
   .em-quick-table-head, .em-quick-row { grid-template-columns: minmax(115px,1.2fr) minmax(105px,1fr) minmax(80px,.8fr); gap: 7px; padding: 8px 10px; }
   .em-quick-row { font-size: 12px; }.em-quick-row > strong { font-size: 14px; }
