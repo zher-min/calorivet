@@ -507,7 +507,7 @@ export default function Home() {
     : condition;
   const consultationSummary = dailyEnergy && feedingAmount && selectedFoodEnergy
     ? [
-        "CaloriVet consultation summary",
+        "VetSlate nutrition consultation summary",
         `Patient: ${petName.trim() || "Not provided"}`,
         `Species: ${species}`,
         `Current body weight: ${formatNumber(Number(weight), 2)} kg`,
@@ -557,8 +557,7 @@ export default function Home() {
       <a className="skip-link" href="#calculator">Skip to calculator</a>
 
       <section className="intro" id="top" aria-labelledby="page-title">
-        <h1 id="page-title">{calculator.brand}</h1>
-        <p>{calculator.name}</p>
+        <h1 id="page-title">{calculator.name}</h1>
         <p className="calculator-species">Dogs &amp; Cats</p>
         <details className="calculator-purpose">
           <summary>What is this calculator for?</summary>
@@ -669,7 +668,7 @@ export default function Home() {
 
       {dailyEnergy && feedingAmount && selectedFoodEnergy && (
         <section className="print-summary">
-          <h1>CaloriVet consultation summary</h1>
+          <h1>VetSlate nutrition consultation summary</h1>
           <dl>
             <div><dt>Patient</dt><dd>{petName.trim() || "Not provided"}</dd></div>
             <div><dt>Species</dt><dd>{species}</dd></div>
@@ -687,10 +686,6 @@ export default function Home() {
         </section>
       )}
 
-      <footer>
-        <p>CaloriVet · Veterinary nutrition estimates for dogs and cats</p>
-
-      </footer>
     </main>
   );
 }

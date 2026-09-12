@@ -3,27 +3,27 @@ import "./globals.css";
 import AppShell from "../components/layout/AppShell";
 import { AppInstallProvider } from "../components/layout/AppInstall";
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#174d42" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f4f0e7" }, { media: "(prefers-color-scheme: dark)", color: "#0f1c28" }] };
 
 export const metadata: Metadata = {
-  title: "VetTools — Veterinary Clinical Calculators",
-  description: "Fast, practical calculators for veterinary clinical practice.",
-  applicationName: "VetTools",
+  title: "VetSlate — Tools for the Veterinarian",
+  description: "Fast, practical clinical tools for veterinarians.",
+  applicationName: "VetSlate",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "VetTools", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "VetSlate", statusBarStyle: "default" },
   other: { "apple-mobile-web-app-capable": "yes" },
   openGraph: {
-    title: "VetTools — Veterinary Clinical Calculators",
-    description: "Fast, practical calculators for veterinary clinical practice.",
-    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "CaloriVet veterinary nutrition calculator" }],
+    title: "VetSlate — Tools for the Veterinarian",
+    description: "Fast, practical clinical tools for veterinarians.",
+    images: [{ url: "/icons/vetslate-1024.png", width: 1024, height: 1024, alt: "VetSlate" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "VetTools — Veterinary Clinical Calculators",
-    description: "Fast, practical calculators for veterinary clinical practice.",
-    images: ["/og.png"],
+    title: "VetSlate — Tools for the Veterinarian",
+    description: "Fast, practical clinical tools for veterinarians.",
+    images: ["/icons/vetslate-1024.png"],
   },
-  icons: { icon: "/icons/vettools-192.png", shortcut: "/icons/vettools-192.png", apple: [{ url: "/icons/vettools-apple-touch-icon.png", sizes: "180x180" }] },
+  icons: { icon: "/icons/vetslate-192.png", shortcut: "/icons/vetslate-192.png", apple: [{ url: "/icons/vetslate-apple-touch-icon.png", sizes: "180x180" }] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

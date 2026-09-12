@@ -25,7 +25,7 @@ export default function Transfusion() {
   const capacity = calculateDonorCapacity(species, donorWeight, result?.volumeMl, product);
   function clear() { setWeight(""); setCurrent(""); setTarget(String(BEDSIDE.defaultTargetPcv)); setProductPcv(""); setDonorWeight(""); setCustom(false); setResetKey(k => k + 1); }
   return <main className={`toolkit-workspace tx-calculator tx-bedside${result ? " tx-has-sticky-result" : ""}`}>
-    <header className="tx-bedside-heading"><div><h1>Blood Transfusion</h1><p>Dogs &amp; Cats</p></div><button type="button" className="reset-button tx-clear" onClick={clear}>Clear</button></header>
+    <header className="tx-bedside-heading"><div><h1>Blood Transfusion Calculator</h1><p>Dogs &amp; Cats</p></div><button type="button" className="reset-button tx-clear" onClick={clear}>Reset</button></header>
     <section className="workflow-card tx-bedside-card" aria-label="Transfusion calculator">
       <div key={resetKey} className="tx-bedside-form">
         <fieldset className="species-picker"><legend>Species</legend><div className="segmented">

@@ -1,17 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-test("release homepage and transfusion direct routes render inside VetTools", async () => {
+test("release homepage and transfusion direct routes render inside VetSlate", async () => {
   const home = await render("/");
   assert.equal(home.status, 200);
   const html = await home.text();
-  assert.match(html, /Veterinary Clinical Calculators/);
+  assert.match(html, /Tools for the Veterinarian/);
   assert.match(html, /href="\/calculators\/calorie"/);
   assert.match(html, /href="\/calculators\/transfusion"/);
   assert.doesNotMatch(html, /Patient information/);
   assert.match(html, /What’s new/);
-  assert.match(html, /v3\.11\.0/);
-  assert.match(html, /Open calculators/);
+  assert.match(html, /v4\.0\.0/);
+  assert.match(html, /Open toolbox/);
   assert.match(html, /Previous updates/);
   assert.doesNotMatch(html, /class="toolkit-grid"/);
   const transfusion = await render("/calculators/transfusion");
@@ -47,7 +47,7 @@ test("renders one continuous standard feeding workflow", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /CaloriVet/);
+  assert.doesNotMatch(html, />CaloriVet(?:\s|<)/);
   assert.match(html, /Calorie &amp; Feeding Calculator/);
   assert.match(html, /What is this calculator for\?/);
   assert.match(html, /Estimates daily calorie needs and a starting feeding amount in g\/day/);

@@ -6,7 +6,7 @@ export default function Home() {
   const [current, ...previous] = releases;
   return <main className="toolkit-workspace home-workspace">
     <section className="home-intro" aria-labelledby="home-title">
-      <div><h1 id="home-title">VetTools</h1><p className="toolkit-subtitle">Veterinary Clinical Calculators</p><p>Fast, practical calculators for veterinary clinical practice.</p></div>
+      <div><picture className="home-brand"><source media="(prefers-color-scheme: dark)" srcSet="/brand/vetslate-logo-dark.svg" /><img src="/brand/vetslate-logo.svg" alt="VetSlate" /></picture><h1 className="sr-only" id="home-title">VetSlate</h1><p className="toolkit-subtitle">Tools for the Veterinarian</p><p>Fast, practical clinical tools for veterinary practice.</p></div>
       <OpenCalculatorsButton />
     </section>
     <section className="release-section" aria-labelledby="whats-new-title">

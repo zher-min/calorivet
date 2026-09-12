@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 916.52 905.78">
+  <defs>
+    <clipPath id="clippath">
+      <rect width="916.52" height="905.78" rx="160.65" ry="160.65" fill="none" stroke-width="0"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clippath)">
+    <rect width="916.52" height="905.78" rx="160.65" ry="160.65" fill="#17324a" stroke-width="0"/>
+    <polygon points="294.98 -1.45 314.53 18.1 967.03 670.6 974.37 3.44 294.98 -1.45" fill="#344e69" stroke-width="0"/>
+    <polygon points="420.37 -11.23 435.75 4.14 948.99 517.39 954.76 -7.39 420.37 -11.23" fill="#669d9a" stroke-width="0"/>
+  </g>
+</svg>

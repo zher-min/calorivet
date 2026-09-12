@@ -151,7 +151,7 @@ export default function EmergencyCalculator() {
     <section className="em-disclaimer"><strong>Clinical Decision Support Only</strong>
       <p>This calculator is intended to assist veterinary professionals with emergency drug and treatment calculations. It does not replace clinical judgment, patient assessment, current treatment guidelines, or verification of drug concentration, dose, route, and contraindications.</p>
       <p>Always confirm all calculations before administration. Drug concentrations and recommendations may vary between products, institutions, patients, and updated guidelines.</p>
-      <p>VetTools should be used as a support tool only, not as the sole basis for treatment decisions.</p>
+      <p>VetSlate should be used as a support tool only, not as the sole basis for treatment decisions.</p>
     </section>
   </main>;
 }

@@ -100,7 +100,7 @@ export default function ParasiteSelector() {
     </article>;
   }
   return <main className="toolkit-workspace ps-workspace">
-    <div className="toolkit-intro"><h1>{copy.title}</h1><p>{copy.subtitle}</p></div>
+    <div className="toolkit-intro"><div className="page-title-row"><h1>{copy.title}</h1><span className="status-badge">WIP</span></div><p>{copy.subtitle}</p></div>
     <div className="ps-top-controls">
       <fieldset className="species-picker"><legend>{copy.species}</legend><div className="segmented">
         {(['dog', 'cat'] as const).map(value => <button key={value} type="button" aria-pressed={species === value} onClick={() => changeSpecies(value)}><span className="species-emoji" aria-hidden="true">{value === 'dog' ? '🐕' : '🐈'}</span>{copy[value]}</button>)}

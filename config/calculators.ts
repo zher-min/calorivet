@@ -20,10 +20,16 @@ export const calculatorCategories = [
     }, {
       id: "drug-dilution", brand: "Drug Dilution", name: "Drug Dilution Calculator", shortName: "Dilution", emoji: "🧪", route: "/calculators/drug-dilution",
       description: "Calculate and verify drug dilutions across common concentration units", homeDescription: "Prepare and verify drug dilutions, specific doses and percentage concentrations.", species: [], status: "active",
+    }, {
+      id: "bsa", brand: "Body Surface Area Calculator", name: "Body Surface Area Calculator", emoji: "📐",
+      shortName: "BSA", route: "/calculators/bsa",
+      description: "Calculate body surface area from body weight",
+      homeDescription: "Calculate veterinary body surface area for dogs and cats from body weight.",
+      species: ["dog", "cat"], status: "active",
     }],
   },
   {
-    id: "nutrition", name: "Nutrition & Preventive Care", calculators: [{
+    id: "nutrition", name: "Nutrition", calculators: [{
       id: "calorie", brand: "Calorie & Feeding Calculator", name: "Calorie & Feeding Calculator", shortName: "Calories", emoji: "🍖", route: "/calculators/calorie",
       description: "Energy requirements, feeding amounts and weight-management calculations",
       homeDescription: "Estimate energy requirements, calculate feeding quantities and support weight-management planning for dogs and cats.",
@@ -31,7 +37,7 @@ export const calculatorCategories = [
     }],
   },
   {
-    id: "parasite", name: "Parasite Prevention", calculators: [{
+    id: "parasite", name: "Preventive Care", calculators: [{
       id: "parasite", brand: "Parasite Selector", name: "Parasite Selector", emoji: "🪱",
       shortName: "Parasites", route: "/calculators/parasite",
       description: "Find protection and compare clinic products",
@@ -47,13 +53,6 @@ export const calculatorCategories = [
         description: "Tap repeatedly to measure events per minute",
         homeDescription: "Measure a repeated event rate per minute with a simple tap interface.",
         species: [], status: "active", kind: "tool",
-      },
-      {
-        id: "bsa", brand: "Body Surface Area Calculator", name: "Body Surface Area Calculator", emoji: "📐",
-        shortName: "BSA", route: "/calculators/bsa",
-        description: "Calculate body surface area from body weight",
-        homeDescription: "Calculate veterinary body surface area for dogs and cats from body weight.",
-        species: ["dog", "cat"], status: "active",
       },
       {
         id: "urine-output", brand: "Urine Output Calculator", name: "Urine Output Calculator", emoji: "🚽",

@@ -2,6 +2,6 @@ import EmergencyCalculator from "../../../calculators/emergency/EmergencyCalcula
 import { getCalculator } from "../../../config/calculators";
 
 const calculator = getCalculator("emergency");
-export const metadata = { title: `${calculator.name} | VetTools`, description: calculator.homeDescription };
+export const metadata = { title: `${calculator.name} | VetSlate`, description: calculator.homeDescription };
 
 export default EmergencyCalculator;

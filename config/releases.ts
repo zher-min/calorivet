@@ -8,7 +8,8 @@ export type VetToolsRelease = {
 };
 
 export const releases: readonly VetToolsRelease[] = [
-  { version: "v3.11.0", date: "2026-09-12", title: "Unified clinical interface", summary: "A cleaner shared interface and a release-focused VetTools home.", changes: ["Unified typography and shared Dog/Cat controls across tools.", "Added a concise What’s New home with direct access to the calculator launcher."], current: true },
+  { version: "v4.0.0", date: "2026-09-13", title: "Introducing VetSlate", summary: "VetTools is now VetSlate, with a refreshed identity and a more consistent clinical interface.", changes: ["Added the VetSlate wordmark, symbol and installed-app icon.", "Renamed the navigation drawer to Toolbox and introduced dark-mode styling.", "Standardized calculator titles, WIP badges, categories and support notices."], current: true },
+  { version: "v3.11.0", date: "2026-09-12", title: "Unified clinical interface", summary: "A cleaner shared interface and a release-focused VetTools home.", changes: ["Unified typography and shared Dog/Cat controls across tools.", "Added a concise What’s New home with direct access to the calculator launcher."] },
   { version: "v3.10.2", date: "2026-09-12", title: "Emergency Quick Jump fix", summary: "Kept the mobile Quick Jump menu visible above its bottom toolbar.", changes: ["Improved mobile menu positioning and access."] },
   { version: "v3.10.1", date: "2026-09-12", title: "Fetal Age integration", summary: "Completed launcher registration and interface polish for fetal-age estimation.", changes: ["Added Fetal Age to the tool registry as WIP.", "Polished measurement selection and navigation metadata."] },
   { version: "v3.10.0", date: "2026-09-12", title: "Ultrasound Fetal Age Calculator", summary: "Added canine and feline ICC/BPD fetal-age and parturition estimates.", changes: ["Included multiple-fetus averaging, measurement guidance and clinical references."] },

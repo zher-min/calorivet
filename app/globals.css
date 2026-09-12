@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap");
 
 .pill-page { width: min(100% - 32px, 820px); }
 .pill-page .toolkit-intro { margin-bottom: 18px; }.pill-page .toolkit-intro p { margin: 5px 0 0; color: var(--muted); font-size: 14px; }
@@ -431,7 +432,9 @@
 @media (max-width: 600px) { .tx-grid { grid-template-columns: 1fr; } .tx-calculator .clinical-section { padding: 18px; } }
 
 .vetcalc-header { position: sticky; top: 0; z-index: 40; min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px max(20px, calc((100vw - 1080px) / 2)); background: #fff; border-bottom: 1px solid #d4dcd3; }
-.vetcalc-brand { font-size: 23px; font-weight: 800; text-decoration: none; line-height: 1.2; }
+.vetcalc-brand { display:flex; align-items:center; gap:12px; text-decoration: none; line-height: 1.2; }
+.vetcalc-brand picture { display:block; width:148px; }
+.vetcalc-brand img { display:block; width:100%; height:auto; }
 .vetcalc-brand span { display: block; margin-top: 3px; font-size: 12px; font-weight: 500; color: #5d6d68; }
 .toolkit-button { min-height: 44px; min-width: 44px; padding: 9px 13px; border: 1px solid #c5cec9; border-radius: 7px; background: white; color: #172321; font-size: 14px; font-weight: 600; }
 .toolkit-button span { margin-right: 6px; font-size: 19px; }
@@ -467,7 +470,6 @@
 .fetal-age-workspace { max-width: 760px; }
 .fetal-age-card { display:grid; gap:16px; }
 .fetal-age-card h2 { margin-bottom:2px; }
-.fetal-wip { display:inline-block; margin-bottom:10px; padding:4px 8px; border-radius:999px; background:#fff4df; color:#79500e; font-size:11px; font-weight:850; letter-spacing:.06em; }
 .fetal-age-card .species-picker { width:min(100%, 320px); }
 .fetal-measurements { display:grid; gap:10px; }
 .field-label { font-weight:700; font-size:14px; }
@@ -501,6 +503,8 @@
 .home-intro { display:flex; align-items:flex-end; justify-content:space-between; gap:28px; padding:26px 0 34px; border-bottom:1px solid var(--line); }
 .home-intro h1 { margin:0; font-size:clamp(34px, 6vw, 48px); line-height:1; letter-spacing:-.04em; }
 .home-intro p { margin:8px 0 0; color:var(--muted); line-height:1.5; }
+.home-brand { display:block; width:min(430px, 72vw); }
+.home-brand img { display:block; width:100%; height:auto; }
 .home-calculators-button { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:11px 18px; border:1px solid var(--green); border-radius:9px; background:var(--green); color:white; font-weight:750; white-space:nowrap; }
 .home-calculators-button:hover { background:var(--green-dark); }
 .home-calculators-button:focus-visible { outline:3px solid var(--focus); outline-offset:3px; }
@@ -546,6 +550,7 @@
 .route-loading { position: fixed; inset: 68px 0 0; z-index: 39; display: grid; place-content: center; justify-items: center; gap: 14px; background: rgba(247,249,246,.94); color: var(--green-dark); backdrop-filter: blur(4px); }
 .route-loading--boundary { z-index: 30; }
 .route-loading strong { font-size: 15px; font-weight: 750; }
+.route-loading-mark { width:54px; height:54px; border-radius:11px; }
 .route-loading-spinner { width: 34px; height: 34px; border: 3px solid var(--sage-strong); border-top-color: var(--green); border-radius: 50%; }
 @media (prefers-reduced-motion: no-preference) { .route-loading-spinner { animation: route-spin .7s linear infinite; } @keyframes route-spin { to { transform: rotate(360deg); } } }
 @media print { .vetcalc-header, .calculator-drawer { display: none !important; } }
@@ -565,6 +570,9 @@
   --focus: #1677a3;
   --shadow: 0 18px 50px rgba(31, 54, 47, 0.07);
   --sans: "Segoe UI Variable", "Aptos", Inter, "Segoe UI", Arial, sans-serif;
+  --heading: "Manrope", var(--sans);
+  --surface: #ffffff;
+  --surface-soft: #fffdf8;
 }
 
 * { box-sizing: border-box; }
@@ -573,6 +581,63 @@ body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(
 button, input, select, textarea, dialog { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; }
+
+.sr-only { position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
+
+:where(.toolkit-intro h1, .bsa-page > h1, .tap-rate-page > h1, .uo-page > h1, .intro h1, .tx-bedside-heading h1) {
+  margin: 0;
+  font-family: var(--heading);
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+}
+.page-title-row { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.status-badge { display:inline-flex; align-items:center; min-height:24px; padding:3px 8px; border:1px solid #d5af58; border-radius:999px; background:#fff4df; color:#79500e; font-family:var(--sans); font-size:11px; font-weight:800; letter-spacing:.06em; }
+.clinical-support-notice, .pill-disclaimer, .em-disclaimer, .tx-disclaimer { border:1px solid var(--line); border-left:4px solid var(--green); border-radius:9px; background:var(--sage); color:var(--ink); }
+
+@media (max-width: 600px) {
+  .vetcalc-brand picture { width:112px; }
+  .vetcalc-brand span { display:none; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink:#edf3f2;
+    --muted:#aebfbc;
+    --cream:#0f1c28;
+    --paper:#142638;
+    --green:#78b6ae;
+    --green-dark:#9ad0c8;
+    --sage:#1c3444;
+    --sage-strong:#355364;
+    --line:#344c5b;
+    --focus:#63c6df;
+    --surface:#172b3c;
+    --surface-soft:#142638;
+    --shadow:0 18px 50px rgba(0,0,0,.28);
+  }
+  body { background:var(--cream); color:var(--ink); }
+  .vetcalc-header, .calculator-drawer, .drawer-content, .toolkit-button, .release-current, .release-history,
+  .workflow-card, .clinical-section, .cri-card, .cri-drug-card, .bsa-calculator, .pill-controls,
+  .em-drug-card, .em-patient, .em-category-panel, .dd-card, .dd-tool, .uo-input-card,
+  .fetal-details, .ps-dialog, .ps-switch, .toolkit-card { background:var(--surface); color:var(--ink); border-color:var(--line); }
+  .vetcalc-header { border-bottom-color:var(--line); }
+  .vetcalc-brand span, .toolkit-intro p, .home-intro p, .release-current p, .release-item p,
+  .launcher-section h3, .release-heading time, .calculator-species { color:var(--muted); }
+  .launcher-label, .toolkit-button { color:var(--ink); }
+  .launcher-tile:hover, .launcher-tile:focus-visible, .launcher-tile[aria-current=page] { background:var(--sage); border-color:var(--sage-strong); }
+  input, select, textarea, .input-wrap, .text-input, .em-weight-input, .bsa-weight-input,
+  .uo-input-shell, .dd-input-select, .dd-input-unit, .tx-bedside input, .tx-bedside select { background:var(--surface-soft) !important; color:var(--ink) !important; border-color:var(--line) !important; }
+  .segmented, .cri-segmented > div { background:#0f202e; }
+  .segmented button.active, .cri-segmented button[aria-pressed=true] { background:var(--surface); color:var(--green-dark); }
+  .route-loading { background:rgba(15,28,40,.95); color:var(--ink); }
+  .ps-wip-warning, .pill-wip, .fetal-alert-amber, .bsa-warning, .dd-warning { background:#352b17; color:#f0cf82; border-color:#725c2d; }
+  .status-badge { background:#352b17; color:#f0cf82; border-color:#725c2d; }
+  .pill-disclaimer, .em-disclaimer, .tx-disclaimer, .clinical-support-notice { background:var(--sage); color:var(--ink); }
+  .release-version span { color:#dff2ef; }
+}
 
 .skip-link { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 10px 14px; background: white; border: 2px solid var(--focus); border-radius: 8px; transform: translateY(-150%); }
 .skip-link:focus { transform: translateY(0); }
@@ -925,4 +990,56 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .print-summary dt { font-weight: 700; }
   .print-summary dd { margin: 0; }
   .print-summary p { margin-top: 24px; padding: 14px; border: 1px solid #bbb; line-height: 1.5; }
+}
+
+/* Shared product-shell typography: calculator internals retain their task-specific hierarchy. */
+.toolkit-workspace .toolkit-intro h1,
+main.bsa-page > h1,
+main.tap-rate-page > h1,
+main.uo-page > h1,
+main .intro h1,
+.tx-bedside-heading h1 {
+  margin: 0;
+  font-family: var(--heading);
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+}
+
+@media (max-width: 650px) {
+  .toolkit-workspace .toolkit-intro h1,
+  main.bsa-page > h1,
+  main.tap-rate-page > h1,
+  main.uo-page > h1,
+  main .intro h1,
+  .tx-bedside-heading h1 { font-size: 28px; }
+}
+
+/* Dark surfaces follow system preference; clinical severity colours keep their meaning. */
+@media (prefers-color-scheme: dark) {
+  .workflow-card, .clinical-section, .analysis-panel, .manufacturer-panel, .consultation-actions,
+  .purpose-card, .feedback-dialog-card, .source-option, .conditional-panel, .pending-result,
+  .fetal-details, .pill-controls, .pill-empty, .em-drug-card, .em-category-panel,
+  .cri-card, .cri-drug-card, .bsa-calculator, .dd-card, .dd-tool, .uo-input-card,
+  .release-current, .release-history, .toolkit-card, .ps-product-card, .ps-dialog-content {
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  .calculator-purpose summary, .reset-button, .feedback-link, .source-option,
+  .analysis-heading button, .consultation-actions button, .bcs-popover, .bcs-options button {
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  .text-input, .input-wrap, .field select, .bcs-current-weight,
+  .fetal-value-row input { background:var(--surface-soft); color:var(--ink); border-color:var(--line); }
+  .toolkit-intro p, .intro p, .step-header p, .field-hint, .fetal-note,
+  .fetal-method, .uo-disclaimer, .dd-disclaimer, .ps-muted { color:var(--muted); }
+  .clinical-disclaimer { background:#3a251f; color:#f2c7bb; border-color:#7a493d; }
+  .uo-result--neutral { background:rgba(23,43,60,.97); }
+  .uo-result--green { background:rgba(20,58,45,.97); }
+  .uo-result--amber { background:rgba(57,45,20,.97); }
+  .uo-result--red { background:rgba(63,30,31,.97); }
 }
