@@ -3,22 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { calculatorCategories } from "../../config/calculators";
+import ToolLauncher from "./ToolLauncher";
 import InstallApp from "./AppInstall";
 import FeedbackDialog from "./FeedbackDialog";
 
-export function CalculatorNavigation({ onSelect }: { onSelect: (route: string) => void }) {
-  const pathname = usePathname();
-  const categories = [...calculatorCategories].sort((a, b) => a.id === "emergency" ? -1 : b.id === "emergency" ? 1 : 0);
-  return <nav aria-label="Calculators">{categories.map(category => <section className="nav-category" key={category.id}>
-    <h3>{category.name}</h3>
-    {category.calculators.map(item => <Link key={item.id} href={item.route} onClick={() => onSelect(item.route)}
-      aria-current={pathname === item.route ? "page" : undefined} className="calculator-nav-item">
-      <strong>{item.brand}</strong><span>{item.shortName}</span><small>{item.description}</small>
-      {pathname === item.route && <small className="active-label">Current calculator</small>}
-    </Link>)}
-  </section>)}</nav>;
-}
+export function CalculatorNavigation({ onSelect }: { onSelect: (route: string) => void }) { return <nav aria-label="Calculators"><ToolLauncher onSelect={onSelect} /></nav>; }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const dialog = useRef<HTMLDialogElement>(null);

@@ -452,6 +452,17 @@
 .calculator-nav-item:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .calculator-nav-item[aria-current=page]::after { color: var(--green); }
 .calculator-nav-item .active-label { font-weight: 700; color: #174d42; }
+.launcher-actions { display:flex; justify-content:flex-end; margin-top:18px; }
+.launcher-section { margin-top:22px; }
+.launcher-section h3 { margin:0 0 8px; color:#5d6d68; font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
+.launcher-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.launcher-tile-wrap { position:relative; min-width:0; }
+.launcher-tile { min-height:82px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 4px; border:1px solid transparent; border-radius:9px; text-align:center; text-decoration:none; }
+.launcher-tile:hover, .launcher-tile:focus-visible, .launcher-tile[aria-current=page] { background:#f0f4f2; border-color:#82a99b; }
+.launcher-emoji { font-size:29px; line-height:1; }
+.launcher-label { color:#172321; font-size:13px; line-height:1.2; }
+.launcher-wip { color:#79500e; font-size:10px; font-weight:800; letter-spacing:.05em; }
+.launcher-star { position:absolute; top:2px; right:2px; min-width:28px; min-height:28px; padding:0; border:0; background:transparent; color:#174d42; font-size:18px; cursor:pointer; }
 .toolkit-workspace { width: min(100% - 40px, 1000px); margin: 0 auto; padding: 36px 0 60px; }
 .toolkit-intro { margin-bottom: 28px; }
 .toolkit-intro h1 { margin: 0; font-size: clamp(28px, 4vw, 36px); line-height: 1.2; letter-spacing: -.03em; }

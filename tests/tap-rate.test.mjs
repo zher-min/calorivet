@@ -22,12 +22,12 @@ test('tap-rate route and dashboard entry render the minimal interface', async ()
   const home = await worker.fetch(new Request('http://localhost/'), env, context);
   const homeHtml = await home.text();
   assert.match(homeHtml, /href="\/calculators\/tap-rate"/);
-  assert.match(homeHtml, /Tap Rate/);
+  assert.match(homeHtml, /Quick BPM/);
 
   const response = await worker.fetch(new Request('http://localhost/calculators/tap-rate'), env, context);
   const html = await response.text();
   assert.equal(response.status, 200);
-  assert.match(html, /<h1>Tap Rate<\/h1>/);
+  assert.match(html, /<h1>Quick BPM<\/h1>/);
   assert.match(html, /aria-label="Tap to calculate rate"/);
   assert.match(html, />TAP<\/button>/);
   assert.match(html, />Reset<\/button>/);

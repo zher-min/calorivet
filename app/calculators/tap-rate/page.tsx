@@ -6,7 +6,7 @@ export const metadata = { title: `${tool.name} | VetTools`, description: tool.ho
 
 export default function TapRatePage() {
   return <main className="toolkit-workspace tap-rate-page">
-    <h1>Tap Rate</h1>
+    <h1>Quick BPM</h1>
     <TapRate />
   </main>;
 }

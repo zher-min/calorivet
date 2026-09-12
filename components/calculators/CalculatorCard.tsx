@@ -3,7 +3,7 @@ import type { Calculator } from "../../config/calculators";
 
 export default function CalculatorCard({ calculator }: { calculator: Calculator }) {
   const isTool = 'kind' in calculator && calculator.kind === 'tool';
-  return <Link className="toolkit-card" href={calculator.route} aria-label={`Open ${calculator.brand} ${isTool ? 'tool' : 'calculator'}`}>
+  return <Link className="toolkit-card" href={calculator.route} aria-label={`Open ${calculator.name}`}>
     <p className="toolkit-category">{calculator.category}</p>
     <h2>{calculator.brand}</h2>
     <p className="toolkit-subtitle">{calculator.id === "calorie" ? calculator.name : calculator.shortName}</p>
