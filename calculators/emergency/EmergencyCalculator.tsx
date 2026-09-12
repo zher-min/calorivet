@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import EmergencyDrugCard from "./EmergencyDrugCard";
+import { calculateEmergencyDose, formatRange } from "./calculations";
 import { concentrationDefinitions, defibrillationTreatments, emergencyCategories, recoverTreatments } from "./data";
 import type { EmergencySpecies, EmergencyTreatment } from "./types";
 
@@ -46,6 +47,7 @@ export default function EmergencyCalculator() {
   const [species, setSpecies] = useState<EmergencySpecies>("dog");
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [toxin, setToxin] = useState<string | null>(null);
+  const [quickDosesOpen, setQuickDosesOpen] = useState(false);
   const concentrations = useEmergencyConcentrations();
   const parsedWeight = Number(weight);
   const weightKg = weight.trim() !== "" && Number.isFinite(parsedWeight) && parsedWeight > 0 ? parsedWeight : null;
@@ -66,6 +68,21 @@ export default function EmergencyCalculator() {
   const refractory = recoverForSpecies.filter(treatment => treatment.indication.startsWith("Refractory"));
   const reversal = recoverForSpecies.filter(treatment => treatment.indication === "CPR reversal drug");
   const categoryTreatments = selectedCategory?.treatments.filter(treatment => treatment.species.includes(species) && (selectedCategory.id !== "toxicology" || treatment.indication === toxin)) ?? [];
+  useEffect(() => {
+    if (!quickDosesOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setQuickDosesOpen(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [quickDosesOpen]);
+
+  const quickRows = recoverForSpecies.map(treatment => {
+    const option = treatment.doseOptions.find(item => !item.species || item.species.includes(species));
+    const definition = treatment.concentrationKey ? concentrationDefinitions.find(item => item.key === treatment.concentrationKey) : undefined;
+    const concentration = definition ? Number(concentrations.values[definition.key]) : null;
+    const validConcentration = concentration !== null && Number.isFinite(concentration) && concentration > 0 ? concentration : null;
+    const result = option && weightKg !== null ? calculateEmergencyDose(weightKg, option, validConcentration, definition?.unit) : null;
+    return { treatment, option, definition, concentration: validConcentration, result };
+  });
 
   return <main className="toolkit-workspace em-page">
     <div className="toolkit-intro"><h1>Emergency Drug Calculator</h1></div>
@@ -77,9 +94,24 @@ export default function EmergencyCalculator() {
       </div></fieldset>
     </section>
 
-    <nav className="em-quick-nav" aria-label="Emergency calculator sections">
-      <details><summary>Quick jump</summary><div><a href="#recover-title">RECOVER CPR</a><a href="#other-title">Other treatments</a><a href="#em-settings">Concentrations</a></div></details>
+    <nav className="em-floating-actions" aria-label="Emergency calculator shortcuts">
+      <button type="button" onClick={() => setQuickDosesOpen(true)}>Quick doses</button>
+      <details className="em-quick-nav"><summary>Quick jump</summary><div><a href="#recover-title">RECOVER CPR</a><a href="#other-title">Other treatments</a><a href="#em-settings">Concentrations</a></div></details>
     </nav>
+
+    {quickDosesOpen && <div className="em-quick-overlay" role="dialog" aria-modal="true" aria-labelledby="quick-doses-title" onMouseDown={event => { if (event.target === event.currentTarget) setQuickDosesOpen(false); }}>
+      <section className="em-quick-sheet">
+        <header><div><h2 id="quick-doses-title">RECOVER quick doses</h2><p>{weightKg ? `${weightKg} kg · ${species === "dog" ? "Dog" : "Cat"}` : `Enter weight · ${species === "dog" ? "Dog" : "Cat"}`}</p></div><button type="button" aria-label="Close quick doses" onClick={() => setQuickDosesOpen(false)}>×</button></header>
+        <div className="em-quick-table" role="table" aria-label="Calculated RECOVER drug doses">
+          <div className="em-quick-table-head" role="row"><span role="columnheader">Drug</span><span role="columnheader">Dose</span><span role="columnheader">Give</span></div>
+          {quickRows.map(({ treatment, option, definition, concentration, result }) => <div className="em-quick-row" role="row" key={treatment.id}>
+            <span role="cell"><strong>{treatment.drugName}</strong><small>{definition ? `${concentration ?? "--"} ${definition.unit}` : treatment.indication}</small></span>
+            <span role="cell">{option ? `${option.doseMin}${option.doseMax !== undefined ? `–${option.doseMax}` : ""} ${option.doseUnit.replaceAll("mcg", "µg")}` : "--"}</span>
+            <strong role="cell">{result?.volumeMinMl !== null && result?.volumeMinMl !== undefined && result?.volumeMaxMl !== null && result?.volumeMaxMl !== undefined ? `${formatRange(result.volumeMinMl, result.volumeMaxMl, "volume")} mL` : "--"}</strong>
+          </div>)}
+        </div>
+      </section>
+    </div>}
 
     <section className="em-recover" aria-labelledby="recover-title">
       <header className="em-section-heading"><span>01</span><div><h2 id="recover-title">RECOVER CPR</h2><p>2024 crash-sheet calculations</p></div></header>
@@ -102,7 +134,10 @@ export default function EmergencyCalculator() {
       })}</div>
     </section>
 
-    <details className="em-settings" id="em-settings"><summary>Concentration settings</summary><p>Modified concentrations are stored only in this browser and shared wherever the same drug appears.</p><button type="button" className="toolkit-button" onClick={concentrations.resetAll}>Reset all emergency drug concentrations</button></details>
+    <details className="em-settings" id="em-settings"><summary>Concentration settings</summary><p>Enter the concentrations stocked by your clinic. Changes update every matching drug card and are stored only in this browser.</p>
+      <div className="em-concentration-directory">{concentrationDefinitions.map(item => <label key={item.key}><span>{item.drugName}</span><span><input type="number" inputMode="decimal" min="0" step="any" value={concentrations.values[item.key]} onChange={event => concentrations.update(item.key, event.target.value)} aria-label={`${item.drugName} concentration`} /><small>{item.unit}</small></span></label>)}</div>
+      <button type="button" className="toolkit-button" onClick={concentrations.resetAll}>Reset all emergency drug concentrations</button>
+    </details>
     <section className="em-disclaimer"><strong>Clinical Decision Support Only</strong>
       <p>This calculator is intended to assist veterinary professionals with emergency drug and treatment calculations. It does not replace clinical judgment, patient assessment, current treatment guidelines, or verification of drug concentration, dose, route, and contraindications.</p>
       <p>Always confirm all calculations before administration. Drug concentrations and recommendations may vary between products, institutions, patients, and updated guidelines.</p>
