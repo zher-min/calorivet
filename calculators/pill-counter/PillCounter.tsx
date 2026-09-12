@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { opencvDetector } from "./detectors/opencvDetector";
-import { loadOpenCv } from "./detectors/opencvLoader";
 import { PILL_DETECTION_CONFIG } from "./detectorConfig";
 import type { Detection, DetectionDiagnostics } from "./types";
 
@@ -16,7 +15,6 @@ export default function PillCounter() {
   const status = difference === null ? `${count} TABLETS DETECTED` : difference > 0 ? `ADD ${difference} MORE` : difference < 0 ? `REMOVE ${Math.abs(difference)}` : "CORRECT QUANTITY";
   const chooseFile = (file: File | undefined) => { if (!file || !file.type.startsWith("image/")) { setError("Choose an image file to begin."); return; } setError(null); setConfirmed(false); setDetections([]); setHistory([]); setDiagnostics(null); setImageUrl(old => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(file); }); };
   const processImage = useCallback(async () => { if (!imageRef.current || !canvasRef.current) return; const image = imageRef.current; const canvas = canvasRef.current; const scale = Math.min(1, PILL_DETECTION_CONFIG.maxProcessingDimension / Math.max(image.naturalWidth, image.naturalHeight)); canvas.width = Math.max(1, Math.round(image.naturalWidth * scale)); canvas.height = Math.max(1, Math.round(image.naturalHeight * scale)); canvas.getContext("2d")?.drawImage(image, 0, 0, canvas.width, canvas.height); setProcessing(true); setError(null); try { const result = await opencvDetector.detect(canvas, { debug: process.env.NODE_ENV !== "production" }); setDetections(result.detections); setDiagnostics(result.diagnostics ?? null); } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not detect tablets in this image."); } finally { setProcessing(false); } }, []);
-  useEffect(() => { void loadOpenCv().catch(() => { /* A visible retryable error is shown if processing is attempted. */ }); }, []);
   useEffect(() => () => { if (imageUrl) URL.revokeObjectURL(imageUrl); }, [imageUrl]);
   const onImageClick = (event: React.MouseEvent<HTMLDivElement>) => { if (confirmed || processing) return; const rect = event.currentTarget.getBoundingClientRect(); const x = clamp((event.clientX - rect.left) / rect.width); const y = clamp((event.clientY - rect.top) / rect.height); const hit = detections.findIndex(item => Math.hypot((item.x - x) * rect.width, (item.y - y) * rect.height) < 24); setHistory(previous => [...previous, detections]); setDetections(current => hit >= 0 ? current.filter((_, index) => index !== hit) : [...current, { id: makeId(), x, y, source: "manual", confidence: null }]); };
   const undo = () => { const previous = history.at(-1); if (!previous || confirmed) return; setDetections(previous); setHistory(current => current.slice(0, -1)); };
