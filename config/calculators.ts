@@ -69,6 +69,10 @@ export const calculatorCategories = [
         homeDescription: "Detect and verify individual tablets or capsules locally in your browser.",
         species: [], status: "prototype", kind: "tool",
       },
+      {
+        id: "fetal-age", brand: "Ultrasound Fetal Age Calculator", name: "Ultrasound Fetal Age Calculator", shortName: "Fetal Age", emoji: "🐣", route: "/calculators/fetal-age",
+        description: "Estimate gestational stage from ultrasound fetometry", homeDescription: "Estimate gestational age and approximate parturition timing from canine and feline ultrasound measurements.", species: ["dog", "cat"], status: "active",
+      },
     ],
   },
 ] as const;
