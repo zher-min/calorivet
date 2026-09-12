@@ -18,7 +18,11 @@ function useEmergencyConcentrations() {
         if (stored && typeof stored === "object") {
           const overrides: Record<string, string> = {};
           for (const [key, value] of Object.entries(stored as Record<string, unknown>)) {
-            if (key in referenceConcentrations && typeof value === "string") overrides[key] = value;
+            if (key in referenceConcentrations && typeof value === "string") {
+              // Atropine previously had no reference concentration; migrate that old blank value to 1 mg/mL.
+              if (key === "atropine" && value.trim() === "") continue;
+              overrides[key] = value;
+            }
           }
           setValues(current => ({ ...current, ...overrides }));
         }
@@ -73,23 +77,32 @@ export default function EmergencyCalculator() {
       </div></fieldset>
     </section>
 
+    <nav className="em-quick-nav" aria-label="Emergency calculator sections">
+      <details><summary>Quick jump</summary><div><a href="#recover-title">RECOVER CPR</a><a href="#other-title">Other treatments</a><a href="#em-settings">Concentrations</a></div></details>
+    </nav>
+
     <section className="em-recover" aria-labelledby="recover-title">
       <header className="em-section-heading"><span>01</span><div><h2 id="recover-title">RECOVER CPR</h2><p>2024 crash-sheet calculations</p></div></header>
       <div className="em-card-grid">{primary.map(renderTreatment)}</div>
-      <h3 className="em-subsection-title">Refractory VF / pulseless VT</h3><div className="em-card-grid">{refractory.map(renderTreatment)}</div>
-      <h3 className="em-subsection-title">CPR reversal drugs</h3><div className="em-card-grid">{reversal.map(renderTreatment)}</div>
-      <h3 className="em-subsection-title">Defibrillation</h3><div className="em-card-grid em-defib-grid">{defibrillationTreatments.map(renderTreatment)}</div>
+      <details className="em-treatment-group"><summary>Refractory VF / pulseless VT</summary><div className="em-card-grid">{refractory.map(renderTreatment)}</div></details>
+      <details className="em-treatment-group"><summary>CPR reversal drugs</summary><div className="em-card-grid">{reversal.map(renderTreatment)}</div></details>
+      <details className="em-treatment-group"><summary>Defibrillation</summary><div className="em-card-grid em-defib-grid">{defibrillationTreatments.map(renderTreatment)}</div></details>
     </section>
 
     <section className="em-other" aria-labelledby="other-title">
       <header className="em-section-heading"><span>02</span><div><h2 id="other-title">Other Emergency Treatments</h2></div></header>
-      <div className="em-category-buttons">{emergencyCategories.map(category => <button type="button" key={category.id} aria-pressed={categoryId === category.id} onClick={() => { setCategoryId(category.id); setToxin(null); }}>{category.name}</button>)}</div>
-      {selectedCategory?.id === "toxicology" && <div className="em-toxin-selector"><span>Select toxin</span><div>{toxins.map(item => <button type="button" key={item} aria-pressed={toxin === item} onClick={() => setToxin(item)}>{item}</button>)}</div></div>}
-      {selectedCategory && selectedCategory.id !== "toxicology" && <div className="em-selected-category"><h3>{selectedCategory.name}</h3><div className="em-card-grid">{categoryTreatments.map(renderTreatment)}</div></div>}
-      {selectedCategory?.id === "toxicology" && toxin && <div className="em-selected-category"><h3>{toxin}</h3><div className="em-card-grid">{categoryTreatments.map(renderTreatment)}</div></div>}
+      <div className="em-category-list">{emergencyCategories.map(category => {
+        const active = categoryId === category.id;
+        return <div className={`em-category-item${active ? " active" : ""}`} key={category.id}>
+          <button type="button" aria-expanded={active} onClick={() => { setCategoryId(active ? null : category.id); setToxin(null); }}>{category.name}<span aria-hidden="true">{active ? "−" : "+"}</span></button>
+          {active && category.id === "toxicology" && <div className="em-toxin-selector"><span>Select toxin</span><div>{toxins.map(item => <button type="button" key={item} aria-pressed={toxin === item} onClick={() => setToxin(item)}>{item}</button>)}</div></div>}
+          {active && category.id !== "toxicology" && <div className="em-selected-category"><div className="em-card-grid">{categoryTreatments.map(renderTreatment)}</div></div>}
+          {active && category.id === "toxicology" && toxin && <div className="em-selected-category"><h3>{toxin}</h3><div className="em-card-grid">{categoryTreatments.map(renderTreatment)}</div></div>}
+        </div>;
+      })}</div>
     </section>
 
-    <details className="em-settings"><summary>Concentration settings</summary><p>Modified concentrations are stored only in this browser and shared wherever the same drug appears.</p><button type="button" className="toolkit-button" onClick={concentrations.resetAll}>Reset all emergency drug concentrations</button></details>
+    <details className="em-settings" id="em-settings"><summary>Concentration settings</summary><p>Modified concentrations are stored only in this browser and shared wherever the same drug appears.</p><button type="button" className="toolkit-button" onClick={concentrations.resetAll}>Reset all emergency drug concentrations</button></details>
     <section className="em-disclaimer"><strong>Clinical Decision Support Only</strong>
       <p>This calculator is intended to assist veterinary professionals with emergency drug and treatment calculations. It does not replace clinical judgment, patient assessment, current treatment guidelines, or verification of drug concentration, dose, route, and contraindications.</p>
       <p>Always confirm all calculations before administration. Drug concentrations and recommendations may vary between products, institutions, patients, and updated guidelines.</p>

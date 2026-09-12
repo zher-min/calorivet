@@ -75,7 +75,7 @@ test("shared drugs use shared concentration keys and no high-dose epinephrine en
   const naloxone = allTreatments.filter(item => item.drugName === "Naloxone");
   assert.equal(new Set(naloxone.map(item => item.concentrationKey)).size, 1);
   assert.ok(!recoverTreatments.some(item => item.drugName === "Epinephrine" && item.doseOptions.some(option => option.doseMin === 0.1)));
-  assert.equal(concentrationDefinitions.find(item => item.key === "atropine").referenceValue, null);
+  assert.equal(concentrationDefinitions.find(item => item.key === "atropine").referenceValue, 1);
 });
 
 test("species-specific emergency options never mix dog and cat doses", () => {

@@ -16,20 +16,20 @@
 .em-section-heading > span { color: var(--muted); font-size: 13px; font-weight: 800; }
 .em-section-heading h2 { margin: 0; font-size: 24px; line-height: 1.2; }
 .em-section-heading p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
-.em-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.em-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
 .em-card-grid > .em-drug-card:only-child { grid-column: 1 / -1; max-width: 650px; }
-.em-subsection-title { margin: 24px 0 10px; font-size: 16px; }
-.em-drug-card { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+.em-subsection-title { margin: 18px 0 8px; font-size: 16px; }
+.em-drug-card { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 11px; background: white; }
 .em-drug-card-dominant { border-color: var(--green); box-shadow: inset 4px 0 0 var(--green); }
 .em-drug-header > div > span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
-.em-drug-header h3 { display: flex; align-items: center; gap: 7px; margin: 4px 0 0; font-size: 20px; line-height: 1.2; }
+.em-drug-header h3 { display: flex; align-items: center; gap: 7px; margin: 3px 0 0; font-size: 18px; line-height: 1.2; }
 .em-info { position: relative; display: inline-block; font-size: 14px; }
 .em-info summary { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: var(--green); cursor: pointer; list-style: none; }
 .em-info summary::-webkit-details-marker { display: none; }
-.em-info[open] > div { position: absolute; top: 35px; right: -8px; z-index: 15; width: min(330px, calc(100vw - 48px)); padding: 13px 14px; border-radius: 9px; background: var(--green-dark); color: white; box-shadow: 0 12px 28px rgba(0,0,0,.24); font-size: 13px; font-weight: 400; line-height: 1.45; }
+.em-info[open] > div { position: fixed; top: 50%; left: 50%; z-index: 80; width: min(420px, calc(100vw - 32px)); max-height: min(70vh, 520px); overflow-y: auto; transform: translate(-50%, -50%); padding: 16px 18px; border: 1px solid rgba(255,255,255,.18); border-radius: 11px; background: var(--green-dark); color: white; box-shadow: 0 20px 60px rgba(0,0,0,.38); font-size: 14px; font-weight: 400; line-height: 1.45; }
 .em-info p { margin: 0 0 8px; }.em-info p:last-child { margin-bottom: 0; }
 .em-info .em-reference { padding-top: 8px; border-top: 1px solid rgba(255,255,255,.2); color: #c8dacd; }
-.em-concentration { margin: 14px 0; }
+.em-concentration { margin: 10px 0; }
 .em-concentration > label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; }
 .em-concentration > div { display: grid; grid-template-columns: minmax(0,1fr) 76px; align-items: stretch; overflow: hidden; border: 1px solid #c3cdc4; border-radius: 8px; }
 .em-concentration input { min-width: 0; min-height: 46px; padding: 9px 11px; border: 0; outline: 0; color: var(--ink); font: inherit; font-size: 16px; font-weight: 700; }
@@ -43,8 +43,8 @@
 .em-route-selector > div { display: flex; flex-wrap: wrap; gap: 6px; }
 .em-route-selector button, .em-category-buttons button, .em-toxin-selector button, .em-dilution button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .em-route-selector button[aria-pressed=true], .em-category-buttons button[aria-pressed=true], .em-toxin-selector button[aria-pressed=true], .em-dilution button[aria-pressed=true] { border-color: var(--green); background: var(--green); color: white; }
-.em-dose-list { display: grid; gap: 12px; }
-.em-dose-block { padding-top: 12px; border-top: 1px solid var(--line); }
+.em-dose-list { display: grid; gap: 9px; }
+.em-dose-block { padding-top: 9px; border-top: 1px solid var(--line); }
 .em-dose-heading { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
 .em-dose-heading > span { color: var(--muted); }
 .em-locked-dose { margin: 6px 0 10px; color: var(--muted); font-size: 13px; font-weight: 700; }
@@ -52,22 +52,34 @@
 .em-calculation-lines > div { padding: 8px 10px; border-radius: 7px; background: #f4f7f4; }
 .em-calculation-lines dt { color: var(--muted); font-size: 11px; }
 .em-calculation-lines dd { margin: 3px 0 0; font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.em-give { margin-top: 10px; padding: 13px 14px; border-radius: 9px; background: var(--green); color: white; }
+.em-give { margin-top: 8px; padding: 10px 12px; border-radius: 9px; background: var(--green); color: white; }
 .em-give span, .em-give strong { display: block; }
 .em-give span { color: #c8dacd; font-size: 11px; font-weight: 800; letter-spacing: .08em; }
-.em-give strong { margin-top: 3px; font-size: clamp(25px, 5vw, 34px); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.em-give strong { margin-top: 3px; font-size: clamp(23px, 4vw, 30px); line-height: 1.1; font-variant-numeric: tabular-nums; }
 .em-lipid-total { display: flex; justify-content: space-between; gap: 12px; margin-top: 9px; padding: 10px; background: var(--sage); border-radius: 7px; font-size: 13px; }
 .em-admin-note, .em-note { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .em-volume-warning, .em-warning { margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid #bb8b2d; border-radius: 5px; background: #fff8e6; color: #69470d; font-size: 13px; line-height: 1.45; }
 .em-volume-warning-strong, .em-warning-warning { border-color: #a23b30; background: #fff1f0; color: #832b24; }
 .em-warning-info { border-color: #7896a0; background: #f1f5f6; color: #304b54; }
 .em-warning strong { display: block; margin-bottom: 3px; font-size: 10px; letter-spacing: .06em; }
-.em-category-buttons { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
-.em-category-buttons button { min-height: 52px; text-align: left; font-size: 14px; }
-.em-selected-category { margin-top: 18px; }.em-selected-category > h3 { margin: 0 0 12px; font-size: 19px; }
+.em-category-list { display: grid; gap: 7px; }
+.em-category-item { overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: white; }
+.em-category-item > button { display: flex; width: 100%; min-height: 48px; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 13px; border: 0; background: white; color: var(--ink); font: inherit; font-size: 14px; font-weight: 750; text-align: left; cursor: pointer; }
+.em-category-item > button span { color: var(--green); font-size: 20px; font-weight: 500; }
+.em-category-item.active > button { background: var(--sage); color: var(--green-dark); }
+.em-selected-category { padding: 4px 10px 12px; }.em-selected-category > h3 { margin: 6px 0 10px; font-size: 17px; }
 .em-toxin-selector { margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: white; }
 .em-toxin-selector > span { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
 .em-toxin-selector > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.em-treatment-group { margin-top: 10px; border: 1px solid var(--line); border-radius: 9px; background: white; }
+.em-treatment-group > summary { min-height: 46px; padding: 11px 13px; align-content: center; color: var(--ink); cursor: pointer; font-size: 14px; font-weight: 750; }
+.em-treatment-group > .em-card-grid { padding: 0 10px 10px; }
+.em-quick-nav { position: fixed; right: 18px; bottom: 18px; z-index: 35; }
+.em-quick-nav details { position: relative; }
+.em-quick-nav summary { min-height: 44px; align-content: center; padding: 9px 14px; border: 1px solid var(--green); border-radius: 999px; background: var(--green-dark); color: white; box-shadow: 0 8px 24px rgba(0,0,0,.2); cursor: pointer; font-size: 13px; font-weight: 800; list-style: none; }
+.em-quick-nav summary::-webkit-details-marker { display: none; }
+.em-quick-nav details > div { position: absolute; right: 0; bottom: 52px; display: grid; width: 190px; overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: white; box-shadow: 0 12px 30px rgba(0,0,0,.2); }
+.em-quick-nav a { padding: 11px 13px; border-bottom: 1px solid var(--line); color: var(--ink); font-size: 13px; font-weight: 700; text-decoration: none; }.em-quick-nav a:last-child { border-bottom: 0; }
 .em-cumulative { display: grid; gap: 8px; margin-top: 14px; padding: 12px; border-radius: 8px; background: var(--paper); font-size: 13px; }
 .em-cumulative label { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 700; }
 .em-cumulative label span { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
@@ -87,14 +99,15 @@
   .em-page { padding-top: 24px; }
   .em-patient { top: 68px; grid-template-columns: 1fr 1fr; padding: 10px; }
   .em-patient > label > span:first-child, .em-patient legend { font-size: 12px; }
-  .em-card-grid, .em-category-buttons { grid-template-columns: 1fr; }
+  .em-card-grid { grid-template-columns: 1fr; }
   .em-card-grid > .em-drug-card:only-child { max-width: none; }
 }
 @media (max-width: 480px) {
   .em-patient { grid-template-columns: 1fr; position: relative; top: auto; }
   .em-drug-card { padding: 16px; }
   .em-calculation-lines, .em-dilution dl { grid-template-columns: 1fr; }
-  .em-info[open] > div { right: -32px; }
+  .em-info[open] > div { top: auto; bottom: 16px; max-height: calc(100vh - 32px); transform: translateX(-50%); }
+  .em-quick-nav { right: 12px; bottom: 12px; }
 }
 
 .cri-page { width: min(100% - 32px, 760px); font-family: var(--sans); }

@@ -10,7 +10,7 @@ const generalTooltip = (use: string, practical: string): TreatmentTooltip => ({
 export const concentrationDefinitions: ConcentrationDefinition[] = [
   { key: "epinephrine", drugName: "Epinephrine", referenceValue: 1, unit: "mg/mL" },
   { key: "vasopressin", drugName: "Vasopressin", referenceValue: 20, unit: "U/mL" },
-  { key: "atropine", drugName: "Atropine", referenceValue: null, unit: "mg/mL" },
+  { key: "atropine", drugName: "Atropine", referenceValue: 1, unit: "mg/mL" },
   { key: "lidocaine", drugName: "Lidocaine", referenceValue: 20, unit: "mg/mL" },
   { key: "amiodarone", drugName: "Amiodarone", referenceValue: 50, unit: "mg/mL" },
   { key: "esmolol", drugName: "Esmolol", referenceValue: 10, unit: "mg/mL" },
