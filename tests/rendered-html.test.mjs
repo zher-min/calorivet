@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-test("dashboard and transfusion direct routes render inside VetCalc", async () => {
+test("release homepage and transfusion direct routes render inside VetTools", async () => {
   const home = await render("/");
   assert.equal(home.status, 200);
   const html = await home.text();
@@ -9,9 +9,11 @@ test("dashboard and transfusion direct routes render inside VetCalc", async () =
   assert.match(html, /href="\/calculators\/calorie"/);
   assert.match(html, /href="\/calculators\/transfusion"/);
   assert.doesNotMatch(html, /Patient information/);
-  assert.match(html, /<a[^>]*class="toolkit-card"[^>]*aria-label="Open Calorie &amp; Feeding Calculator"/);
-  assert.match(html, /<a[^>]*class="toolkit-card"[^>]*aria-label="Open Blood Transfusion Calculator"/);
-  assert.doesNotMatch(html, /<a[^>]*class="toolkit-open"/);
+  assert.match(html, /What’s new/);
+  assert.match(html, /v3\.11\.0/);
+  assert.match(html, /Open calculators/);
+  assert.match(html, /Previous updates/);
+  assert.doesNotMatch(html, /class="toolkit-grid"/);
   const transfusion = await render("/calculators/transfusion");
   assert.equal(transfusion.status, 200);
   const page = await transfusion.text();

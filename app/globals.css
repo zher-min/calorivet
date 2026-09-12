@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-.pill-page { width: min(100% - 32px, 820px); font-family: var(--sans); }
+.pill-page { width: min(100% - 32px, 820px); }
 .pill-page .toolkit-intro { margin-bottom: 18px; }.pill-page .toolkit-intro p { margin: 5px 0 0; color: var(--muted); font-size: 14px; }
 .pill-wip { padding: 22px; border: 1px solid #d9b865; border-left: 5px solid #bb8b2d; border-radius: 11px; background: #fff8e6; color: #69470d; }.pill-wip > span { display: inline-block; padding: 4px 7px; border-radius: 5px; background: #f2dfaa; font-size: 11px; font-weight: 850; letter-spacing: .08em; }.pill-wip h2 { margin: 12px 0 7px; color: var(--ink); font-size: 21px; }.pill-wip p { max-width: 590px; margin: 0 0 16px; font-size: 14px; line-height: 1.55; }
 .pill-controls { display: grid; grid-template-columns: minmax(180px, 260px) 1fr; gap: 14px; align-items: end; padding: 14px; border: 1px solid var(--line); border-radius: 11px; background: white; }
@@ -13,7 +13,7 @@
 .pill-empty { margin-top: 18px; padding: 28px; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); text-align: center; }.pill-disclaimer { margin-top: 18px; padding: 14px 16px; border-left: 4px solid var(--green); border-radius: 8px; background: #edf2ef; color: var(--muted); font-size: 13px; line-height: 1.5; }.pill-disclaimer strong { color: var(--ink); }.pill-disclaimer p { margin: 5px 0 0; }.pill-debug { margin-top: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); font-size: 12px; }.pill-debug img { display: block; max-width: 100%; margin-top: 8px; border-radius: 5px; }
 @media (max-width: 600px) { .pill-page { width: min(100% - 24px, 820px); }.pill-controls { grid-template-columns: 1fr; }.pill-actions { display: grid; grid-template-columns: 1fr 1fr; }.pill-actions .toolkit-button { width: 100%; }.pill-toolbar .toolkit-button { flex: 1 1 auto; }.pill-result strong { font-size: 22px; } }
 
-.em-page { width: min(100% - 32px, 1040px); padding-bottom: 32px; font-family: var(--sans); color: var(--ink); }
+.em-page { width: min(100% - 32px, 1040px); padding-bottom: 32px; color: var(--ink); }
 .em-page .toolkit-intro { margin-bottom: 18px; }
 .em-patient { position: sticky; top: 76px; z-index: 20; display: grid; grid-template-columns: minmax(180px, 1fr) minmax(220px, 1fr); align-items: end; gap: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.97); box-shadow: 0 8px 24px rgba(16,40,35,.08); backdrop-filter: blur(8px); }
 .em-patient > label > span:first-child, .em-patient legend { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
@@ -145,7 +145,7 @@
   .em-quick-row { font-size: 12px; }.em-quick-row > strong { font-size: 14px; }
 }
 
-.cri-page { width: min(100% - 32px, 760px); font-family: var(--sans); }
+.cri-page { width: min(100% - 32px, 760px); }
 .cri-page .toolkit-intro { margin-bottom: 20px; }
 .cri-calculator { display: grid; gap: 18px; }
 .cri-card, .cri-drug-card { display: grid; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: white; }
@@ -199,7 +199,7 @@
   .cri-result-grid { grid-template-columns: 1fr; }
 }
 
-.bsa-page { width: min(100% - 32px, 620px); font-family: var(--sans); }
+.bsa-page { width: min(100% - 32px, 620px); }
 .bsa-page > h1 { margin: 0 0 24px; font-size: clamp(28px, 5vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
 .bsa-calculator { display: grid; gap: 22px; padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: white; }
 .bsa-calculator .species-picker legend, .bsa-weight-field > span:first-child { display: block; margin-bottom: 7px; color: var(--ink); font-size: 14px; font-weight: 700; }
@@ -222,7 +222,7 @@
   .bsa-result { min-height: 165px; }
 }
 
-.tap-rate-page { width: min(100% - 32px, 560px); min-height: calc(100dvh - 68px); padding-top: 30px; font-family: var(--sans); }
+.tap-rate-page { width: min(100% - 32px, 560px); min-height: calc(100dvh - 68px); padding-top: 30px; }
 .tap-rate-page > h1 { width: min(100%, 480px); margin: 0 auto 4px; font-size: clamp(28px, 5vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
 .tap-rate { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: 20px; }
 .tap-rate__display { display: grid; place-content: center; min-height: 174px; padding: 20px 0 8px; text-align: center; }
@@ -241,7 +241,7 @@
 }
 @media (prefers-reduced-motion: reduce) { .tap-rate__tap { transition: none; } }
 
-.ps-workspace { font-family: var(--sans); font-size: 16px; line-height: 1.5; }
+.ps-workspace { font-size: 16px; line-height: 1.5; }
 .ps-workspace h2, .ps-workspace h3 { font-weight: 700; }
 .ps-workspace h3 { font-size: 17px; margin: 16px 0 10px; }
 .ps-top-controls, .ps-table-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
@@ -330,7 +330,7 @@
   .ps-fields { grid-template-columns: 1fr; }.ps-dialog-content { padding: 16px; }
 }
 
-.site-feedback-footer { text-align: center; padding: 12px 20px 160px; font-family: var(--sans); }
+.site-feedback-footer { text-align: center; padding: 12px 20px 160px; }
 .site-feedback-footer .feedback-link { min-height: 44px; font-size: 14px; text-transform: none; letter-spacing: normal; }
 .site-feedback-footer .feedback-dialog { margin: auto; }
 .site-feedback-footer .feedback-dialog input, .site-feedback-footer .feedback-dialog textarea { font-size: 16px; }
@@ -348,7 +348,7 @@
 @media (display-mode: standalone) { .install-app { display: none; } }
 @media print { .install-app { display: none; } }
 
-.tx-bedside { max-width: 620px; font-family: var(--sans); }
+.tx-bedside { max-width: 620px; }
 .tx-bedside .species-picker legend { font-size: 14px; }
 .tx-bedside .segmented button { min-height: 48px; font-size: 16px; }
 .tx-bedside.tx-has-sticky-result { padding-bottom: calc(170px + env(safe-area-inset-bottom)); }
@@ -468,11 +468,7 @@
 .fetal-age-card { display:grid; gap:16px; }
 .fetal-age-card h2 { margin-bottom:2px; }
 .fetal-wip { display:inline-block; margin-bottom:10px; padding:4px 8px; border-radius:999px; background:#fff4df; color:#79500e; font-size:11px; font-weight:850; letter-spacing:.06em; }
-.fetal-species { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:8px; padding:4px; border:1px solid var(--line); border-radius:12px; background:#f3f6f3; }
-.fetal-species button { min-height:52px; padding:10px 14px; border:1px solid transparent; border-radius:9px; background:transparent; color:var(--ink); font:inherit; font-size:16px; font-weight:750; cursor:pointer; }
-.fetal-species button span { margin-right:7px; font-size:21px; }
-.fetal-species button[aria-pressed=true] { border-color:#8fb2a6; background:#fff; color:var(--green-dark); box-shadow:0 2px 7px rgba(16,40,35,.09); }
-.fetal-species button:active { transform:scale(.985); }
+.fetal-age-card .species-picker { width:min(100%, 320px); }
 .fetal-measurements { display:grid; gap:10px; }
 .field-label { font-weight:700; font-size:14px; }
 .field-label small { color:var(--muted); font-weight:500; }
@@ -501,6 +497,35 @@
 .toolkit-intro h1 { margin: 0; font-size: clamp(28px, 4vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
 .toolkit-intro p { margin: 8px 0 0; color: #5d6d68; line-height: 1.5; }
 .toolkit-subtitle { font-size: 18px; font-weight: 600; }
+.home-workspace { max-width: 860px; }
+.home-intro { display:flex; align-items:flex-end; justify-content:space-between; gap:28px; padding:26px 0 34px; border-bottom:1px solid var(--line); }
+.home-intro h1 { margin:0; font-size:clamp(34px, 6vw, 48px); line-height:1; letter-spacing:-.04em; }
+.home-intro p { margin:8px 0 0; color:var(--muted); line-height:1.5; }
+.home-calculators-button { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:11px 18px; border:1px solid var(--green); border-radius:9px; background:var(--green); color:white; font-weight:750; white-space:nowrap; }
+.home-calculators-button:hover { background:var(--green-dark); }
+.home-calculators-button:focus-visible { outline:3px solid var(--focus); outline-offset:3px; }
+.release-section { padding-top:30px; }
+.release-heading { display:flex; align-items:end; justify-content:space-between; gap:16px; margin-bottom:14px; }
+.release-heading span { color:var(--green); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.release-heading h2 { margin:4px 0 0; font-size:clamp(25px, 4vw, 32px); letter-spacing:-.025em; }
+.release-heading time { color:var(--muted); font-size:13px; }
+.release-current { padding:24px; border:1px solid var(--sage-strong); border-radius:12px; background:white; box-shadow:inset 4px 0 0 var(--green); }
+.release-version { display:flex; align-items:center; gap:8px; }
+.release-version span { padding:4px 8px; border-radius:999px; background:var(--sage); color:var(--green-dark); font-size:12px; font-weight:800; }
+.release-version span + span { background:var(--green); color:white; }
+.release-current h3 { margin:14px 0 6px; font-size:22px; }
+.release-current p { margin:0; color:var(--muted); line-height:1.55; }
+.release-current ul { margin:14px 0 0; padding-left:20px; line-height:1.6; }
+.release-history { margin-top:14px; border:1px solid var(--line); border-radius:10px; background:white; }
+.release-history summary { display:flex; align-items:center; justify-content:space-between; min-height:48px; padding:10px 16px; font-weight:750; cursor:pointer; }
+.release-history summary span { color:var(--muted); font-size:12px; font-weight:600; }
+.release-history > div { padding:0 16px 8px; }
+.release-item { padding:16px 0; border-top:1px solid var(--line); }
+.release-item > div { display:flex; justify-content:space-between; gap:12px; color:var(--muted); font-size:12px; }
+.release-item > div span { color:var(--green); font-weight:800; }
+.release-item h3 { margin:6px 0 4px; font-size:16px; }
+.release-item p { margin:0; color:var(--muted); font-size:14px; line-height:1.5; }
+.home-install .install-app { margin-top:20px; }
 .toolkit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .toolkit-card { display: flex; flex-direction: column; padding: 25px; border: 1px solid #d4dcd3; border-radius: 10px; background: #fff; text-decoration: none; cursor: pointer; }
 .toolkit-card:hover { border-color: var(--green); background: var(--paper); }
@@ -516,7 +541,7 @@
 .clinical-section h2 span { margin-right: 12px; font-size: 14px; color: #5d6d68; }
 .section-pending { margin-bottom: 0; color: #5d6d68; font-size: 14px; line-height: 1.5; }
 .calculator-species { color: #5d6d68; font-size: 14px; }
-@media (max-width: 600px) { .toolkit-grid { grid-template-columns: 1fr; } .vetcalc-brand span { display: none; } .toolkit-workspace { width: calc(100% - 28px); padding-top: 26px; } .toolkit-card { padding: 20px; } }
+@media (max-width: 600px) { .toolkit-grid { grid-template-columns: 1fr; } .vetcalc-brand span { display: none; } .toolkit-workspace { width: calc(100% - 28px); padding-top: 26px; } .toolkit-card { padding: 20px; } .home-intro { align-items:stretch; flex-direction:column; padding-top:8px; } .home-calculators-button { width:100%; } .release-current { padding:20px 18px; } }
 @media (prefers-reduced-motion: no-preference) { .calculator-drawer[open] { animation: drawer-enter .16s ease-out; } @keyframes drawer-enter { from { transform: translateX(100%); } to { transform: translateX(0); } } }
 .route-loading { position: fixed; inset: 68px 0 0; z-index: 39; display: grid; place-content: center; justify-items: center; gap: 14px; background: rgba(247,249,246,.94); color: var(--green-dark); backdrop-filter: blur(4px); }
 .route-loading--boundary { z-index: 30; }
@@ -545,7 +570,7 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--sans); }
-button, input, select { font: inherit; }
+button, input, select, textarea, dialog { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; }
 
@@ -639,7 +664,7 @@ a { color: inherit; }
 .bcs-info:hover::after, .bcs-info:focus::after { opacity: 1; transform: translateY(0); }
 .species-picker { margin: 0; padding: 0; border: 0; }
 .segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 10px; background: #e7ebe4; }
-.segmented button { min-height: 43px; padding: 10px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 800; }
+.segmented button { min-height: 48px; padding: 10px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font-size: 15px; font-weight: 800; }
 .species-emoji { display: inline-block; margin-right: 6px; font-size: 17px; line-height: 1; vertical-align: -2px; }
 .segmented button.active { background: white; color: var(--green); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07); }
 
@@ -760,7 +785,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 /* Urine output */
-.dd-page { width: min(100% - 32px, 720px); font-family: var(--sans); }
+.dd-page { width: min(100% - 32px, 720px); }
 .dd-page .toolkit-intro { margin-bottom: 18px; }
 .dd-calculator { display: grid; gap: 14px; }
 .dd-card, .dd-tool { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: white; }
@@ -801,7 +826,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 @media (max-width: 600px) { .dd-main, .dd-details-body { grid-template-columns: 1fr; }.dd-main .dd-field:last-child, .dd-details-body .dd-result-rows, .dd-details-body .dd-small-inline { grid-column: auto; }.dd-card { padding: 18px; }.dd-result-rows { grid-template-columns: 1fr 1fr; }.dd-converter { grid-template-columns: 1fr; }.dd-converter > strong { min-height: 20px; transform: rotate(90deg); } }
 
 /* Urine output */
-.uo-page { width: min(100% - 32px, 620px); padding-top: 30px; padding-bottom: calc(210px + env(safe-area-inset-bottom)); font-family: var(--sans); }
+.uo-page { width: min(100% - 32px, 620px); padding-top: 30px; padding-bottom: calc(210px + env(safe-area-inset-bottom)); }
 .uo-page > h1 { margin: 0 0 24px; font-size: clamp(28px, 5vw, 36px); line-height: 1.2; letter-spacing: -.03em; }
 .uo-calculator { display: grid; gap: 18px; }
 .uo-input-card { display: grid; gap: 18px; padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: white; }
