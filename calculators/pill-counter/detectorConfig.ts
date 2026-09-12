@@ -1,5 +1,5 @@
 export const PILL_DETECTION_CONFIG = {
-  maxProcessingDimension: 960, borderSamplePercent: 0.06,
+  maxProcessingDimension: 640, borderSamplePercent: 0.06,
   backgroundMadMultiplier: 2.5, minBackgroundDistanceThreshold: 12, maxBackgroundDistanceThreshold: 35,
   gaussianKernelSize: 3, adaptiveBlockSize: 31, adaptiveConstant: 5, morphologyKernelSize: 3,
   morphologyOpenIterations: 1, morphologyCloseIterations: 1, minRelativeArea: 0.00004, maxRelativeArea: 0.08,

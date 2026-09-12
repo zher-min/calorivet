@@ -20,13 +20,15 @@ export default function PillCounter() {
     try {
       // Never mount the original 12–50 MP camera image. Downsample before it reaches the DOM.
       const bitmap = await createImageBitmap(file);
-      const scale = Math.min(1, PILL_DETECTION_CONFIG.maxProcessingDimension / Math.max(bitmap.width, bitmap.height));
+      const reportedMemory = typeof navigator !== "undefined" && "deviceMemory" in navigator ? Number((navigator as Navigator & { deviceMemory?: number }).deviceMemory) : 0;
+      const maxDimension = reportedMemory > 0 && reportedMemory <= 2 ? 512 : PILL_DETECTION_CONFIG.maxProcessingDimension;
+      const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
       const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(bitmap.width * scale)); canvas.height = Math.max(1, Math.round(bitmap.height * scale));
       canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height); bitmap.close();
       const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error("Could not prepare image.")), "image/jpeg", 0.88));
       const nextUrl = URL.createObjectURL(blob);
       setImageUrl(old => { if (old) URL.revokeObjectURL(old); return nextUrl; });
-    } catch { setError("Could not prepare this image. Try another photo or use manual markers."); setProcessing(false); }
+    } catch { setError("This device could not prepare the photo. Try a smaller image or use manual markers."); setProcessing(false); }
   };
   const processImage = useCallback(async () => { if (!imageRef.current || !canvasRef.current) return; const image = imageRef.current; const canvas = canvasRef.current; canvas.width = image.naturalWidth; canvas.height = image.naturalHeight; canvas.getContext("2d")?.drawImage(image, 0, 0); setError(null); try { const result = await opencvWorkerDetector.detect(canvas, { debug: process.env.NODE_ENV !== "production" }); setDetections(result.detections); setDiagnostics(result.diagnostics ?? null); } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not detect tablets in this image."); } finally { setProcessing(false); } }, []);
   useEffect(() => () => { opencvWorkerDetector.dispose(); if (imageUrl) URL.revokeObjectURL(imageUrl); }, [imageUrl]);
