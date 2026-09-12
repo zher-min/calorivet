@@ -466,6 +466,12 @@
 .fetal-age-workspace { max-width: 760px; }
 .fetal-age-card { display:grid; gap:16px; }
 .fetal-age-card h2 { margin-bottom:2px; }
+.fetal-wip { display:inline-block; margin-bottom:10px; padding:4px 8px; border-radius:999px; background:#fff4df; color:#79500e; font-size:11px; font-weight:850; letter-spacing:.06em; }
+.fetal-species { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:8px; padding:4px; border:1px solid var(--line); border-radius:12px; background:#f3f6f3; }
+.fetal-species button { min-height:52px; padding:10px 14px; border:1px solid transparent; border-radius:9px; background:transparent; color:var(--ink); font:inherit; font-size:16px; font-weight:750; cursor:pointer; }
+.fetal-species button span { margin-right:7px; font-size:21px; }
+.fetal-species button[aria-pressed=true] { border-color:#8fb2a6; background:#fff; color:var(--green-dark); box-shadow:0 2px 7px rgba(16,40,35,.09); }
+.fetal-species button:active { transform:scale(.985); }
 .fetal-measurements { display:grid; gap:10px; }
 .field-label { font-weight:700; font-size:14px; }
 .field-label small { color:var(--muted); font-weight:500; }
