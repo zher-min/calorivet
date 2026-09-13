@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   icons: { icon: "/icons/vetslate-192.png", shortcut: "/icons/vetslate-192.png", apple: [{ url: "/icons/vetslate-apple-touch-icon.png", sizes: "180x180" }] },
 };
 
-const themeBootstrap = `(() => { try { const saved = localStorage.getItem("vetslate:theme"); const theme = saved === "light" || saved === "dark" ? saved : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); document.documentElement.dataset.theme = theme; document.documentElement.style.colorScheme = theme; } catch { document.documentElement.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } })();`;
+const themeBootstrap = `(() => { try { const saved = localStorage.getItem("vetslate:theme"); const manual = saved === "light" || saved === "dark"; const theme = manual ? saved : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); document.documentElement.dataset.theme = theme; document.documentElement.dataset.themePreference = manual ? saved : "auto"; document.documentElement.style.colorScheme = theme; } catch { document.documentElement.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; document.documentElement.dataset.themePreference = "auto"; } })();`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head><body><AppInstallProvider><AppShell>{children}</AppShell></AppInstallProvider></body></html>;

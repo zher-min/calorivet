@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
+type ThemePreference = Theme | "auto";
 
 const THEME_STORAGE_KEY = "vetslate:theme";
 
@@ -14,19 +15,35 @@ function applyTheme(theme: Theme) {
   });
 }
 
+function deviceTheme(): Theme {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>(() =>
     typeof document !== "undefined" && document.documentElement.dataset.theme === "dark" ? "dark" : "light"
+  );
+  const [preference, setPreference] = useState<ThemePreference>(() =>
+    typeof document !== "undefined" && document.documentElement.dataset.themePreference !== "auto" ? theme : "auto"
   );
 
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
 
+  useEffect(() => {
+    if (preference !== "auto") return;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const followDevice = (event: MediaQueryListEvent) => setTheme(event.matches ? "dark" : "light");
+    media.addEventListener("change", followDevice);
+    return () => media.removeEventListener("change", followDevice);
+  }, [preference]);
+
   const nextTheme: Theme = theme === "dark" ? "light" : "dark";
 
   return (
-    <button
+    <div className="theme-control">
+      <button
       type="button"
       className="theme-toggle"
       data-theme={theme}
@@ -36,6 +53,8 @@ export default function ThemeToggle() {
       onClick={() => {
         applyTheme(nextTheme);
         try { window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme); } catch { /* Theme still applies for this visit. */ }
+        document.documentElement.dataset.themePreference = nextTheme;
+        setPreference(nextTheme);
         setTheme(nextTheme);
       }}
     >
@@ -44,6 +63,22 @@ export default function ThemeToggle() {
         <span className="theme-toggle-icon theme-toggle-moon">☾</span>
         <span className="theme-toggle-thumb" />
       </span>
-    </button>
+      </button>
+      <button
+        type="button"
+        className="theme-auto"
+        aria-pressed={preference === "auto"}
+        onClick={() => {
+          const currentDeviceTheme = deviceTheme();
+          try { window.localStorage.removeItem(THEME_STORAGE_KEY); } catch { /* Auto still applies for this visit. */ }
+          document.documentElement.dataset.themePreference = "auto";
+          setPreference("auto");
+          setTheme(currentDeviceTheme);
+          applyTheme(currentDeviceTheme);
+        }}
+      >
+        Auto
+      </button>
+    </div>
   );
 }
