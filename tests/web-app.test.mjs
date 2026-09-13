@@ -28,7 +28,7 @@ test('both calculator pages expose manifest and Apple installation metadata', as
     const response = await worker.fetch(new Request(`http://localhost${route}`), {ASSETS:{fetch:async()=>new Response('',{status:404})}}, {waitUntil(){},passThroughOnException(){}});
     const html = await response.text();
     assert.equal(response.status,200);
-    assert.match(html,/rel="manifest"[^>]*href="\/manifest.webmanifest"|href="\/manifest.webmanifest"[^>]*rel="manifest"/);
+    assert.match(html,/rel="manifest"[^>]*href="(?:https:\/\/vetslate\.com)?\/manifest\.webmanifest"|href="(?:https:\/\/vetslate\.com)?\/manifest\.webmanifest"[^>]*rel="manifest"/);
     assert.match(html,/apple-mobile-web-app-capable/);
     assert.match(html,/\/icons\/vetslate-apple-touch-icon.png/);
     assert.match(html,/Add to Home Screen/);

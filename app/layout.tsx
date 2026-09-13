@@ -6,22 +6,23 @@ import { AppInstallProvider } from "../components/layout/AppInstall";
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f4f0e7" }, { media: "(prefers-color-scheme: dark)", color: "#0f1c28" }] };
 
 export const metadata: Metadata = {
-  title: "VetSlate — Tools for the Veterinarian",
-  description: "Fast, practical clinical tools for veterinarians.",
+  metadataBase: new URL("https://vetslate.com"),
+  title: "VetSlate — Clinical support, made simple",
+  description: "Clinical support, made simple.",
   applicationName: "VetSlate",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "VetSlate", statusBarStyle: "default" },
   other: { "apple-mobile-web-app-capable": "yes" },
   openGraph: {
-    title: "VetSlate — Tools for the Veterinarian",
-    description: "Fast, practical clinical tools for veterinarians.",
-    images: [{ url: "/icons/vetslate-1024.png", width: 1024, height: 1024, alt: "VetSlate" }],
+    title: "VetSlate — Clinical support, made simple",
+    description: "Clinical support, made simple.",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "VetSlate — Clinical support, made simple" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "VetSlate — Tools for the Veterinarian",
-    description: "Fast, practical clinical tools for veterinarians.",
-    images: ["/icons/vetslate-1024.png"],
+    title: "VetSlate — Clinical support, made simple",
+    description: "Clinical support, made simple.",
+    images: ["/og.png"],
   },
   icons: { icon: "/icons/vetslate-192.png", shortcut: "/icons/vetslate-192.png", apple: [{ url: "/icons/vetslate-apple-touch-icon.png", sizes: "180x180" }] },
 };

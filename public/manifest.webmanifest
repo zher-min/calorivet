@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "VetSlate — Tools for the Veterinarian",
+  "name": "VetSlate — Clinical support, made simple",
   "short_name": "VetSlate",
-  "description": "Fast, practical clinical tools for veterinarians.",
+  "description": "Clinical support, made simple.",
   "lang": "en",
   "start_url": "/",
   "scope": "/",

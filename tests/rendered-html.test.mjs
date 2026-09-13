@@ -5,7 +5,7 @@ test("release homepage and transfusion direct routes render inside VetSlate", as
   const home = await render("/");
   assert.equal(home.status, 200);
   const html = await home.text();
-  assert.match(html, /Tools for the Veterinarian/);
+  assert.match(html, /Clinical support, made simple/);
   assert.match(html, /href="\/calculators\/calorie"/);
   assert.match(html, /href="\/calculators\/transfusion"/);
   assert.doesNotMatch(html, /Patient information/);

@@ -22,7 +22,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => () => { document.body.style.overflow = ""; }, []);
   return <CalculatorDrawerContext.Provider value={{ openCalculatorDrawer: open }}>
     <header className="vetcalc-header">
-      <Link className="vetcalc-brand" href="/" aria-label="VetSlate home" onClick={() => { if (pathname !== "/") setNavigatingTo("/"); }}><picture><img className="brand-logo-light" src="/brand/vetslate-logo.svg" alt="VetSlate" /><img className="brand-logo-dark" src="/brand/vetslate-logo-dark.svg" alt="" /></picture><span>Tools for the Veterinarian</span></Link>
+      <Link className="vetcalc-brand" href="/" aria-label="VetSlate home" onClick={() => { if (pathname !== "/") setNavigatingTo("/"); }}><picture><img className="brand-logo-light" src="/brand/vetslate-logo.svg" alt="VetSlate" /><img className="brand-logo-dark" src="/brand/vetslate-logo-dark.svg" alt="" /></picture><span>Clinical support, made simple</span></Link>
       <div className="header-actions"><ThemeToggle /><button ref={trigger} className="toolkit-button" aria-haspopup="dialog" aria-controls="calculator-drawer" onClick={open}><span aria-hidden="true">☷</span> Toolbox</button></div>
     </header>
     <dialog id="calculator-drawer" ref={dialog} className="calculator-drawer" aria-labelledby="drawer-title"
