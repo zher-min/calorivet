@@ -629,7 +629,20 @@ a { color: inherit; }
   .launcher-label, .toolkit-button { color:var(--ink); }
   .launcher-tile:hover, .launcher-tile:focus-visible, .launcher-tile[aria-current=page] { background:var(--sage); border-color:var(--sage-strong); }
   input, select, textarea, .input-wrap, .text-input, .em-weight-input, .bsa-weight-input,
-  .uo-input-shell, .dd-input-select, .dd-input-unit, .tx-bedside input, .tx-bedside select { background:var(--surface-soft) !important; color:var(--ink) !important; border-color:var(--line) !important; }
+  .uo-input-shell, .dd-input-select, .dd-input-unit, .cri-number-unit, .cri-dose-input,
+  .cri-stock-input, .em-concentration-directory > label > span:last-child,
+  .tx-bedside input, .tx-bedside select, .tx-field input, .tx-field select { background:var(--surface-soft) !important; color:var(--ink) !important; border-color:var(--line) !important; }
+  .em-weight-input > span, .bsa-weight-input > span, .uo-input-shell > span,
+  .cri-number-unit > span, .cri-dose-input > span, .cri-stock-input > span,
+  .dd-input-unit > span, .input-wrap > span, .fetal-input-unit,
+  .tx-input-unit, .tx-field-unit { background:var(--surface-soft); color:var(--ink); border-color:var(--line); }
+  input::placeholder, textarea::placeholder { color:#91a5a2; opacity:1; }
+  .em-route-selector button, .em-category-buttons button, .em-toxin-selector button,
+  .em-dilution button, .em-category-item, .em-category-item > button, .em-toxin-selector,
+  .em-treatment-group, .em-quick-nav > div, .em-quick-sheet, .em-settings,
+  .cri-presets button, .cri-drug-results > div, .ps-chips button, .ps-table-scroll,
+  .ps-no-match, .ps-comparison-details > details, .ps-dialog-heading,
+  .tx-presets button, .dd-result-rows > div { background:var(--surface); color:var(--ink); border-color:var(--line); }
   .segmented, .cri-segmented > div { background:#0f202e; }
   .segmented button.active, .cri-segmented button[aria-pressed=true] { background:var(--surface); color:var(--green-dark); }
   .route-loading { background:rgba(15,28,40,.95); color:var(--ink); }
