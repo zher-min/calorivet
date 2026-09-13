@@ -452,9 +452,9 @@
 .toolkit-button { min-height: 44px; min-width: 44px; padding: 9px 13px; border: 1px solid #c5cec9; border-radius: 7px; background: white; color: #172321; font-size: 14px; font-weight: 600; }
 .toolkit-button span { margin-right: 6px; font-size: 19px; }
 :where(a, button, input, select, summary):focus-visible { outline: 3px solid #1677a3; outline-offset: 3px; }
-.calculator-drawer { position: fixed; inset: 0 0 0 auto; margin: 0; padding: 0; border: 0; width: min(360px, 94vw); max-width: none; height: 100dvh; max-height: none; background: #fff; color: #172321; }
+.calculator-drawer { position: fixed; inset: 0 0 0 auto; box-sizing: border-box; margin: 0; padding: 0; border: 0; width: min(360px, 94vw); max-width: none; height: 100dvh; max-height: none; background: #fff; color: #172321; }
 .calculator-drawer::backdrop { background: rgb(15 28 25 / 35%); }
-.drawer-content { min-height: 100%; padding: 22px; }
+.drawer-content { box-sizing: border-box; min-height: 100%; width: 100%; padding: 22px; }
 .drawer-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .drawer-heading h2 { margin: 0; font-size: 22px; }
 .nav-category { margin-top: 30px; }
@@ -563,6 +563,10 @@
 .section-pending { margin-bottom: 0; color: #5d6d68; font-size: 14px; line-height: 1.5; }
 .calculator-species { color: #5d6d68; font-size: 14px; }
 @media (max-width: 600px) { .toolkit-grid { grid-template-columns: 1fr; } .vetcalc-brand span { display: none; } .toolkit-workspace { width: calc(100% - 28px); padding-top: 26px; } .toolkit-card { padding: 20px; } .home-intro { align-items:stretch; flex-direction:column; padding-top:8px; } .home-calculators-button { width:100%; } .release-current { padding:20px 18px; } }
+@media (max-width: 640px) {
+  .launcher-actions { flex-direction: column; align-items: stretch; gap: 10px; width: 100%; }
+  .launcher-actions .install-app, .launcher-actions .install-button, .launcher-actions > .toolkit-button { width: 100%; box-sizing: border-box; }
+}
 @media (prefers-reduced-motion: no-preference) { .calculator-drawer[open] { animation: drawer-enter .16s ease-out; } @keyframes drawer-enter { from { transform: translateX(100%); } to { transform: translateX(0); } } }
 .route-loading { position: fixed; inset: 68px 0 0; z-index: 39; display: grid; place-content: center; justify-items: center; gap: 14px; background: rgba(247,249,246,.94); color: var(--green-dark); backdrop-filter: blur(4px); }
 .route-loading--boundary { z-index: 30; }
