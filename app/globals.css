@@ -457,7 +457,6 @@
 .drawer-content { min-height: 100%; padding: 22px; }
 .drawer-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .drawer-heading h2 { margin: 0; font-size: 22px; }
-.drawer-content > .install-app { margin-top: 14px; margin-bottom: 4px; }
 .nav-category { margin-top: 30px; }
 .nav-category h3, .toolkit-category { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #5d6d68; }
 .calculator-nav-item { position: relative; display: block; min-height: 76px; margin-top: 10px; padding: 14px 42px 14px 14px; border: 1px solid #d4dcd3; border-radius: 9px; background: #fff; text-decoration: none; box-shadow: 0 1px 2px rgba(16,40,35,.04); }
@@ -470,7 +469,9 @@
 .calculator-nav-item:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .calculator-nav-item[aria-current=page]::after { color: var(--green); }
 .calculator-nav-item .active-label { font-weight: 700; color: #174d42; }
-.launcher-actions { display:flex; justify-content:flex-end; margin-top:18px; }
+.launcher-actions { display:flex; align-items:flex-start; justify-content:flex-end; gap:8px; margin-top:18px; }
+.launcher-actions .install-app { min-width:0; margin:0; }
+.launcher-actions .toolkit-button { white-space:nowrap; }
 .launcher-section { margin-top:22px; }
 .launcher-section h3 { margin:0 0 8px; color:#5d6d68; font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
 .launcher-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
@@ -519,6 +520,7 @@
 .home-intro p { margin:8px 0 0; color:var(--muted); line-height:1.5; }
 .home-brand { display:block; width:min(430px, 72vw); }
 .home-brand img { display:block; width:100%; height:auto; }
+.home-actions { display:flex; flex-direction:column; align-items:stretch; gap:10px; }
 .home-calculators-button { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:11px 18px; border:1px solid var(--green); border-radius:9px; background:var(--green); color:white; font-weight:750; white-space:nowrap; }
 .home-calculators-button:hover { background:var(--green-dark); }
 .home-calculators-button:focus-visible { outline:3px solid var(--focus); outline-offset:3px; }
@@ -543,7 +545,8 @@
 .release-item > div span { color:var(--green); font-weight:800; }
 .release-item h3 { margin:6px 0 4px; font-size:16px; }
 .release-item p { margin:0; color:var(--muted); font-size:14px; line-height:1.5; }
-.home-install .install-app { margin-top:20px; }
+.home-install .install-app { margin:0; }
+.home-install .install-button { width:100%; justify-content:center; }
 .toolkit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .toolkit-card { display: flex; flex-direction: column; padding: 25px; border: 1px solid #d4dcd3; border-radius: 10px; background: #fff; text-decoration: none; cursor: pointer; }
 .toolkit-card:hover { border-color: var(--green); background: var(--paper); }

@@ -7,7 +7,10 @@ export default function Home() {
   return <main className="toolkit-workspace home-workspace">
     <section className="home-intro" aria-labelledby="home-title">
       <div><picture className="home-brand"><img className="brand-logo-light" src="/brand/vetslate-logo.svg" alt="VetSlate" /><img className="brand-logo-dark" src="/brand/vetslate-logo-dark.svg" alt="" /></picture><h1 className="sr-only" id="home-title">VetSlate</h1><p className="toolkit-subtitle">Clinical support, made simple</p><p>Fast, practical clinical tools for veterinary practice.</p></div>
-      <OpenCalculatorsButton />
+      <div className="home-actions">
+        <OpenCalculatorsButton />
+        <div className="home-install"><InstallApp /></div>
+      </div>
     </section>
     <section className="release-section" aria-labelledby="whats-new-title">
       <div className="release-heading"><div><span>Release notes</span><h2 id="whats-new-title">What’s new</h2></div><time dateTime={current.date}>{current.date}</time></div>
@@ -24,6 +27,5 @@ export default function Home() {
         </article>)}</div>
       </details>
     </section>
-    <div className="home-install"><InstallApp /></div>
   </main>;
 }

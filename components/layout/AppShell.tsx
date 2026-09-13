@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import ToolLauncher from "./ToolLauncher";
-import InstallApp from "./AppInstall";
 import FeedbackDialog from "./FeedbackDialog";
 import ThemeToggle from "./ThemeToggle";
 import { CalculatorDrawerContext } from "./CalculatorDrawerContext";
@@ -30,7 +29,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       onClose={() => { document.body.style.overflow = ""; trigger.current?.focus(); }}>
       <div className="drawer-content">
         <div className="drawer-heading"><h2 id="drawer-title">Toolbox</h2><button className="toolkit-button" aria-label="Close toolbox" onClick={close}>×</button></div>
-        <InstallApp />
         <CalculatorNavigation onSelect={route => { close(); if (route !== pathname) setNavigatingTo(route); }} />
       </div>
     </dialog>
