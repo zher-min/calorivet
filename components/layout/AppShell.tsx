@@ -30,8 +30,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       onClose={() => { document.body.style.overflow = ""; trigger.current?.focus(); }}>
       <div className="drawer-content">
         <div className="drawer-heading"><h2 id="drawer-title">Toolbox</h2><button className="toolkit-button" aria-label="Close toolbox" onClick={close}>×</button></div>
-        <CalculatorNavigation onSelect={route => { close(); if (route !== pathname) setNavigatingTo(route); }} />
         <InstallApp />
+        <CalculatorNavigation onSelect={route => { close(); if (route !== pathname) setNavigatingTo(route); }} />
       </div>
     </dialog>
     {navigatingTo && navigatingTo !== pathname && <div className="route-loading" role="status" aria-live="polite" aria-label="Loading"><img className="route-loading-mark" src="/brand/vetslate-symbol.svg" alt="" /><span className="route-loading-spinner" aria-hidden="true" /><strong>Loading…</strong></div>}
