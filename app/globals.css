@@ -1080,4 +1080,12 @@ main .intro h1,
   .uo-result--green { background:rgba(20,58,45,.97); }
   .uo-result--amber { background:rgba(57,45,20,.97); }
   .uo-result--red { background:rgba(63,30,31,.97); }
+  /* Calorie analysis cards retain readable contrast in dark mode. */
+  .distribution div, .active-energy, .info-message, .feeding-card {
+    background: var(--surface-soft);
+    border-color: var(--line);
+    color: var(--ink);
+  }
+  .distribution span, .active-energy span, .active-energy small { color: var(--muted); }
+  .distribution b, .active-energy strong { color: var(--green); }
 }
