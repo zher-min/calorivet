@@ -70,7 +70,7 @@ export const calculatorCategories = [
       },
       {
         id: "fetal-age", brand: "Ultrasound Fetal Age Calculator", name: "Ultrasound Fetal Age Calculator", shortName: "Fetal Age", emoji: "🐣", route: "/calculators/fetal-age",
-        description: "Estimate gestational stage from ultrasound fetometry", homeDescription: "Estimate gestational age and approximate parturition timing from canine and feline ultrasound measurements.", species: ["dog", "cat"], status: "prototype", kind: "tool",
+        description: "Estimate gestational stage from ultrasound fetometry", homeDescription: "Estimate gestational age and approximate parturition timing from canine and feline ultrasound measurements.", species: ["dog", "cat"], status: "active", kind: "tool",
       },
     ],
   },
