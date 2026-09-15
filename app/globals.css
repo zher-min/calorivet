@@ -507,6 +507,10 @@
 .fetal-reference { padding-top:12px; line-height:1.55; font-size:14px; }
 .fetal-reference h3 { margin:14px 0 4px; font-size:15px; }
 .fetal-reference p { margin:6px 0; }
+.fetal-reference-image { margin:12px 0 18px; }
+.fetal-reference-image img { display:block; width:100%; max-height:300px; object-fit:contain; border:1px solid var(--line); border-radius:8px; background:#101820; }
+.fetal-reference-image figcaption { margin-top:6px; color:var(--muted); font-size:13px; line-height:1.45; }
+.fetal-reference-image figcaption small { font-size:12px; }
 .fetal-disclaimer { color:var(--muted); font-size:13px; line-height:1.5; margin-top:18px; }
 @media (max-width:600px) { .fetal-result-grid { grid-template-columns:1fr; gap:12px; } }
 .toolkit-workspace { width: min(100% - 40px, 1000px); margin: 0 auto; padding: 36px 0 60px; }
