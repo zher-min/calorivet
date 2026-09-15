@@ -576,6 +576,12 @@
 .route-loading--boundary { z-index: 30; }
 .route-loading strong { font-size: 15px; font-weight: 750; }
 .route-loading-mark { width:54px; height:54px; border-radius:11px; }
+.route-loading--minimal { inset: 0; background: var(--cream); backdrop-filter: none; }
+.route-loading--minimal .route-loading-mark { width: clamp(72px, 18vw, 110px); height: auto; border-radius: 14px; }
+.startup-error { min-height: 100dvh; display: grid; place-content: center; justify-items: center; gap: 10px; padding: 24px; background: var(--cream); color: var(--ink); text-align: center; }
+.startup-error img { width: clamp(72px, 18vw, 110px); height: auto; border-radius: 14px; }
+.startup-error h1 { margin: 8px 0 0; font-family: var(--heading); font-size: 24px; }
+.startup-error p { margin: 0 0 8px; color: var(--muted); }
 .route-loading-spinner { width: 34px; height: 34px; border: 3px solid var(--sage-strong); border-top-color: var(--green); border-radius: 50%; }
 @media (prefers-reduced-motion: no-preference) { .route-loading-spinner { animation: route-spin .7s linear infinite; } @keyframes route-spin { to { transform: rotate(360deg); } } }
 @media print { .vetcalc-header, .calculator-drawer { display: none !important; } }
