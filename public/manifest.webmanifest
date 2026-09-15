@@ -7,7 +7,7 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f4f0e7",
+  "background_color": "#17324a",
   "theme_color": "#174d42",
   "icons": [
     { "src": "/icons/vetslate-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
