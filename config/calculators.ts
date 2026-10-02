@@ -48,10 +48,10 @@ export const calculatorCategories = [
   {
     id: "clinical-utilities", name: "Clinical Utilities", calculators: [
       {
-        id: "tap-rate", brand: "Quick BPM", name: "Quick BPM", emoji: "🫁",
-        shortName: "Quick BPM", route: "/calculators/tap-rate",
-        description: "Tap repeatedly to measure events per minute",
-        homeDescription: "Measure a repeated event rate per minute with a simple tap interface.",
+        id: "tap-rate", brand: "BPM / Drip Rate", name: "BPM / Drip Rate Calculator", emoji: "💧",
+        shortName: "BPM / Drip Rate", route: "/calculators/tap-rate",
+        description: "Tap to measure repeated events or estimate an IV fluid drip rate",
+        homeDescription: "Measure events per minute or estimate IV fluid delivery from observed drops and the giving-set drop factor.",
         species: [], status: "active", kind: "tool",
       },
       {
